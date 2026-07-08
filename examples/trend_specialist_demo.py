@@ -18,9 +18,10 @@ snapshot = MarketSnapshot(
 )
 
 specialist = TrendSpecialist()
-report = specialist.analyze(snapshot)
+report, signal = specialist.analyze(snapshot)
 
 print(report.summary())
 print("Valid:", report.is_valid())
 print("Facts:", report.facts)
 print("Warnings:", report.warnings)
+print("Signal:", signal.summary())

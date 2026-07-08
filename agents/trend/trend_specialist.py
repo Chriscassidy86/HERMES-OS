@@ -19,6 +19,7 @@ III - Intelligence Layer
 """
 
 from agents.base.base_specialist import BaseSpecialist
+from models.signal import Signal
 
 
 class TrendSpecialist(BaseSpecialist):
@@ -31,11 +32,11 @@ class TrendSpecialist(BaseSpecialist):
 
     def analyze(self, snapshot):
         """
-        Analyze market trend and return an AgentReport.
+        Analyze market trend and return both an AgentReport and a Signal.
         """
 
         if snapshot.market_trend.lower() == "bullish":
-            return self.create_report(
+            report = self.create_report(
                 status="BULLISH",
                 confidence=80.0,
                 facts=[
@@ -46,7 +47,18 @@ class TrendSpecialist(BaseSpecialist):
                 recommendation="TREND_FOLLOWING_ALLOWED",
             )
 
-        return self.create_report(
+            signal = Signal(
+                source=self.name,
+                direction="LONG",
+                confidence=80.0,
+                strength=0.78,
+                timeframe="4H",
+                priority=2,
+            )
+
+            return report, signal
+
+        report = self.create_report(
             status="NEUTRAL",
             confidence=50.0,
             facts=[
@@ -57,3 +69,14 @@ class TrendSpecialist(BaseSpecialist):
             ],
             recommendation="WAIT_FOR_CONFIRMATION",
         )
+
+        signal = Signal(
+            source=self.name,
+            direction="WAIT",
+            confidence=50.0,
+            strength=0.30,
+            timeframe="4H",
+            priority=3,
+        )
+
+        return report, signal
