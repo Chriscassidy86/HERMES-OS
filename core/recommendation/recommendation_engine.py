@@ -19,18 +19,34 @@ III - Intelligence Layer
 """
 
 from models.evidence_summary import EvidenceSummary
+from models.recommendation import Recommendation
 
 
 class RecommendationEngine:
     """
-    Converts summarized evidence into a recommendation.
+    Converts summarized evidence into a Recommendation.
     """
 
-    def recommend(self, summary: EvidenceSummary) -> str:
+    def recommend(self, summary: EvidenceSummary) -> Recommendation:
         if summary.bullish > summary.bearish and summary.average_confidence >= 70:
-            return "RECOMMEND_LONG"
+            return Recommendation(
+                symbol=summary.symbol,
+                action="LONG",
+                confidence=summary.average_confidence,
+                reason="Bullish evidence exceeds bearish evidence with acceptable confidence.",
+            )
 
         if summary.bearish > summary.bullish and summary.average_confidence >= 70:
-            return "RECOMMEND_SHORT"
+            return Recommendation(
+                symbol=summary.symbol,
+                action="SHORT",
+                confidence=summary.average_confidence,
+                reason="Bearish evidence exceeds bullish evidence with acceptable confidence.",
+            )
 
-        return "RECOMMEND_WAIT"
+        return Recommendation(
+            symbol=summary.symbol,
+            action="WAIT",
+            confidence=summary.average_confidence,
+            reason="Evidence is not strong enough for a directional recommendation.",
+        )
