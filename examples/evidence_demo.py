@@ -52,5 +52,9 @@ print("====================================================")
 print("        HERMES EVIDENCE SUMMARY")
 print("====================================================")
 
-for key, value in summary.items():
-    print(f"{key}: {value}")
+print(f"Symbol: {summary.symbol}")
+print(f"Bullish: {summary.bullish}")
+print(f"Bearish: {summary.bearish}")
+print(f"Neutral: {summary.neutral}")
+print(f"Average Confidence: {summary.average_confidence}%")
+print(f"Signal Count: {summary.signal_count}")

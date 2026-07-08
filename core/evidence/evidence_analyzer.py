@@ -19,6 +19,7 @@ III - Intelligence Layer
 """
 
 from models.decision_packet import DecisionPacket
+from models.evidence_summary import EvidenceSummary
 
 
 class EvidenceAnalyzer:
@@ -26,24 +27,19 @@ class EvidenceAnalyzer:
     Analyzes the evidence collected from Hermes specialists.
     """
 
-    def analyze(self, packet: DecisionPacket) -> dict:
-
+    def analyze(self, packet: DecisionPacket) -> EvidenceSummary:
         bullish = 0
         bearish = 0
         neutral = 0
-
         total_confidence = 0.0
 
         for signal in packet.signals:
-
             total_confidence += signal.confidence
 
             if signal.direction == "LONG":
                 bullish += 1
-
             elif signal.direction == "SHORT":
                 bearish += 1
-
             else:
                 neutral += 1
 
@@ -53,11 +49,11 @@ class EvidenceAnalyzer:
             else 0
         )
 
-        return {
-            "symbol": packet.symbol,
-            "bullish": bullish,
-            "bearish": bearish,
-            "neutral": neutral,
-            "average_confidence": round(average_confidence, 2),
-            "signal_count": packet.signal_count(),
-        }
+        return EvidenceSummary(
+            symbol=packet.symbol,
+            bullish=bullish,
+            bearish=bearish,
+            neutral=neutral,
+            average_confidence=round(average_confidence, 2),
+            signal_count=packet.signal_count(),
+        )
