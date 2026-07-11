@@ -58,6 +58,27 @@ class TrendSpecialist(BaseSpecialist):
 
             return report, signal
 
+        if snapshot.market_trend.lower() == "bearish":
+            report = self.create_report(
+                status="BEARISH",
+                confidence=80.0,
+                facts=[
+                    f"{snapshot.symbol} market trend is bearish",
+                    f"Current price is ${snapshot.price:,.2f}",
+                ],
+                warnings=[],
+                recommendation="DEFENSIVE_SHORT_BIAS",
+            )
+            signal = Signal(
+                source=self.name,
+                direction="SHORT",
+                confidence=80.0,
+                strength=0.78,
+                timeframe="4H",
+                priority=2,
+            )
+            return report, signal
+
         report = self.create_report(
             status="NEUTRAL",
             confidence=50.0,

@@ -1,57 +1,46 @@
+"""Run a real, paper-only Hermes morning decision cycle."""
+
 from pathlib import Path
 import sys
 
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(ROOT_DIR))
 
-print("=" * 58)
-print("               HERMES QUANT LABS")
-print("=" * 58)
-print()
-print("Good Morning Chris.")
-print()
-print("Beginning Morning Executive Meeting...")
-print()
+from agents.trend.trend_specialist import TrendSpecialist
+from core.decision_cycle import DecisionCycle
+from reports.market_snapshot import MarketSnapshot
 
-print("-" * 58)
-print("[1/6] Market Snapshot")
-print("✓ Complete")
-print()
 
-print("-" * 58)
-print("[2/6] Trend Department")
-print("✓ Complete")
-print("Status: BULLISH")
-print("Confidence: 80%")
-print()
+def main() -> None:
+    snapshot = MarketSnapshot(
+        symbol="BTC/USD",
+        price=108_000.25,
+        volume_24h=42_500_000_000,
+        market_trend="Bullish",
+        volatility=2.8,
+        fear_greed_index=74,
+    )
+    result = DecisionCycle([TrendSpecialist()]).run(snapshot)
 
-print("-" * 58)
-print("[3/6] Evidence Department")
-print("✓ Complete")
-print("Bullish: 2")
-print("Neutral: 1")
-print("Bearish: 0")
-print()
+    print("=" * 58)
+    print("HERMES PAPER-ONLY OPERATIONAL DECISION CYCLE")
+    print("=" * 58)
+    print(f"Cycle: {result.cycle_id}")
+    print(f"Market: {result.snapshot.summary()}")
+    for report in result.specialist_reports:
+        print(f"Specialist: {report.summary()}")
+    print(f"Evidence: {result.evidence_summary.summary()}")
+    print(f"Recommendation: {result.recommendation.summary()}")
+    print(f"Risk: {result.risk_assessment.summary()}")
+    print(f"Final status: {result.final_status}")
+    print(f"Paper execution eligible: {result.paper_execution_eligible}")
+    print("Order placed: False")
+    if result.rejection_reasons:
+        print("Rejections:")
+        for reason in result.rejection_reasons:
+            print(f"- {reason}")
+    print("=" * 58)
 
-print("-" * 58)
-print("[4/6] Recommendation Department")
-print("✓ Complete")
-print("Recommendation: LONG")
-print()
 
-print("-" * 58)
-print("[5/6] Risk Department")
-print("✓ Complete")
-print("Approved: True")
-print("Maximum Position: $20.00")
-print("Maximum Loss: $1.00")
-print()
-
-print("-" * 58)
-print("[6/6] Executive Brief")
-print("✓ Ready")
-print()
-
-print("=" * 58)
-print("Morning Meeting Complete.")
-print("=" * 58)
+if __name__ == "__main__":
+    main()

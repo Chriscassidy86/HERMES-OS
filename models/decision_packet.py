@@ -31,7 +31,7 @@ class DecisionPacket:
     """
 
     symbol: str
-    signals: list[Signal] = field(default_factory=list)
+    signals: tuple[Signal, ...] = field(default_factory=tuple)
     created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
     def add_signal(self, signal: Signal) -> "DecisionPacket":
@@ -41,7 +41,7 @@ class DecisionPacket:
 
         return DecisionPacket(
             symbol=self.symbol,
-            signals=[*self.signals, signal],
+            signals=(*self.signals, signal),
             created_at=self.created_at,
         )
 
