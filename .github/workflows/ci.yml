@@ -16,8 +16,16 @@ jobs:
   secret-scan:
     runs-on: ubuntu-latest
     steps:
+      # GitLeaks builds event-specific revision ranges (base..head for pull
+      # requests and before..after for pushes), so both endpoints must exist.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # The action uses the read-only automatic token to inspect pull-request
+      # metadata; it does not grant write access or weaken leak detection.
       - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   dependency-review:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
