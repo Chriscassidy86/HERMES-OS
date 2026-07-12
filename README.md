@@ -52,6 +52,9 @@ and emit a human-review-only learning proposal.
 
 Use `python -m reports.operator_cli <database> <report>` for read-only local JSON reports.
 
+Run `python examples/replay_demo.py` for an artificial deterministic fixture.
+Fixture results are never presented as evidence of real profitability.
+
 ## Current limitations
 
 - Specialist rules are intentionally simple deterministic heuristics.

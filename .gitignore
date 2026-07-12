@@ -24,7 +24,7 @@ logs/
 # Data
 data/
 data/paper_trading/
-backtests/
+data/backtests/
 exports/
 
 # VS Code

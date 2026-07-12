@@ -1,5 +1,10 @@
 # Changelog
 
+## Foundation VIII - Deterministic Backtest and Replay Framework
+
+- Added historical fixture loading, replay clock/session, metrics, benchmark, and exports.
+- Enforced decision-time versus future-outcome separation and deterministic costs.
+
 ## Foundation VII - Operator Reports and Paper Dashboard Foundation
 
 - Added read-only JSON reports for decisions, evidence, portfolio, trades, P&L,

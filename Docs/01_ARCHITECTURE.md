@@ -58,3 +58,9 @@ Foundation VII adds read-only `OperatorReports` and a JSON CLI for system state,
 latest decisions/evidence, paper portfolio, positions, trades, P&L, scorecards,
 rejections, risk, and provider health. Reports reuse journal and performance
 services; no business logic or trading controls exist in the interface.
+
+Foundation VIII adds deterministic historical candle loading, replay clock,
+session, paper fee/slippage model, equity history, benchmark comparison, metrics,
+and trade/decision exports. A decision receives only the current candle-derived
+snapshot; the next candle is read only after the decision to evaluate outcome,
+preventing look-ahead access.

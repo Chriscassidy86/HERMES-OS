@@ -30,5 +30,8 @@ learning proposals with minimum samples and mandatory human approval.
 Foundation VII completed as local JSON/text reporting. No website or dashboard
 was added; the operator layer remains read-only and paper-mode only.
 
+Foundation VIII completed: deterministic replay, no-look-ahead separation,
+fees/slippage, portfolio history, benchmarks, metrics, and exports.
+
 Not implemented: orchestrated sessions, performance learning, backtesting,
 production hardening, exchange connectivity, or live trading.
