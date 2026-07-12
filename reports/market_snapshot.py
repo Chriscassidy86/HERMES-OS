@@ -35,6 +35,12 @@ class MarketSnapshot:
     volatility: float
     fear_greed_index: int
 
+    previous_price: float | None = None
+    average_volume: float | None = None
+    short_moving_average: float | None = None
+    long_moving_average: float | None = None
+    timeframe: str = "4H"
+
     timestamp: datetime = field(
         default_factory=lambda: datetime.now(timezone.utc)
     )

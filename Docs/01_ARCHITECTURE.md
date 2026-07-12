@@ -16,3 +16,11 @@ signals, invalid evidence, WAIT recommendations, and risk rejection fail closed.
 
 The cycle has no exchange adapter, order model, execution service, live-data
 connection, or persistent portfolio.
+
+Foundation IV.2 makes the intelligence layer multi-specialist. Trend, Market
+Regime, Momentum, Volume, and Volatility produce timestamped evidence using the
+same immutable snapshot. `EvidenceAnalyzer` applies explicit specialist weight,
+source reliability, confidence, strength, freshness, and timeframe compatibility.
+Neutral evidence is recorded but excluded from directional confidence. The
+summary exposes contributions, conflicts, exclusions, directional score, and
+final confidence so every recommendation remains explainable.

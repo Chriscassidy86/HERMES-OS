@@ -36,7 +36,7 @@ class LowConfidenceSpecialist(BaseSpecialist):
     def analyze(self, snapshot):
         return (
             self.create_report("BULLISH", 60.0, ["Weak trend"], [], "CAUTION"),
-            Signal(self.name, "LONG", 60.0, 0.55, "4H", 3),
+            Signal(self.name, "LONG", 60.0, 0.55, "4H", 3, FIXED_TIME, ("Weak trend",)),
         )
 
 

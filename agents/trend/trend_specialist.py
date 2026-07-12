@@ -52,8 +52,10 @@ class TrendSpecialist(BaseSpecialist):
                 direction="LONG",
                 confidence=80.0,
                 strength=0.78,
-                timeframe="4H",
+                timeframe=snapshot.timeframe,
                 priority=2,
+                timestamp=snapshot.timestamp,
+                evidence=("Market trend input is bearish.",),
             )
 
             return report, signal
@@ -74,8 +76,10 @@ class TrendSpecialist(BaseSpecialist):
                 direction="SHORT",
                 confidence=80.0,
                 strength=0.78,
-                timeframe="4H",
+                timeframe=snapshot.timeframe,
                 priority=2,
+                timestamp=snapshot.timestamp,
+                evidence=("Market trend input is bullish.",),
             )
             return report, signal
 
@@ -96,8 +100,10 @@ class TrendSpecialist(BaseSpecialist):
             direction="WAIT",
             confidence=50.0,
             strength=0.30,
-            timeframe="4H",
+            timeframe=snapshot.timeframe,
             priority=3,
+            timestamp=snapshot.timestamp,
+            evidence=("Market trend input is not directional.",),
         )
 
         return report, signal
