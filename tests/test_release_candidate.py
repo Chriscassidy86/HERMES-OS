@@ -8,6 +8,12 @@ class ReleaseCandidateTests(unittest.TestCase):
     def test_required_release_documents_exist(self):
         names=("OPERATIONS_HANDBOOK.md","PAPER_TRADING_GUIDE.md","SAFETY_BOUNDARIES.md","INCIDENT_RESPONSE.md","RELEASE_NOTES_RC1.md")
         self.assertTrue(all((self.root/"Docs"/name).is_file() for name in names)); self.assertTrue((self.root/"FOUNDATIONS.md").is_file())
+    def test_release_documents_describe_current_rc(self):
+        readme=(self.root/"README.md").read_text(encoding="utf-8")
+        notes=(self.root/"Docs"/"RELEASE_NOTES_RC1.md").read_text(encoding="utf-8")
+        self.assertIn("Paper Trading RC1 candidate",readme)
+        self.assertIn("corrupted internal bbolt metadata database",notes)
+        self.assertIn("no Docker-specific source changes",notes)
     def test_fresh_install_health(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory); settings=RuntimeSettings("PAPER",root/"data"/"fresh.sqlite3",root/"logs",1000,1); journal=SQLiteAuditJournal(settings.database_path); journal.initialize(); self.assertTrue(StartupChecks(settings,journal).run().healthy)

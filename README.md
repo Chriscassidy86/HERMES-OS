@@ -1,8 +1,8 @@
 # HERMES-OS
 
 HERMES-OS is an experimental Python multi-agent crypto decision system. The
-current release implements Foundation IV.2: deterministic weighted
-multi-specialist intelligence in a synchronous, paper-only decision cycle.
+current release is the Paper Trading RC1 candidate, incorporating Foundations
+IV.1 through X in a synchronous, paper-only platform.
 
 ## Implemented architecture
 
