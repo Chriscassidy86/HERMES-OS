@@ -1,0 +1,88 @@
+"""SQLite audit journal. Importing this module performs no database writes."""
+from dataclasses import asdict, is_dataclass
+from datetime import datetime, timezone
+from decimal import Decimal
+from enum import Enum
+import json
+from pathlib import Path
+import sqlite3
+
+SCHEMA_VERSION=1
+TABLES=("decision_cycles","snapshots","specialist_reports","evidence_summaries",
+ "recommendations","risk_assessments","paper_orders","fills","positions","trades",
+ "portfolio_snapshots","rejection_reasons")
+
+class DuplicateCycleError(ValueError): pass
+class SchemaVersionError(RuntimeError): pass
+class ClosingConnection(sqlite3.Connection):
+    def __exit__(self,exc_type,exc_value,traceback):
+        try: return super().__exit__(exc_type,exc_value,traceback)
+        finally: self.close()
+
+def _json_default(value):
+    if is_dataclass(value): return asdict(value)
+    if isinstance(value,datetime): return value.astimezone(timezone.utc).isoformat()
+    if isinstance(value,Decimal): return str(value)
+    if isinstance(value,Enum): return value.value
+    raise TypeError(f"Unsupported audit value: {type(value).__name__}")
+def serialize(value): return json.dumps(value,default=_json_default,sort_keys=True,separators=(",",":"))
+
+class SQLiteAuditJournal:
+    def __init__(self,path): self.path=Path(path)
+    def connect(self):
+        connection=sqlite3.connect(self.path,factory=ClosingConnection)
+        connection.row_factory=sqlite3.Row; connection.execute("PRAGMA foreign_keys=ON")
+        return connection
+    def initialize(self):
+        self.path.parent.mkdir(parents=True,exist_ok=True)
+        with self.connect() as db:
+            db.execute("CREATE TABLE IF NOT EXISTS schema_metadata (version INTEGER NOT NULL)")
+            row=db.execute("SELECT version FROM schema_metadata").fetchone()
+            if row is None: db.execute("INSERT INTO schema_metadata VALUES (?)",(SCHEMA_VERSION,))
+            elif row[0]!=SCHEMA_VERSION: raise SchemaVersionError(f"Expected schema {SCHEMA_VERSION}, found {row[0]}")
+            db.execute("CREATE TABLE IF NOT EXISTS decision_cycles (cycle_id TEXT PRIMARY KEY, created_at TEXT NOT NULL, status TEXT NOT NULL, eligible INTEGER NOT NULL, payload TEXT NOT NULL)")
+            for table in TABLES[1:]:
+                if table in {"paper_orders","fills","positions","trades","portfolio_snapshots"}:
+                    db.execute(f"CREATE TABLE IF NOT EXISTS {table} (record_id TEXT PRIMARY KEY, cycle_id TEXT, created_at TEXT NOT NULL, payload TEXT NOT NULL)")
+                else:
+                    db.execute(f"CREATE TABLE IF NOT EXISTS {table} (id INTEGER PRIMARY KEY AUTOINCREMENT, cycle_id TEXT NOT NULL, created_at TEXT NOT NULL, payload TEXT NOT NULL, FOREIGN KEY(cycle_id) REFERENCES decision_cycles(cycle_id) ON DELETE CASCADE)")
+    def validate_schema(self):
+        with self.connect() as db:
+            row=db.execute("SELECT version FROM schema_metadata").fetchone()
+            if row is None or row[0]!=SCHEMA_VERSION: raise SchemaVersionError("Database schema version is invalid.")
+    def save_cycle(self,result):
+        created=result.timestamp.astimezone(timezone.utc).isoformat()
+        try:
+            with self.connect() as db:
+                db.execute("INSERT INTO decision_cycles VALUES (?,?,?,?,?)",(result.cycle_id,created,result.final_status,int(result.paper_execution_eligible),serialize(result)))
+                self._insert_cycle_details(db,result,created)
+        except sqlite3.IntegrityError as exc:
+            raise DuplicateCycleError(result.cycle_id) from exc
+    def _insert_cycle_details(self,db,result,created):
+        rows=(("snapshots",result.snapshot),("evidence_summaries",result.evidence_summary),
+              ("recommendations",result.recommendation),("risk_assessments",result.risk_assessment))
+        for table,value in rows: db.execute(f"INSERT INTO {table}(cycle_id,created_at,payload) VALUES(?,?,?)",(result.cycle_id,created,serialize(value)))
+        for report in result.specialist_reports: db.execute("INSERT INTO specialist_reports(cycle_id,created_at,payload) VALUES(?,?,?)",(result.cycle_id,created,serialize(report)))
+        for reason in result.rejection_reasons: db.execute("INSERT INTO rejection_reasons(cycle_id,created_at,payload) VALUES(?,?,?)",(result.cycle_id,created,serialize({"reason":reason})))
+    def save_portfolio(self,portfolio,cycle_id=None):
+        now=portfolio.clock().astimezone(timezone.utc).isoformat()
+        with self.connect() as db:
+            for table,records,key in (("paper_orders",portfolio.orders.values(),"order_id"),("fills",portfolio.fills.values(),"fill_id"),("positions",portfolio.positions.values(),"symbol"),("trades",portfolio.trades,"trade_id")):
+                for record in records:
+                    rid=getattr(record,key); db.execute(f"INSERT OR REPLACE INTO {table} VALUES(?,?,?,?)",(rid,cycle_id,now,serialize(record)))
+            rid=f"portfolio-{now}"
+            payload={"account":portfolio.account(),"positions":tuple(portfolio.positions.values()),"transitions":tuple(portfolio.transitions)}
+            db.execute("INSERT INTO portfolio_snapshots VALUES(?,?,?,?)",(rid,cycle_id,now,serialize(payload)))
+    def load_cycle(self,cycle_id):
+        with self.connect() as db:
+            row=db.execute("SELECT payload FROM decision_cycles WHERE cycle_id=?",(cycle_id,)).fetchone()
+        return json.loads(row[0]) if row else None
+    def recent_cycles(self,limit=20): return self._query("SELECT payload FROM decision_cycles ORDER BY created_at DESC LIMIT ?",(limit,))
+    def paper_trades(self,limit=20): return self._query("SELECT payload FROM trades ORDER BY created_at DESC LIMIT ?",(limit,))
+    def current_portfolio(self):
+        rows=self._query("SELECT payload FROM portfolio_snapshots ORDER BY created_at DESC LIMIT 1")
+        return rows[0] if rows else None
+    def rejection_history(self,limit=20): return self._query("SELECT payload FROM rejection_reasons ORDER BY id DESC LIMIT ?",(limit,))
+    def _query(self,sql,params=()):
+        with self.connect() as db: rows=db.execute(sql,params).fetchall()
+        return [json.loads(row[0]) for row in rows]

@@ -1,5 +1,11 @@
 # Changelog
 
+## Foundation IV.4 - SQLite Audit Journal and Persistence
+
+- Added explicit schema versioning and initialization.
+- Added transactional cycle and paper-portfolio persistence.
+- Added deterministic serialization, duplicate protection, and query commands.
+
 ## Foundation IV.3 - Persistent Paper Portfolio Lifecycle
 
 - Added paper accounts, positions, orders, fills, trades, and transition records.

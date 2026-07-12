@@ -3,6 +3,7 @@ from dataclasses import replace
 from datetime import datetime, timedelta, timezone
 import unittest
 from agents.base.base_specialist import BaseSpecialist
+from agents.trend.trend_specialist import TrendSpecialist
 from core.decision_cycle import DecisionCycle
 from core.evidence.evidence_analyzer import EvidenceAnalyzer
 from models.decision_packet import DecisionPacket
@@ -24,6 +25,10 @@ class BrokenSpecialist(BaseSpecialist):
     def __init__(self): super().__init__("Broken Specialist")
     def analyze(self, snapshot): raise RuntimeError("expected failure")
 class WeightedEvidenceTests(unittest.TestCase):
+    def test_trend_explanation_matches_direction(self):
+        _,bullish=TrendSpecialist().analyze(snapshot("Bullish"))
+        _,bearish=TrendSpecialist().analyze(snapshot("Bearish"))
+        self.assertIn("bullish",bullish.evidence[0]); self.assertIn("bearish",bearish.evidence[0])
     def test_unanimous_bullish(self):
         result = summary(*(signal(source) for source in SOURCES))
         self.assertEqual(5, result.bullish); self.assertGreater(result.directional_score, 0.79)

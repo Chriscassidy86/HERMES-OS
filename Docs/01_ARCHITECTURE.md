@@ -31,3 +31,9 @@ carry directional cycle eligibility and Risk Manager approval. Deterministic
 market fills apply configured fees and slippage, update cash and exposure, and
 record every state transition. Short selling is rejected until its accounting
 and margin model can be proven safe. No exchange interface exists.
+
+Foundation IV.4 adds a persistence abstraction boundary through
+`SQLiteAuditJournal`. Schema-versioned, transaction-safe SQLite records capture
+cycles and every decision artifact plus portfolio state and rejection history.
+Serialization is deterministic JSON with UTC timestamps. Initialization is
+explicit and duplicate cycle identifiers fail closed.

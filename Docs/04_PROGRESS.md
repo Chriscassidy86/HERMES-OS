@@ -12,6 +12,10 @@ Foundation IV.3 completed: deterministic long-only paper order proposals,
 market fills, fees, slippage, positions, valuation, realized/unrealized P&L,
 accounting invariants, rejection reasons, and audited order transitions.
 
+Foundation IV.4 completed: schema-versioned SQLite initialization, transactional
+and idempotent cycle persistence, paper lifecycle persistence, portfolio reload,
+operator queries, deterministic serialization, and migration validation.
+
 Not implemented: persistent paper portfolio, simulated orders, weighted
 evidence, additional production specialists, external market data, exchange
 connectivity, or live trading.

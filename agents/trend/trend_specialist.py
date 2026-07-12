@@ -55,7 +55,7 @@ class TrendSpecialist(BaseSpecialist):
                 timeframe=snapshot.timeframe,
                 priority=2,
                 timestamp=snapshot.timestamp,
-                evidence=("Market trend input is bearish.",),
+                evidence=("Market trend input is bullish.",),
             )
 
             return report, signal
@@ -79,7 +79,7 @@ class TrendSpecialist(BaseSpecialist):
                 timeframe=snapshot.timeframe,
                 priority=2,
                 timestamp=snapshot.timestamp,
-                evidence=("Market trend input is bullish.",),
+                evidence=("Market trend input is bearish.",),
             )
             return report, signal
 

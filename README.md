@@ -30,6 +30,9 @@ python -m unittest discover -s tests -v
 Run the isolated simulated portfolio example with
 `python examples/paper_portfolio_demo.py`.
 
+Run `python examples/audit_journal_demo.py` to initialize a local SQLite audit
+journal and save one supplied-data cycle. No network or exchange is contacted.
+
 The project currently uses only the Python standard library.
 
 ## Safety boundary
