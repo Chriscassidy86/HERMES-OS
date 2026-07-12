@@ -23,7 +23,7 @@ logs/
 
 # Data
 data/
-paper_trading/
+data/paper_trading/
 backtests/
 exports/
 

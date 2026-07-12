@@ -1,5 +1,12 @@
 # Changelog
 
+## Foundation IV.3 - Persistent Paper Portfolio Lifecycle
+
+- Added paper accounts, positions, orders, fills, trades, and transition records.
+- Added deterministic market-fill fees and slippage.
+- Added cash, equity, exposure, and P&L accounting.
+- Enforced cycle eligibility, Risk Manager veto, and safe long-only behavior.
+
 ## Foundation IV.2 - Weighted Multi-Specialist Intelligence
 
 - Added Market Regime, Momentum, Volume, and Volatility specialists.

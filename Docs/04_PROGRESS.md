@@ -8,6 +8,10 @@ Foundation IV.2 completed: five deterministic specialists, strict signal
 validation, explicit weighted evidence configuration, contribution explanations,
 conflict/exclusion reporting, and multi-specialist cycle tests.
 
+Foundation IV.3 completed: deterministic long-only paper order proposals,
+market fills, fees, slippage, positions, valuation, realized/unrealized P&L,
+accounting invariants, rejection reasons, and audited order transitions.
+
 Not implemented: persistent paper portfolio, simulated orders, weighted
 evidence, additional production specialists, external market data, exchange
 connectivity, or live trading.

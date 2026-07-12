@@ -27,6 +27,9 @@ python examples/workflows/morning_meeting.py
 python -m unittest discover -s tests -v
 ```
 
+Run the isolated simulated portfolio example with
+`python examples/paper_portfolio_demo.py`.
+
 The project currently uses only the Python standard library.
 
 ## Safety boundary
@@ -35,7 +38,7 @@ The project currently uses only the Python standard library.
 - No broker, exchange, API-key, or Binance.US integration exists.
 - `LIVE_TRADING` remains `False`.
 - Invalid or empty evidence and risk rejection always prevent eligibility.
-- Persistent paper portfolios and simulated orders are outside Foundation IV.2.
+- Paper orders are local deterministic simulations only; no exchange is contacted.
 
 ## Current limitations
 

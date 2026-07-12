@@ -24,3 +24,10 @@ source reliability, confidence, strength, freshness, and timeframe compatibility
 Neutral evidence is recorded but excluded from directional confidence. The
 summary exposes contributions, conflicts, exclusions, directional score, and
 final confidence so every recommendation remains explainable.
+
+Foundation IV.3 adds an in-memory `PaperPortfolio` aggregate and immutable
+account, position, order, fill, trade, and transition records. A proposal must
+carry directional cycle eligibility and Risk Manager approval. Deterministic
+market fills apply configured fees and slippage, update cash and exposure, and
+record every state transition. Short selling is rejected until its accounting
+and margin model can be proven safe. No exchange interface exists.
