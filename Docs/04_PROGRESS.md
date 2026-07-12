@@ -27,5 +27,8 @@ Foundation VI completed: performance metrics, specialist accuracy and
 calibration, daily/weekly/drawdown/win-loss reports, and recommendation-only
 learning proposals with minimum samples and mandatory human approval.
 
+Foundation VII completed as local JSON/text reporting. No website or dashboard
+was added; the operator layer remains read-only and paper-mode only.
+
 Not implemented: orchestrated sessions, performance learning, backtesting,
 production hardening, exchange connectivity, or live trading.

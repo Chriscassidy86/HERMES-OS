@@ -53,3 +53,8 @@ specialist scorecards, drawdown, expectancy, profit factor, calibration, and
 daily/weekly reports. `LearningEngine` only emits immutable proposed
 configuration patches with evidence, sample size, estimates, confidence, risks,
 and mandatory human approval. It has no configuration write path.
+
+Foundation VII adds read-only `OperatorReports` and a JSON CLI for system state,
+latest decisions/evidence, paper portfolio, positions, trades, P&L, scorecards,
+rejections, risk, and provider health. Reports reuse journal and performance
+services; no business logic or trading controls exist in the interface.

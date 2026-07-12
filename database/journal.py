@@ -72,7 +72,7 @@ class SQLiteAuditJournal:
                     rid=getattr(record,key); db.execute(f"INSERT OR REPLACE INTO {table} VALUES(?,?,?,?)",(rid,cycle_id,now,serialize(record)))
             rid=f"portfolio-{now}"
             payload={"account":portfolio.account(),"positions":tuple(portfolio.positions.values()),"transitions":tuple(portfolio.transitions)}
-            db.execute("INSERT INTO portfolio_snapshots VALUES(?,?,?,?)",(rid,cycle_id,now,serialize(payload)))
+            db.execute("INSERT OR REPLACE INTO portfolio_snapshots VALUES(?,?,?,?)",(rid,cycle_id,now,serialize(payload)))
     def load_cycle(self,cycle_id):
         with self.connect() as db:
             row=db.execute("SELECT payload FROM decision_cycles WHERE cycle_id=?",(cycle_id,)).fetchone()

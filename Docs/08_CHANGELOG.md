@@ -1,5 +1,11 @@
 # Changelog
 
+## Foundation VII - Operator Reports and Paper Dashboard Foundation
+
+- Added read-only JSON reports for decisions, evidence, portfolio, trades, P&L,
+  scorecards, rejections, risk, provider health, and system status.
+- Added a local CLI without exchange controls or web assets.
+
 ## Foundation VI - Performance and Learning Engine
 
 - Added paper outcome, strategy, specialist, drawdown, and period reports.

@@ -50,6 +50,8 @@ Run `python examples/paper_session_demo.py` for one complete persisted paper-onl
 Run `python examples/performance_learning_demo.py` to calculate paper performance
 and emit a human-review-only learning proposal.
 
+Use `python -m reports.operator_cli <database> <report>` for read-only local JSON reports.
+
 ## Current limitations
 
 - Specialist rules are intentionally simple deterministic heuristics.
