@@ -36,5 +36,8 @@ fees/slippage, portfolio history, benchmarks, metrics, and exports.
 Foundation IX completed: configuration, logging, lifecycle/health checks,
 backup/restore, paper-only containers, CI, and deployment documentation.
 
+Foundation X completed: RC1 architecture/security/dependency/migration/install,
+replay/session, operations, safety, incident, release, and limitation review.
+
 Not implemented: orchestrated sessions, performance learning, backtesting,
 production hardening, exchange connectivity, or live trading.

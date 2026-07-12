@@ -1,5 +1,11 @@
 # Changelog
 
+## Foundation X - Paper Trading RC1
+
+- Completed release audit and required operator/safety/incident documentation.
+- Added foundation ledger, fresh-install and forbidden-live-capability tests.
+- Confirmed PAPER MODE ONLY; no deployment, merge, or push performed.
+
 ## Foundation IX - Paper Production Hardening
 
 - Added typed paper-only environment settings and rotating structured logs.

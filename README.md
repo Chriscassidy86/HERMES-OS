@@ -58,6 +58,9 @@ Fixture results are never presented as evidence of real profitability.
 See `Docs/DEPLOYMENT.md` for paper-only Docker and VPS guidance. Live mode is
 rejected by configuration validation and no exchange credentials are supported.
 
+RC1 operations, safety, incident response, and release limitations are documented
+under `Docs/`. `FOUNDATIONS.md` records milestone acceptance and local commits.
+
 ## Current limitations
 
 - Specialist rules are intentionally simple deterministic heuristics.
