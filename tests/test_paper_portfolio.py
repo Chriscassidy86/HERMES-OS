@@ -63,6 +63,11 @@ class PaperPortfolioTests(unittest.TestCase):
         book=portfolio(); order=book.propose(eligible_cycle(),"100"); book.execute_market(order.order_id); before=book.account()
         with self.assertRaises(ValueError): book.close_position("BTC/USD","-1")
         self.assertEqual(before,book.account()); self.assertIn("BTC/USD",book.positions)
+    def test_non_finite_mark_price_does_not_mutate(self):
+        book=portfolio(); order=book.propose(eligible_cycle(),"100"); book.execute_market(order.order_id); before=book.positions["BTC/USD"]
+        for price in ("NaN","Infinity","-Infinity"):
+            with self.assertRaises(ValueError): book.mark_price("BTC/USD",price)
+            self.assertEqual(before,book.positions["BTC/USD"])
     def test_duplicate_cycle_order_does_not_overwrite(self):
         book=portfolio(); first=book.propose(eligible_cycle(),"100")
         with self.assertRaises(ValueError): book.propose(eligible_cycle(),"100")

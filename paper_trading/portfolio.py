@@ -67,7 +67,7 @@ class PaperPortfolio:
 
     def mark_price(self,symbol,price):
         price=Decimal(str(price))
-        if price<=0: raise ValueError("Mark price must be positive.")
+        if not price.is_finite() or price<=0: raise ValueError("Mark price must be finite and positive.")
         self.positions[symbol]=replace(self.positions[symbol],current_price=price)
 
     def close_position(self,symbol,price):
