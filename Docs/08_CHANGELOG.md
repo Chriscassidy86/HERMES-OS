@@ -1,5 +1,11 @@
 # Changelog
 
+## Foundation VI - Performance and Learning Engine
+
+- Added paper outcome, strategy, specialist, drawdown, and period reports.
+- Added deterministic P&L, expectancy, profit factor, drawdown, and calibration.
+- Added human-review configuration proposals that cannot mutate production rules.
+
 ## Foundation V.2 - Orchestrated Paper Trading Sessions
 
 - Composed validated data, specialists, risk, paper execution, persistence, and health.

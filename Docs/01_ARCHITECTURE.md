@@ -47,3 +47,9 @@ Foundation V.2 composes provider, decision cycle, Risk Manager, paper portfolio,
 SQLite journal, and health reporting in `PaperTradingSession`. Duplicate cycles
 are persisted before execution and suppressed. `ScheduledPaperSession.run_once`
 is synchronous, injected-clock, and failure-isolated with no background threads.
+
+Foundation VI evaluates closed paper outcomes with deterministic strategy and
+specialist scorecards, drawdown, expectancy, profit factor, calibration, and
+daily/weekly reports. `LearningEngine` only emits immutable proposed
+configuration patches with evidence, sample size, estimates, confidence, risks,
+and mandatory human approval. It has no configuration write path.

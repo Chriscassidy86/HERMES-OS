@@ -47,6 +47,9 @@ Run `python examples/market_data_demo.py` for the deterministic fixture provider
 
 Run `python examples/paper_session_demo.py` for one complete persisted paper-only session.
 
+Run `python examples/performance_learning_demo.py` to calculate paper performance
+and emit a human-review-only learning proposal.
+
 ## Current limitations
 
 - Specialist rules are intentionally simple deterministic heuristics.

@@ -23,5 +23,9 @@ and offline deterministic tests.
 Foundation V.2 completed: one-cycle and scheduled paper sessions, duplicate
 protection, failure isolation, structured health, persistence, and state reload.
 
+Foundation VI completed: performance metrics, specialist accuracy and
+calibration, daily/weekly/drawdown/win-loss reports, and recommendation-only
+learning proposals with minimum samples and mandatory human approval.
+
 Not implemented: orchestrated sessions, performance learning, backtesting,
 production hardening, exchange connectivity, or live trading.
