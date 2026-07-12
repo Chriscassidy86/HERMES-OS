@@ -64,3 +64,8 @@ session, paper fee/slippage model, equity history, benchmark comparison, metrics
 and trade/decision exports. A decision receives only the current candle-derived
 snapshot; the next candle is read only after the decision to evaluate outcome,
 preventing look-ahead access.
+
+Foundation IX hardens paper operation with validated environment settings,
+non-overridable paper mode, rotating JSON logs, startup/database/provider checks,
+graceful shutdown state, validated SQLite backup/restore, non-root container
+files, healthcheck, and non-deploying CI tests and secret scanning.

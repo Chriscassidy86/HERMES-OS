@@ -33,5 +33,8 @@ was added; the operator layer remains read-only and paper-mode only.
 Foundation VIII completed: deterministic replay, no-look-ahead separation,
 fees/slippage, portfolio history, benchmarks, metrics, and exports.
 
+Foundation IX completed: configuration, logging, lifecycle/health checks,
+backup/restore, paper-only containers, CI, and deployment documentation.
+
 Not implemented: orchestrated sessions, performance learning, backtesting,
 production hardening, exchange connectivity, or live trading.

@@ -1,5 +1,11 @@
 # Changelog
 
+## Foundation IX - Paper Production Hardening
+
+- Added typed paper-only environment settings and rotating structured logs.
+- Added startup/health/shutdown and validated SQLite backup/restore.
+- Added non-root Docker/Compose healthchecks and non-deploying CI safety checks.
+
 ## Foundation VIII - Deterministic Backtest and Replay Framework
 
 - Added historical fixture loading, replay clock/session, metrics, benchmark, and exports.

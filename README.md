@@ -55,6 +55,9 @@ Use `python -m reports.operator_cli <database> <report>` for read-only local JSO
 Run `python examples/replay_demo.py` for an artificial deterministic fixture.
 Fixture results are never presented as evidence of real profitability.
 
+See `Docs/DEPLOYMENT.md` for paper-only Docker and VPS guidance. Live mode is
+rejected by configuration validation and no exchange credentials are supported.
+
 ## Current limitations
 
 - Specialist rules are intentionally simple deterministic heuristics.
