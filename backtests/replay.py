@@ -30,6 +30,14 @@ class ReplayConfig:
 class ReplayResult:
     config:ReplayConfig; strategy:object; benchmark_return:float; outcomes:tuple
     decisions:tuple; equity_history:tuple; risk_rejections:int; no_trade_count:int
+    metrics:object=None
+
+@dataclass(frozen=True)
+class ReplayMetrics:
+    total_return:float; win_rate:float; loss_rate:float; maximum_drawdown:float
+    profit_factor:float|None; expectancy:float; average_holding_seconds:float
+    trade_count:int; risk_rejection_count:int; no_trade_count:int
+    specialist_accuracy:tuple
 
 class ReplaySession:
     def __init__(self,loader,config=ReplayConfig()): self.loader=loader; self.config=config; self.clock=ReplayClock()
@@ -52,7 +60,11 @@ class ReplaySession:
             outcomes.append(outcome); equity+=outcome.pnl; history.append(equity)
         strategy=PerformanceEngine().strategy_scorecard(outcomes,self.config.starting_balance)
         benchmark=round((candles[-1].close/candles[0].close-1)*100,4)
-        return ReplayResult(self.config,strategy,benchmark,tuple(outcomes),tuple(decisions),tuple(round(v,4) for v in history),rejected,no_trade)
+        holding=sum((item.closed_at-item.opened_at).total_seconds() for item in outcomes)/len(outcomes) if outcomes else 0.0
+        specialist=PerformanceEngine().specialist_scorecards(outcomes)
+        metrics=ReplayMetrics(round(strategy.total_pnl/self.config.starting_balance*100,4),strategy.win_rate,strategy.loss_rate,
+            strategy.maximum_drawdown,strategy.profit_factor,strategy.expectancy,round(holding,2),strategy.sample_size,rejected,no_trade,specialist)
+        return ReplayResult(self.config,strategy,benchmark,tuple(outcomes),tuple(decisions),tuple(round(v,4) for v in history),rejected,no_trade,metrics)
     @staticmethod
     def export(result,directory):
         directory=Path(directory); directory.mkdir(parents=True,exist_ok=True)

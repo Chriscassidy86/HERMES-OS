@@ -12,3 +12,6 @@ Other reports are `cycle`, `evidence`, `portfolio`, `positions`, `trades`, `pnl`
 Logs are rotating structured JSON. Stop cleanly before maintenance. Back up and
 restore only with the validated functions in `database.maintenance`. Preserve
 the database and logs during incidents; never insert credentials into either.
+
+CLI maintenance: `python -m database.maintenance backup SOURCE DESTINATION` and
+`python -m database.maintenance restore BACKUP TARGET`. Stop Hermes before restore.

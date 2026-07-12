@@ -16,3 +16,10 @@ def restore_database(backup,target):
     SQLiteAuditJournal(backup).validate_schema(); target.parent.mkdir(parents=True,exist_ok=True)
     temporary=target.with_suffix(target.suffix+".restore"); shutil.copy2(backup,temporary); temporary.replace(target)
     SQLiteAuditJournal(target).validate_schema(); return target
+
+def main():
+    import argparse
+    parser=argparse.ArgumentParser(); parser.add_argument("operation",choices=("backup","restore")); parser.add_argument("source"); parser.add_argument("destination"); args=parser.parse_args()
+    result=backup_database(args.source,args.destination) if args.operation=="backup" else restore_database(args.source,args.destination)
+    print(result)
+if __name__=="__main__": main()

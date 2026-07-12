@@ -27,5 +27,8 @@ class StartupChecks:
 class GracefulShutdown:
     def __init__(self): self._event=Event()
     def request(self,*_): self._event.set()
+    def install_signal_handlers(self):
+        import signal
+        signal.signal(signal.SIGINT,self.request); signal.signal(signal.SIGTERM,self.request)
     @property
     def requested(self): return self._event.is_set()

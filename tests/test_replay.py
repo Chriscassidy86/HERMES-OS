@@ -19,6 +19,8 @@ class ReplayTests(unittest.TestCase):
     def test_slippage_impact(self): self.assertGreater(self.replay(slippage_bps=0).strategy.total_pnl,self.replay(slippage_bps=50).strategy.total_pnl)
     def test_losing_strategy(self): self.assertLess(self.replay((100,90,80)).strategy.total_pnl,0)
     def test_profitable_fixture_not_claimed_live(self): self.assertGreater(self.replay().strategy.total_pnl,0); self.assertEqual(2,self.replay().strategy.sample_size)
+    def test_required_result_summary_metrics(self):
+        metrics=self.replay().metrics; self.assertEqual(2,metrics.trade_count); self.assertGreater(metrics.average_holding_seconds,0); self.assertTrue(metrics.specialist_accuracy); self.assertNotEqual(0,metrics.total_return)
     def test_restart_consistency_and_exports(self):
         first=self.replay(); second=self.replay(); self.assertEqual(first.equity_history,second.equity_history)
         with tempfile.TemporaryDirectory() as directory:
