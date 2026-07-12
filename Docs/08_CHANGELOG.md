@@ -1,5 +1,10 @@
 # Changelog
 
+## Foundation V.2 - Orchestrated Paper Trading Sessions
+
+- Composed validated data, specialists, risk, paper execution, persistence, and health.
+- Added duplicate suppression, restart state reload, and synchronous scheduling.
+
 ## Foundation V.1 - Validated Market Data Providers
 
 - Added deterministic fixture and replay providers.

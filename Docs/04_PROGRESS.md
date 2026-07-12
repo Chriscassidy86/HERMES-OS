@@ -20,5 +20,8 @@ Foundation V.1 completed: provider protocol, fixture/replay providers, read-only
 public-data boundary, normalization, freshness, retry, timeout, health state,
 and offline deterministic tests.
 
+Foundation V.2 completed: one-cycle and scheduled paper sessions, duplicate
+protection, failure isolation, structured health, persistence, and state reload.
+
 Not implemented: orchestrated sessions, performance learning, backtesting,
 production hardening, exchange connectivity, or live trading.

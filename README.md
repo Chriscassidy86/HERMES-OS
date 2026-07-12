@@ -45,6 +45,8 @@ The project currently uses only the Python standard library.
 
 Run `python examples/market_data_demo.py` for the deterministic fixture provider.
 
+Run `python examples/paper_session_demo.py` for one complete persisted paper-only session.
+
 ## Current limitations
 
 - Specialist rules are intentionally simple deterministic heuristics.

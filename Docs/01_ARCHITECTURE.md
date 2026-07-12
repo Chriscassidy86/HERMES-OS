@@ -42,3 +42,8 @@ Foundation V.1 introduces the `MarketDataProvider` boundary, snapshot builder,
 fixture and replay providers, and a credential-free read-only public wrapper.
 Deterministic fixtures remain the default. Required fields, normalization,
 freshness, retries, timeout, and provider health all fail closed.
+
+Foundation V.2 composes provider, decision cycle, Risk Manager, paper portfolio,
+SQLite journal, and health reporting in `PaperTradingSession`. Duplicate cycles
+are persisted before execution and suppressed. `ScheduledPaperSession.run_once`
+is synchronous, injected-clock, and failure-isolated with no background threads.

@@ -82,6 +82,13 @@ class SQLiteAuditJournal:
     def current_portfolio(self):
         rows=self._query("SELECT payload FROM portfolio_snapshots ORDER BY created_at DESC LIMIT 1")
         return rows[0] if rows else None
+    def restore_portfolio(self,portfolio):
+        from paper_trading.models import PaperPosition
+        state=self.current_portfolio()
+        if state is None: return False
+        portfolio.cash=Decimal(state["account"]["cash_balance"])
+        portfolio.positions={item["symbol"]:PaperPosition(item["symbol"],Decimal(item["quantity"]),Decimal(item["average_entry_price"]),Decimal(item["current_price"]),Decimal(item["entry_fees"])) for item in state["positions"]}
+        return True
     def rejection_history(self,limit=20): return self._query("SELECT payload FROM rejection_reasons ORDER BY id DESC LIMIT ?",(limit,))
     def _query(self,sql,params=()):
         with self.connect() as db: rows=db.execute(sql,params).fetchall()
