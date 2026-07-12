@@ -16,6 +16,16 @@ def portfolio(cash="10000",fee="10",slippage="5"):
     return PaperPortfolio(Decimal(cash),Decimal(fee),Decimal(slippage),lambda:NOW)
 
 class PaperPortfolioTests(unittest.TestCase):
+    def test_invalid_accounting_configuration_is_rejected(self):
+        for values in (
+            {"starting_cash": "NaN"},
+            {"starting_cash": 0},
+            {"fee_bps": -1},
+            {"slippage_bps": "Infinity"},
+        ):
+            with self.subTest(values=values), self.assertRaises(ValueError):
+                PaperPortfolio(**values)
+
     def test_open_long_position(self):
         book=portfolio(); order=book.propose(eligible_cycle(),"100"); order,fill=book.execute_market(order.order_id)
         self.assertEqual(OrderStatus.FILLED,order.status); self.assertIn("BTC/USD",book.positions)

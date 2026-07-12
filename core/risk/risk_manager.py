@@ -18,6 +18,8 @@ III - Intelligence Layer
 ===============================================================================
 """
 
+from math import isfinite
+
 from models.recommendation import Recommendation
 from models.risk_assessment import RiskAssessment
 
@@ -29,14 +31,20 @@ class RiskManager:
 
     def evaluate(self, recommendation: Recommendation) -> RiskAssessment:
 
-        if recommendation.action == "WAIT":
+        if (
+            recommendation.action not in {"LONG", "SHORT"}
+            or not isinstance(recommendation.confidence, (int, float))
+            or isinstance(recommendation.confidence, bool)
+            or not isfinite(recommendation.confidence)
+            or not 0 <= recommendation.confidence <= 100
+        ):
             return RiskAssessment(
                 symbol=recommendation.symbol,
                 approved=False,
                 risk_score=100,
                 max_position_size=0.0,
                 max_loss=0.0,
-                reason="No trade recommended.",
+                reason="Recommendation is not a valid directional trade.",
             )
 
         if recommendation.confidence >= 80:

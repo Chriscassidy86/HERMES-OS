@@ -22,6 +22,12 @@ class PaperPortfolio:
     def __init__(self, starting_cash=Decimal("10000"), fee_bps=Decimal("10"), slippage_bps=Decimal("5"), clock=None):
         self.starting_cash=Decimal(starting_cash); self.cash=self.starting_cash
         self.fee_bps=Decimal(fee_bps); self.slippage_bps=Decimal(slippage_bps)
+        if not self.starting_cash.is_finite() or self.starting_cash <= 0:
+            raise ValueError("Starting cash must be finite and positive.")
+        if not self.fee_bps.is_finite() or self.fee_bps < 0:
+            raise ValueError("Fee basis points must be finite and non-negative.")
+        if not self.slippage_bps.is_finite() or self.slippage_bps < 0:
+            raise ValueError("Slippage basis points must be finite and non-negative.")
         self.clock=clock or (lambda: datetime.now(timezone.utc)); self.positions={}
         self.orders={}; self.fills={}; self.trades=[]; self.transitions=[]; self._ids=count(1)
 
