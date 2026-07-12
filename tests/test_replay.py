@@ -27,4 +27,14 @@ class ReplayTests(unittest.TestCase):
             ReplaySession.export(first,directory); import pathlib; self.assertTrue((pathlib.Path(directory)/"trades.csv").exists()); self.assertTrue((pathlib.Path(directory)/"decisions.json").exists())
     def test_no_trade_and_rejection_counts(self):
         result=ReplaySession(FixtureCandleLoader(candles((100,100,100),"Sideways"))).run(); self.assertEqual(2,result.no_trade_count); self.assertEqual(2,result.risk_rejections)
+    def test_invalid_replay_inputs_fail_closed(self):
+        invalid_cases=(
+            (candles((0,105,110)),ReplayConfig()),
+            (tuple(reversed(candles())),ReplayConfig()),
+            (candles(),ReplayConfig(starting_balance=0)),
+            (candles(),ReplayConfig(fee_bps=-1)),
+        )
+        for values,config in invalid_cases:
+            with self.subTest(config=config),self.assertRaises(ValueError):
+                ReplaySession(FixtureCandleLoader(values),config).run()
 if __name__=="__main__": unittest.main()

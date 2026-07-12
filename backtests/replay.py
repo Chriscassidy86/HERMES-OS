@@ -1,6 +1,7 @@
 """Deterministic historical replay with strict decision/future separation."""
 from dataclasses import asdict,dataclass
-from datetime import datetime
+from datetime import datetime,timezone
+from math import isfinite
 import csv,json
 from pathlib import Path
 from agents.performance.performance_engine import PerformanceEngine
@@ -42,8 +43,8 @@ class ReplayMetrics:
 class ReplaySession:
     def __init__(self,loader,config=ReplayConfig()): self.loader=loader; self.config=config; self.clock=ReplayClock()
     def run(self):
-        candles=self.loader.load()
-        if len(candles)<2: raise ValueError("Replay requires at least two candles.")
+        candles=tuple(self.loader.load())
+        self._validate_inputs(candles)
         decisions=[]; outcomes=[]; equity=self.config.starting_balance; history=[equity]; rejected=no_trade=0
         for index in range(len(candles)-1):
             current=candles[index]; self.clock.set(current.timestamp)
@@ -65,6 +66,29 @@ class ReplaySession:
         metrics=ReplayMetrics(round(strategy.total_pnl/self.config.starting_balance*100,4),strategy.win_rate,strategy.loss_rate,
             strategy.maximum_drawdown,strategy.profit_factor,strategy.expectancy,round(holding,2),strategy.sample_size,rejected,no_trade,specialist)
         return ReplayResult(self.config,strategy,benchmark,tuple(outcomes),tuple(decisions),tuple(round(v,4) for v in history),rejected,no_trade,metrics)
+    def _validate_inputs(self,candles):
+        config_values=(self.config.starting_balance,self.config.fee_bps,self.config.slippage_bps)
+        if not all(isinstance(value,(int,float)) and not isinstance(value,bool) and isfinite(value) for value in config_values):
+            raise ValueError("Replay configuration values must be finite numbers.")
+        if self.config.starting_balance<=0 or self.config.fee_bps<0 or self.config.slippage_bps<0:
+            raise ValueError("Replay balance must be positive and costs must be non-negative.")
+        if len(candles)<2: raise ValueError("Replay requires at least two candles.")
+        symbol=candles[0].symbol; previous_timestamp=None
+        for candle in candles:
+            if candle.symbol!=symbol: raise ValueError("Replay candles must use one symbol.")
+            if not isinstance(candle.timestamp,datetime) or candle.timestamp.tzinfo is None:
+                raise ValueError("Replay candle timestamps must be timezone-aware.")
+            timestamp=candle.timestamp.astimezone(timezone.utc)
+            if previous_timestamp is not None and timestamp<=previous_timestamp:
+                raise ValueError("Replay candle timestamps must be strictly increasing.")
+            previous_timestamp=timestamp
+            positive=(candle.close,candle.average_volume,candle.previous_close,candle.short_ma,candle.long_ma)
+            if not all(isinstance(value,(int,float)) and not isinstance(value,bool) and isfinite(value) and value>0 for value in positive):
+                raise ValueError("Replay price and average inputs must be finite and positive.")
+            if not isinstance(candle.volume,(int,float)) or isinstance(candle.volume,bool) or not isfinite(candle.volume) or candle.volume<0:
+                raise ValueError("Replay volume must be finite and non-negative.")
+            if not isinstance(candle.volatility,(int,float)) or isinstance(candle.volatility,bool) or not isfinite(candle.volatility) or candle.volatility<0:
+                raise ValueError("Replay volatility must be finite and non-negative.")
     @staticmethod
     def export(result,directory):
         directory=Path(directory); directory.mkdir(parents=True,exist_ok=True)
