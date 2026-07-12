@@ -9,6 +9,10 @@ Inspect status using `python -m reports.operator_cli data/hermes.sqlite3 status`
 Other reports are `cycle`, `evidence`, `portfolio`, `positions`, `trades`, `pnl`,
 `rejections`, `risk`, and `provider`.
 
+On application restart, restore the latest portfolio snapshot before running a
+new paper session. Restoration includes order/fill/trade lifecycle history and
+continues trade identifiers without reusing persisted IDs.
+
 Logs are rotating structured JSON. Stop cleanly before maintenance. Back up and
 restore only with the validated functions in `database.maintenance`. Preserve
 the database and logs during incidents; never insert credentials into either.

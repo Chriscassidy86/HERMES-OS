@@ -1,4 +1,5 @@
 """Foundation IV.4 SQLite audit journal tests."""
+from dataclasses import replace
 from datetime import datetime, timezone
 from pathlib import Path
 import sqlite3, tempfile, unittest
@@ -47,6 +48,13 @@ class JournalTests(unittest.TestCase):
         result=cycle(); book=PaperPortfolio(clock=lambda:NOW); order=book.propose(result,102); book.execute_market(order.order_id)
         self.journal.save_portfolio(book,result.cycle_id); loaded=self.journal.current_portfolio()
         self.assertEqual("9979.97",loaded["account"]["cash_balance"])
+    def test_restored_trade_ids_do_not_overwrite_history(self):
+        first=cycle(); book=PaperPortfolio(clock=lambda:NOW); order=book.propose(first,102); book.execute_market(order.order_id); book.close_position("BTC/USD",105)
+        self.journal.save_portfolio(book,first.cycle_id)
+        restored=PaperPortfolio(clock=lambda:NOW); self.assertTrue(self.journal.restore_portfolio(restored))
+        second=replace(first,cycle_id="second-cycle"); order=restored.propose(second,102); restored.execute_market(order.order_id); restored.close_position("BTC/USD",106)
+        self.journal.save_portfolio(restored,second.cycle_id)
+        self.assertEqual({"PT-000001","PT-000002"},{trade["trade_id"] for trade in self.journal.paper_trades()})
     def test_schema_version_validation(self):
         with self.journal.connect() as db: db.execute("UPDATE schema_metadata SET version=999")
         with self.assertRaises(SchemaVersionError): self.journal.validate_schema()

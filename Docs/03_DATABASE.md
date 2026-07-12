@@ -8,3 +8,6 @@ rejection reasons. Payloads use deterministic sorted JSON and UTC timestamps.
 Initialize with `python -m database.cli data/hermes.sqlite3 init`. Inspect with
 the `cycles`, `trades`, `portfolio`, or `rejections` command. Writes are
 transactional, cycle IDs are unique, and imports never initialize a database.
+Portfolio snapshots include the complete simulated order, fill, position, trade,
+and transition state. Restart restoration also advances durable trade identifiers,
+so subsequent saves cannot replace earlier trade history.

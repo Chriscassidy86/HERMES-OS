@@ -6,9 +6,9 @@ learning-proposal, replay, health, backup, and container stack. Run
 `python examples/workflows/morning_meeting.py` and test with
 `python -m unittest discover -s tests -v`.
 
-Paper eligibility is informational. No order is created or placed. Live trading,
-exchange connections, API keys, persistent portfolio state, and paper-order
-simulation are absent by design.
+Paper eligibility is informational and cannot place a real order. Live trading,
+exchange connections, API keys, and real execution are absent by design. Local
+paper-order simulation and SQLite-backed portfolio restoration are implemented.
 
 No authenticated exchange client, private API, funded-account connection,
 withdrawal capability, or live order path exists. RC1 is long-only for simulated
