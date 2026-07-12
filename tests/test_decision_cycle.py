@@ -3,6 +3,7 @@
 from datetime import datetime, timezone
 import unittest
 from math import inf
+from unittest.mock import patch
 
 from agents.base.base_specialist import BaseSpecialist
 from agents.trend.trend_specialist import TrendSpecialist
@@ -44,6 +45,12 @@ class LowConfidenceSpecialist(BaseSpecialist):
 
 
 class DecisionCycleTests(unittest.TestCase):
+    def test_signal_default_timestamp_is_created_per_instance(self):
+        with patch("models.signal.datetime") as clock:
+            clock.now.return_value = FIXED_TIME
+            signal = Signal("test", "WAIT", 0, 0, "4H", 1)
+        self.assertEqual(FIXED_TIME, signal.timestamp)
+
     def test_risk_manager_rejects_invalid_recommendations(self):
         manager = RiskManager()
         for action, confidence in (("WAIT", 100), ("TRANSFER", 100), ("LONG", inf)):
