@@ -1,5 +1,11 @@
 # Changelog
 
+## Foundation V.1 - Validated Market Data Providers
+
+- Added deterministic fixture and replay providers.
+- Added normalization, snapshot validation, freshness, retries, and health state.
+- Added a credential-free read-only public-data boundary; tests remain offline.
+
 ## Foundation IV.4 - SQLite Audit Journal and Persistence
 
 - Added explicit schema versioning and initialization.

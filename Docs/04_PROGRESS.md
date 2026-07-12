@@ -16,6 +16,9 @@ Foundation IV.4 completed: schema-versioned SQLite initialization, transactional
 and idempotent cycle persistence, paper lifecycle persistence, portfolio reload,
 operator queries, deterministic serialization, and migration validation.
 
-Not implemented: persistent paper portfolio, simulated orders, weighted
-evidence, additional production specialists, external market data, exchange
-connectivity, or live trading.
+Foundation V.1 completed: provider protocol, fixture/replay providers, read-only
+public-data boundary, normalization, freshness, retry, timeout, health state,
+and offline deterministic tests.
+
+Not implemented: orchestrated sessions, performance learning, backtesting,
+production hardening, exchange connectivity, or live trading.

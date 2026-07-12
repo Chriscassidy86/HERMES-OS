@@ -37,3 +37,8 @@ Foundation IV.4 adds a persistence abstraction boundary through
 cycles and every decision artifact plus portfolio state and rejection history.
 Serialization is deterministic JSON with UTC timestamps. Initialization is
 explicit and duplicate cycle identifiers fail closed.
+
+Foundation V.1 introduces the `MarketDataProvider` boundary, snapshot builder,
+fixture and replay providers, and a credential-free read-only public wrapper.
+Deterministic fixtures remain the default. Required fields, normalization,
+freshness, retries, timeout, and provider health all fail closed.

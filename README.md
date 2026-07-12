@@ -43,10 +43,12 @@ The project currently uses only the Python standard library.
 - Invalid or empty evidence and risk rejection always prevent eligibility.
 - Paper orders are local deterministic simulations only; no exchange is contacted.
 
+Run `python examples/market_data_demo.py` for the deterministic fixture provider.
+
 ## Current limitations
 
 - Specialist rules are intentionally simple deterministic heuristics.
 - Evidence weights and source reliability are explicit static configuration.
 - Risk rules use fixed demonstration limits rather than portfolio state.
-- Snapshots are caller-supplied; there is no market-data provider.
-- The cycle is synchronous and in-memory, with no persistent audit store.
+- Fixture and replay market data are supported; no default internet provider is configured.
+- SQLite persistence is local and synchronous.
