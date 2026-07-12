@@ -16,12 +16,11 @@ paper session smoke test. Never reuse this RC as a live execution service.
 
 ## Local release audit
 
-The full 103-test suite, healthcheck, formatting/compile checks, fresh install,
+The full 107-test suite, healthcheck, formatting/compile checks, fresh install,
 schema/backup tests, paper session, replay, standard-library dependency inventory,
 and forbidden private-exchange capability scan passed on 2026-07-12. Docker image
-validation remains blocked solely by the local Docker Desktop installation:
-containerd reports a corrupted internal bbolt metadata database during engine
-startup. This is external to Hermes. The repository manifest, non-root user,
+validation could not run because the Docker CLI is unavailable in the final
+audit environment. The repository manifest, non-root user,
 PAPER environment, startup supervisor, and healthcheck are test-covered and need
 no Docker-specific source changes.
 
@@ -34,3 +33,6 @@ cycle-derived paper IDs, non-mutating duplicate-position rejection, preserved
 same-time portfolio history, and a foreground paper-only container supervisor.
 The final engineering review also preserved complete portfolio lifecycle state
 and durable trade IDs across restarts and rejected non-finite mark prices.
+RC1 review additionally made Risk Manager reject malformed or non-finite
+recommendations, rejected invalid portfolio cost configuration, validated replay
+inputs before simulation, and corrected per-instance signal timestamps.

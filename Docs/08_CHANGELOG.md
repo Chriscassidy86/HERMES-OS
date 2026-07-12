@@ -1,5 +1,8 @@
 # Changelog
 
+- Hardened RC1 risk, portfolio-cost, and replay input validation and corrected
+  default signal timestamps to be created per instance.
+
 ## Foundation X - Paper Trading RC1
 
 - Completed release audit and required operator/safety/incident documentation.
