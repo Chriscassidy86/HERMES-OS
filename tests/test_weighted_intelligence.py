@@ -24,6 +24,16 @@ def snapshot(trend="Bullish"):
 class BrokenSpecialist(BaseSpecialist):
     def __init__(self): super().__init__("Broken Specialist")
     def analyze(self, snapshot): raise RuntimeError("expected failure")
+class StaleSpecialist(BaseSpecialist):
+    def __init__(self): super().__init__("Trend Specialist")
+    def analyze(self,snapshot):
+        report=self.create_report("BULLISH",80,["stale"],[],"EVIDENCE_ONLY")
+        return report,Signal(self.name,"LONG",80,0.8,"4H",2,NOW-timedelta(hours=5),("stale",))
+class FutureSignalSpecialist(BaseSpecialist):
+    def __init__(self): super().__init__("Trend Specialist")
+    def analyze(self,snapshot):
+        report=self.create_report("BULLISH",80,["future"],[],"EVIDENCE_ONLY")
+        return report,Signal(self.name,"LONG",80,0.8,"4H",2,NOW+timedelta(minutes=5),("future",))
 class WeightedEvidenceTests(unittest.TestCase):
     def test_trend_explanation_matches_direction(self):
         _,bullish=TrendSpecialist().analyze(snapshot("Bullish"))
@@ -61,4 +71,18 @@ class WeightedEvidenceTests(unittest.TestCase):
         first = DecisionCycle(clock=lambda: NOW).run(snapshot())
         second = DecisionCycle(clock=lambda: NOW).run(snapshot())
         self.assertEqual(first, second); self.assertEqual(5, len(first.specialist_reports))
+    def test_contradictory_cycle_fails_closed(self):
+        conflicted=replace(snapshot(),short_moving_average=99.0,long_moving_average=101.0)
+        result=DecisionCycle(clock=lambda:NOW).run(conflicted)
+        self.assertEqual("REJECTED_INVALID_EVIDENCE",result.final_status); self.assertFalse(result.paper_execution_eligible); self.assertTrue(any("Contradictory" in reason for reason in result.rejection_reasons))
+    def test_stale_signal_makes_cycle_invalid(self):
+        result=DecisionCycle([StaleSpecialist()],clock=lambda:NOW).run(snapshot())
+        self.assertEqual("REJECTED_INVALID_EVIDENCE",result.final_status); self.assertTrue(any("Excluded evidence" in reason for reason in result.rejection_reasons))
+    def test_future_snapshot_fails_closed(self):
+        future=replace(snapshot(),timestamp=NOW+timedelta(minutes=5))
+        result=DecisionCycle(clock=lambda:NOW).run(future)
+        self.assertEqual("REJECTED_INVALID_EVIDENCE",result.final_status); self.assertFalse(result.paper_execution_eligible)
+    def test_future_signal_fails_closed(self):
+        result=DecisionCycle([FutureSignalSpecialist()],clock=lambda:NOW).run(snapshot())
+        self.assertEqual("REJECTED_INVALID_EVIDENCE",result.final_status); self.assertTrue(any("future" in reason.lower() for reason in result.rejection_reasons))
 if __name__ == "__main__": unittest.main()

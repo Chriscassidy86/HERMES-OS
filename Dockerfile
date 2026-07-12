@@ -6,4 +6,4 @@ COPY . /app
 RUN mkdir -p /app/data /app/logs && chown -R hermes:hermes /app
 USER hermes
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD ["python","scripts/healthcheck.py"]
-CMD ["python","main.py"]
+CMD ["python","scripts/paper_service.py"]

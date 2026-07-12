@@ -1,5 +1,5 @@
 """Foundation IV.3 paper portfolio lifecycle and accounting tests."""
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 import unittest
 from core.decision_cycle import DecisionCycle
@@ -8,10 +8,10 @@ from paper_trading.portfolio import PaperPortfolio
 from reports.market_snapshot import MarketSnapshot
 
 NOW=datetime(2026,7,11,12,tzinfo=timezone.utc)
-def eligible_cycle():
+def eligible_cycle(at=NOW):
     snap=MarketSnapshot("BTC/USD",100.0,1500.0,"Bullish",2.0,55,
-        98.0,1000.0,101.0,99.0,"4H",NOW)
-    return DecisionCycle(clock=lambda:NOW).run(snap)
+        98.0,1000.0,101.0,99.0,"4H",at)
+    return DecisionCycle(clock=lambda:at).run(snap)
 def portfolio(cash="10000",fee="10",slippage="5"):
     return PaperPortfolio(Decimal(cash),Decimal(fee),Decimal(slippage),lambda:NOW)
 
@@ -52,4 +52,22 @@ class PaperPortfolioTests(unittest.TestCase):
         book=portfolio(); initial=book.account().equity_balance; order=book.propose(eligible_cycle(),"100"); book.execute_market(order.order_id)
         account=book.account(); expected=book.cash+sum(p.market_value for p in book.positions.values())
         self.assertEqual(expected.quantize(Decimal("0.01")),account.equity_balance); self.assertLess(account.equity_balance,initial)
+    def test_existing_position_rejected_without_mutation(self):
+        book=portfolio(); first=book.propose(eligible_cycle(),"100"); book.execute_market(first.order_id)
+        cash=book.cash; fills=dict(book.fills); second=book.propose(eligible_cycle(NOW+timedelta(minutes=1)),"101")
+        self.assertEqual(OrderStatus.REJECTED,second.status); self.assertEqual(cash,book.cash); self.assertEqual(fills,book.fills)
+    def test_order_ids_remain_unique_across_cycles(self):
+        first=portfolio().propose(eligible_cycle(),"100"); second=portfolio().propose(eligible_cycle(NOW+timedelta(minutes=1)),"100")
+        self.assertNotEqual(first.order_id,second.order_id)
+    def test_invalid_close_price_does_not_mutate(self):
+        book=portfolio(); order=book.propose(eligible_cycle(),"100"); book.execute_market(order.order_id); before=book.account()
+        with self.assertRaises(ValueError): book.close_position("BTC/USD","-1")
+        self.assertEqual(before,book.account()); self.assertIn("BTC/USD",book.positions)
+    def test_duplicate_cycle_order_does_not_overwrite(self):
+        book=portfolio(); first=book.propose(eligible_cycle(),"100")
+        with self.assertRaises(ValueError): book.propose(eligible_cycle(),"100")
+        self.assertEqual(first,book.orders[first.order_id])
+    def test_non_finite_and_zero_quantity_sizes_are_rejected(self):
+        nan_order=portfolio().propose(eligible_cycle(),"NaN"); self.assertEqual(OrderStatus.REJECTED,nan_order.status)
+        tiny=portfolio().propose(eligible_cycle(),"1000000000000",notional="0.01"); self.assertEqual(OrderStatus.REJECTED,tiny.status); self.assertEqual(Decimal("0"),tiny.quantity)
 if __name__=="__main__": unittest.main()

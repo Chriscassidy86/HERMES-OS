@@ -24,5 +24,5 @@ class HardeningTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory); source=root/"source.sqlite3"; SQLiteAuditJournal(source).initialize(); backup=backup_database(source,root/"backup.sqlite3"); restored=restore_database(backup,root/"restored.sqlite3"); SQLiteAuditJournal(restored).validate_schema()
     def test_container_is_non_root_and_paper_only(self):
-        root=Path(__file__).resolve().parent.parent; docker=(root/"Dockerfile").read_text(); compose=(root/"docker-compose.yml").read_text(); self.assertIn("USER hermes",docker); self.assertIn("HERMES_MODE: PAPER",compose); self.assertNotIn("LIVE",compose)
+        root=Path(__file__).resolve().parent.parent; docker=(root/"Dockerfile").read_text(); compose=(root/"docker-compose.yml").read_text(); self.assertIn("USER hermes",docker); self.assertIn('CMD ["python","scripts/paper_service.py"]',docker); self.assertIn("HERMES_MODE: PAPER",compose); self.assertNotIn("LIVE",compose)
 if __name__=="__main__": unittest.main()

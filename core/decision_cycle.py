@@ -2,7 +2,7 @@
 
 from collections.abc import Callable, Iterable
 from dataclasses import replace
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from math import isfinite
 from typing import Any
 
@@ -44,6 +44,13 @@ class DecisionCycle:
     def run(self, snapshot: MarketSnapshot) -> DecisionCycleResult:
         timestamp = self._normalized_timestamp(self._clock())
         rejection_reasons = self._validate_snapshot(snapshot)
+        if (
+            isinstance(snapshot, MarketSnapshot)
+            and isinstance(snapshot.timestamp, datetime)
+            and snapshot.timestamp.tzinfo is not None
+            and snapshot.timestamp.astimezone(timezone.utc) > timestamp + timedelta(seconds=60)
+        ):
+            rejection_reasons.append("Snapshot timestamp is in the future.")
         symbol = (
             snapshot.symbol.strip()
             if isinstance(snapshot, MarketSnapshot)
@@ -82,6 +89,24 @@ class DecisionCycle:
             created_at=timestamp,
         )
         evidence_summary = self._evidence.analyze(packet, as_of=timestamp)
+        if evidence_summary.conflicting_evidence:
+            rejection_reasons.extend(
+                f"Contradictory evidence: {reason}"
+                for reason in evidence_summary.conflicting_evidence
+            )
+        invalid_exclusions = tuple(
+            reason
+            for reason in evidence_summary.excluded_evidence
+            if any(
+                marker in reason.lower()
+                for marker in ("stale", "future", "incompatible", "no configured trust")
+            )
+        )
+        if invalid_exclusions:
+            rejection_reasons.extend(
+                f"Excluded evidence: {reason}"
+                for reason in invalid_exclusions
+            )
 
         if rejection_reasons:
             recommendation = Recommendation(

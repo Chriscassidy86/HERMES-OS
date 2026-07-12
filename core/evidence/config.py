@@ -25,6 +25,7 @@ class EvidenceConfig:
     target_timeframe: str = "4H"
     minimum_confidence: float = 50.0
     max_age_seconds: int = 14_400
+    max_future_skew_seconds: int = 60
 
 
 DEFAULT_EVIDENCE_CONFIG = EvidenceConfig()

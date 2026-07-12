@@ -13,6 +13,8 @@ class MarketDataTests(unittest.TestCase):
         with self.assertRaises(MarketDataError): self.builder.build(value)
     def test_stale_data(self):
         with self.assertRaises(StaleMarketDataError): self.builder.build(record(timestamp=NOW-timedelta(hours=5)))
+    def test_future_data(self):
+        with self.assertRaises(MarketDataError): self.builder.build(record(timestamp=NOW+timedelta(minutes=5)))
     def test_malformed_response(self):
         with self.assertRaises(MarketDataError): self.builder.build(record(price="invalid"))
     def test_timeout(self):

@@ -31,7 +31,7 @@ class MalformedSpecialist(BaseSpecialist):
 
 class LowConfidenceSpecialist(BaseSpecialist):
     def __init__(self) -> None:
-        super().__init__("Low Confidence Specialist")
+        super().__init__("Momentum Specialist")
 
     def analyze(self, snapshot):
         return (

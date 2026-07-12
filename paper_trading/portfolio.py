@@ -30,16 +30,19 @@ class PaperPortfolio:
         return PaperAccount(self.cash.quantize(CENT),equity.quantize(CENT))
 
     def propose(self, result: DecisionCycleResult, price, notional=None):
-        now=self.clock(); oid=f"PO-{next(self._ids):06d}"; price=Decimal(str(price))
+        now=self.clock(); oid=f"PO-{result.cycle_id}"; price=Decimal(str(price))
+        if oid in self.orders: raise ValueError("A paper order already exists for this decision cycle.")
         cap=Decimal(str(result.risk_assessment.max_position_size)); amount=Decimal(str(notional)) if notional is not None else cap
         reasons=[]
         if not result.paper_execution_eligible: reasons.append("Decision cycle is not paper-execution eligible.")
         if not result.risk_assessment.approved: reasons.append("Risk Manager vetoed the trade.")
         if result.recommendation.action not in {"LONG","SHORT"}: reasons.append("Recommendation is not directional.")
         if result.recommendation.action=="SHORT": reasons.append("Simulated short positions are not supported safely yet.")
-        if price<=0: reasons.append("Execution price must be greater than zero.")
-        if amount<=0 or amount>cap: reasons.append("Position size is invalid or exceeds the Risk Manager cap.")
-        qty=(amount/price).quantize(QTY,rounding=ROUND_DOWN) if price>0 else Decimal("0")
+        if not price.is_finite() or price<=0: reasons.append("Execution price must be finite and greater than zero.")
+        if not amount.is_finite() or not cap.is_finite() or amount<=0 or amount>cap: reasons.append("Position size is invalid or exceeds the Risk Manager cap.")
+        if result.snapshot.symbol in self.positions: reasons.append("An open position already exists for this symbol.")
+        qty=(amount/price).quantize(QTY,rounding=ROUND_DOWN) if price.is_finite() and price>0 and amount.is_finite() else Decimal("0")
+        if qty<=0: reasons.append("Position size rounds to zero quantity.")
         order=PaperOrder(oid,result.cycle_id,result.snapshot.symbol,"BUY",qty,price,OrderStatus.CREATED,now)
         self.orders[oid]=order
         if reasons: return self._transition(order,OrderStatus.REJECTED," ".join(reasons),tuple(reasons))
@@ -48,17 +51,17 @@ class PaperPortfolio:
     def execute_market(self, order_id):
         order=self.orders[order_id]
         if order.status!=OrderStatus.VALIDATED: raise ValueError("Only validated orders may execute.")
+        if order.symbol in self.positions:
+            return self._transition(order,OrderStatus.REJECTED,"An open position already exists for this symbol.",("An open position already exists for this symbol.",))
         order=self._transition(order,OrderStatus.OPEN,"Opened for deterministic simulated fill.")
         fill_price=(order.reference_price*(Decimal("1")+self.slippage_bps/Decimal("10000"))).quantize(CENT)
         notional=order.quantity*fill_price; fee=(notional*self.fee_bps/Decimal("10000")).quantize(CENT)
         if self.cash<notional+fee:
             return self._transition(order,OrderStatus.CANCELLED,"Insufficient simulated cash at fill price.")
-        fid=f"PF-{next(self._ids):06d}"
+        fid=f"PF-{order.order_id}"
         fill=PaperFill(fid,order.order_id,order.quantity,fill_price,fee,fill_price-order.reference_price,self.clock())
         if fid in self.fills: raise ValueError("Duplicate fill identifier.")
         self.fills[fid]=fill; self.cash-=notional+fee
-        existing=self.positions.get(order.symbol)
-        if existing: raise ValueError("Adding to an existing position is not supported in IV.3.")
         self.positions[order.symbol]=PaperPosition(order.symbol,order.quantity,fill_price,fill_price,fee)
         return self._transition(order,OrderStatus.FILLED,"Deterministic market fill completed."),fill
 
@@ -69,6 +72,7 @@ class PaperPortfolio:
 
     def close_position(self,symbol,price):
         position=self.positions[symbol]; price=Decimal(str(price)); now=self.clock()
+        if not price.is_finite() or price<=0: raise ValueError("Close price must be finite and positive.")
         fill_price=(price*(Decimal("1")-self.slippage_bps/Decimal("10000"))).quantize(CENT)
         proceeds=position.quantity*fill_price; fee=(proceeds*self.fee_bps/Decimal("10000")).quantize(CENT)
         self.cash+=proceeds-fee

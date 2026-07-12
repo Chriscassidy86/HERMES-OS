@@ -32,3 +32,4 @@ class GracefulShutdown:
         signal.signal(signal.SIGINT,self.request); signal.signal(signal.SIGTERM,self.request)
     @property
     def requested(self): return self._event.is_set()
+    def wait(self,timeout): return self._event.wait(timeout)

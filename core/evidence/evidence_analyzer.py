@@ -29,7 +29,9 @@ class EvidenceAnalyzer:
             weight = self.config.specialist_weights.get(signal.source, 0.0)
             reliability = self.config.source_reliability.get(signal.source, 0.0)
 
-            if age > self.config.max_age_seconds:
+            if age < -self.config.max_future_skew_seconds:
+                included, reason = False, "Signal timestamp is in the future."
+            elif age > self.config.max_age_seconds:
                 included, reason = False, "Signal is stale."
             elif signal.confidence < self.config.minimum_confidence:
                 included, reason = False, "Signal confidence is below the configured minimum."

@@ -26,13 +26,14 @@ def normalize_symbol(symbol):
 
 class SnapshotBuilder:
     REQUIRED=("symbol","price","volume_24h","market_trend","volatility","fear_greed_index","timestamp")
-    def __init__(self,clock=None,max_age_seconds=14400): self.clock=clock or (lambda:datetime.now(timezone.utc)); self.max_age_seconds=max_age_seconds
+    def __init__(self,clock=None,max_age_seconds=14400,max_future_skew_seconds=60): self.clock=clock or (lambda:datetime.now(timezone.utc)); self.max_age_seconds=max_age_seconds; self.max_future_skew_seconds=max_future_skew_seconds
     def build(self,data:dict[str,Any],timeframe="4H"):
         missing=[key for key in self.REQUIRED if key not in data]
         if missing: raise MarketDataError(f"Missing market fields: {', '.join(missing)}")
         timestamp=data["timestamp"]
         if not isinstance(timestamp,datetime) or timestamp.tzinfo is None: raise MarketDataError("Market timestamp must be timezone-aware.")
         age=(self.clock().astimezone(timezone.utc)-timestamp.astimezone(timezone.utc)).total_seconds()
+        if age < -self.max_future_skew_seconds: raise MarketDataError("Market timestamp is in the future.")
         if age>self.max_age_seconds: raise StaleMarketDataError("Market data is stale.")
         try:
             snapshot=MarketSnapshot(symbol=normalize_symbol(data["symbol"]),price=float(data["price"]),volume_24h=float(data["volume_24h"]),

@@ -12,4 +12,4 @@
 | VII | Operator reporting | Complete | 2026-07-12 | `1f18906` | 67 tests; read-only JSON reports | No dashboard |
 | VIII | Backtest and replay | Complete | 2026-07-12 | `48430a2` | 75 tests; no look-ahead/reproducible | Fixtures are not profitability evidence |
 | IX | Paper production hardening | Complete | 2026-07-12 | `71a0c44` | 83 tests; health/backup/container/CI | Single-process SQLite |
-| X | Paper RC1 | Complete | 2026-07-12 | `7ac6b8b` | 89 tests plus release audit and smoke tests | PAPER MODE ONLY |
+| X | Paper RC1 | Complete | 2026-07-12 | `7ac6b8b` | 100 tests plus release audit and smoke tests | PAPER MODE ONLY |

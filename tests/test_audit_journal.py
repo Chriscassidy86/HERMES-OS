@@ -50,4 +50,11 @@ class JournalTests(unittest.TestCase):
     def test_schema_version_validation(self):
         with self.journal.connect() as db: db.execute("UPDATE schema_metadata SET version=999")
         with self.assertRaises(SchemaVersionError): self.journal.validate_schema()
+    def test_same_timestamp_portfolio_history_is_not_overwritten(self):
+        result=cycle(); book=PaperPortfolio(clock=lambda:NOW); order=book.propose(result,102); book.execute_market(order.order_id)
+        self.journal.save_portfolio(book,"cycle-one"); book.cash-=1; self.journal.save_portfolio(book,"cycle-two")
+        with self.journal.connect() as db:
+            snapshots=db.execute("SELECT COUNT(*) FROM portfolio_snapshots").fetchone()[0]
+            positions=db.execute("SELECT COUNT(*) FROM positions").fetchone()[0]
+        self.assertEqual(2,snapshots); self.assertEqual(2,positions); self.assertEqual(str(book.account().cash_balance),self.journal.current_portfolio()["account"]["cash_balance"])
 if __name__=="__main__": unittest.main()

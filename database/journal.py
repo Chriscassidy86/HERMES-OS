@@ -69,8 +69,10 @@ class SQLiteAuditJournal:
         with self.connect() as db:
             for table,records,key in (("paper_orders",portfolio.orders.values(),"order_id"),("fills",portfolio.fills.values(),"fill_id"),("positions",portfolio.positions.values(),"symbol"),("trades",portfolio.trades,"trade_id")):
                 for record in records:
-                    rid=getattr(record,key); db.execute(f"INSERT OR REPLACE INTO {table} VALUES(?,?,?,?)",(rid,cycle_id,now,serialize(record)))
-            rid=f"portfolio-{now}"
+                    rid=getattr(record,key)
+                    if table=="positions": rid=f"{cycle_id or 'none'}:{rid}"
+                    db.execute(f"INSERT OR REPLACE INTO {table} VALUES(?,?,?,?)",(rid,cycle_id,now,serialize(record)))
+            rid=f"portfolio-{cycle_id or 'none'}-{now}-{len(portfolio.transitions)}-{len(portfolio.trades)}"
             payload={"account":portfolio.account(),"positions":tuple(portfolio.positions.values()),"transitions":tuple(portfolio.transitions)}
             db.execute("INSERT OR REPLACE INTO portfolio_snapshots VALUES(?,?,?,?)",(rid,cycle_id,now,serialize(payload)))
     def load_cycle(self,cycle_id):
@@ -80,7 +82,7 @@ class SQLiteAuditJournal:
     def recent_cycles(self,limit=20): return self._query("SELECT payload FROM decision_cycles ORDER BY created_at DESC LIMIT ?",(limit,))
     def paper_trades(self,limit=20): return self._query("SELECT payload FROM trades ORDER BY created_at DESC LIMIT ?",(limit,))
     def current_portfolio(self):
-        rows=self._query("SELECT payload FROM portfolio_snapshots ORDER BY created_at DESC LIMIT 1")
+        rows=self._query("SELECT payload FROM portfolio_snapshots ORDER BY created_at DESC, rowid DESC LIMIT 1")
         return rows[0] if rows else None
     def restore_portfolio(self,portfolio):
         from paper_trading.models import PaperPosition
