@@ -47,3 +47,5 @@ For continuous PAPER operation use `PaperOperationsService` with a positive inte
 bounded recent-cycle limit, and failure circuit. Always restore and validate the journal
 before cycling. The accelerated reliability harness validates 24-hour scheduling without
 waiting for wall-clock duration; it does not replace an operator-observed soak test.
+
+V6 operators should enable only supported symbols, review per-symbol provider health, investigate conflict failures, and require passing soak thresholds before extended PAPER sessions. One symbol failure must not be treated as permission to bypass Risk Manager for another.

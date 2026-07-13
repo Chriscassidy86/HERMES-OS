@@ -27,4 +27,5 @@ class SchedulerTests(unittest.TestCase):
   shutdown=GracefulShutdown(); shutdown.request(); result=MultiSymbolScheduler(Session(),Journal(),shutdown,clock=lambda:NOW).run(schedules()); self.assertEqual(0,result.cycles)
  def test_duplicate_symbols_rejected(self):
   with self.assertRaises(ValueError): self.execute((SymbolSchedule("BTC"),SymbolSchedule("BTC")),maximum_rounds=1)
+  with self.assertRaises(ValueError): self.execute(maximum_rounds=0)
 if __name__=="__main__": unittest.main()

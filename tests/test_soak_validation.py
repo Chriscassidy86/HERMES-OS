@@ -19,4 +19,6 @@ class SoakTests(unittest.TestCase):
   report=self.harness.run(hours=24,symbols=SYMBOLS,thresholds=SoakThresholds(maximum_queue_depth=0),injector=lambda *_:{"queue_depth":1}); self.assertFalse(report.passed); self.assertTrue(report.failures)
  def test_counts_orders_dashboard_learning(self):
   report=self.harness.run(hours=24,symbols=SYMBOLS,injector=lambda *_:{"orders":True,"fills":True,"trades":True,"dashboard":True,"learning":True,"risk":True,"stale":True}); self.assertEqual(report.total_cycles,report.fills); self.assertTrue(report.accelerated_not_wall_clock); self.assertTrue(report.paper_only)
+ def test_malformed_injected_metrics_rejected(self):
+  with self.assertRaises(ValueError): self.harness.run(hours=24,symbols=SYMBOLS,injector=lambda *_:{"duration_ms":float("nan")})
 if __name__=="__main__": unittest.main()

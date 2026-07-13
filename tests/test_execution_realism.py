@@ -31,4 +31,5 @@ class ExecutionRealismTests(unittest.TestCase):
   with self.assertRaises(ValueError): RealisticPaperSimulator().submit(rejected,side="BUY",order_type="MARKET",quantity=1,market_price=100)
  def test_invalid_rules(self):
   with self.assertRaises(ValueError): RealisticPaperSimulator(SimulationRules(slippage_bps=-1))
+  with self.assertRaises(ValueError): RealisticPaperSimulator().submit(cycle(),side="BUY",order_type="LIMIT",quantity=1,market_price=100,limit_price=-1)
 if __name__=="__main__": unittest.main()

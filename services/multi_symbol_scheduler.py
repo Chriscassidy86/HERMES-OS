@@ -13,6 +13,7 @@ class MultiSymbolScheduler:
         schedules=tuple(schedules)
         if not schedules or len({item.symbol for item in schedules})!=len(schedules): raise ValueError("Unique symbol schedules are required.")
         if not isfinite(interval_seconds) or interval_seconds<0: raise ValueError("Interval is invalid.")
+        if maximum_rounds is not None and (isinstance(maximum_rounds,bool) or not isinstance(maximum_rounds,int) or maximum_rounds<1): raise ValueError("Maximum rounds must be a positive integer.")
         self.journal.validate_schema(); recovered=self.journal.restore_portfolio(self.session.portfolio)
         states={item.symbol:SymbolRuntimeState(item.symbol,item.enabled,"UNKNOWN",None,None,"UNKNOWN","UNKNOWN",0,0,0,()) for item in schedules}
         ordering=[]; rounds=0; reason="SHUTDOWN_REQUESTED"

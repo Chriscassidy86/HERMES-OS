@@ -1,13 +1,16 @@
 """Deterministic fail-closed redundancy for unauthenticated public candles."""
 from dataclasses import replace
 from time import monotonic
+from datetime import datetime,timezone
+from math import isfinite
 from data_providers.market_data import MarketDataError,normalize_symbol
 from models.provider_redundancy import AttributedPublicCandle,RedundantProviderState
 
 class RedundantPublicProvider:
-    def __init__(self,providers,*,conflict_tolerance_percent=2.0,cooldown_failures=3,cooldown_cycles=2,latency_clock=None):
-        self.providers=tuple(providers); self.tolerance=conflict_tolerance_percent; self.cooldown_failures=cooldown_failures; self.cooldown_cycles=cooldown_cycles; self.latency_clock=latency_clock or monotonic; self._states={}
+    def __init__(self,providers,*,conflict_tolerance_percent=2.0,cooldown_failures=3,cooldown_cycles=2,latency_clock=None,clock=None,max_age_seconds=18000):
+        self.providers=tuple(providers); self.tolerance=conflict_tolerance_percent; self.cooldown_failures=cooldown_failures; self.cooldown_cycles=cooldown_cycles; self.latency_clock=latency_clock or monotonic; self.clock=clock or (lambda:datetime.now(timezone.utc)); self.max_age_seconds=max_age_seconds; self._states={}
         if not self.providers or len({p.name for p in self.providers})!=len(self.providers): raise ValueError("Unique public providers are required.")
+        if not isfinite(self.tolerance) or self.tolerance<0 or cooldown_failures<1 or cooldown_cycles<0 or max_age_seconds<=0: raise ValueError("Provider redundancy configuration is invalid.")
     def get_candle(self,symbol,timeframe="4H"):
         normalized=normalize_symbol(symbol)
         if normalized not in {"BTC/USD","ETH/USD","SOL/USD","XRP/USD"}: raise MarketDataError("Unsupported public symbol mapping.")
@@ -22,6 +25,10 @@ class RedundantPublicProvider:
                 candle=provider.get_candle(normalized,timeframe)
                 latency=max(0,(self.latency_clock()-started)*1000)
                 if candle.provider!=provider.name or candle.symbol!=normalized or candle.timeframe!=timeframe: raise MarketDataError("Provider attribution or compatibility mismatch.")
+                if not isinstance(candle.timestamp,datetime) or candle.timestamp.tzinfo is None or not isfinite(candle.close) or candle.close<=0: raise MarketDataError("Provider candle is malformed.")
+                age=(self.clock().astimezone(timezone.utc)-candle.timestamp.astimezone(timezone.utc)).total_seconds()
+                if age>self.max_age_seconds: raise MarketDataError("Provider candle is stale.")
+                if age < -60: raise MarketDataError("Provider candle is future-dated.")
                 state=replace(state,successes=state.successes+1,consecutive_failures=0,latency_ms=round(latency,3),healthy=True,score=round((state.successes+2)/(state.successes+state.failures+2),6))
                 successes.append((index,candle))
             except Exception:

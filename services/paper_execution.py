@@ -54,10 +54,10 @@ class RealisticPaperSimulator:
     def _triggered(self,order,price):
         if order.order_type=="MARKET": return True
         if order.order_type=="LIMIT":
-            if order.limit_price is None or not isfinite(order.limit_price): raise ValueError("Limit price is required.")
+            if order.limit_price is None or not isfinite(order.limit_price) or order.limit_price<=0: raise ValueError("Positive limit price is required.")
             return price<=order.limit_price if order.side=="BUY" else price>=order.limit_price
         if order.order_type in {"STOP_LOSS","TAKE_PROFIT"}:
-            if order.stop_price is None or not isfinite(order.stop_price): raise ValueError("Stop price is required.")
+            if order.stop_price is None or not isfinite(order.stop_price) or order.stop_price<=0: raise ValueError("Positive stop price is required.")
             adverse=price<=order.stop_price if order.side=="SELL" else price>=order.stop_price
             return adverse if order.order_type=="STOP_LOSS" else not adverse
         if order.trailing_percent is None or not isfinite(order.trailing_percent) or order.trailing_percent<=0: raise ValueError("Trailing percent is required.")

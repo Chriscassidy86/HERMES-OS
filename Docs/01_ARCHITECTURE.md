@@ -78,6 +78,7 @@ V5.1 designates `PaperOperationsService` as the continuous market engine, preser
 V5 connects that engine to explainable paper execution, the GET-only live dashboard, recommendation-only learning, and an accelerated reliability harness. Risk Manager remains the sole execution gate.
 V6.1 adds a fair scheduler above the existing session, with isolated per-symbol runtime state and one recovered shared PAPER portfolio.
 V6.2 composes existing unauthenticated candle adapters behind per-symbol health, cooldown, conflict validation, and deterministic priority.
+V6 completes one shared-portfolio PAPER pipeline: fair multi-symbol scheduling, attributed public redundancy, Risk-gated realistic simulation, portfolio projections, and reproducible soak artifacts.
 
 Foundation II supplies configuration, logging, events, registry, scheduler, and
 boot orchestration. Foundation III supplies frozen domain records, the
