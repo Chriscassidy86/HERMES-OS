@@ -60,3 +60,5 @@ searchable validation endpoints are available; wall-clock soak control is prepar
 no multi-day soak was started automatically.
 The continuous scheduler now materializes eligible validation artifacts after persisted
 cycles, so the operator views populate over time without feeding outcomes back into decisions.
+Outcome checkpoints allow a bounded 60-second scheduling tolerance around the declared
+horizon, and validation projection failures are isolated from the PAPER scheduler.
