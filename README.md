@@ -15,6 +15,8 @@ Governed paper experiments require a scoped human approval record before evaluat
 run `python examples/research_experiment_demo.py` for a deterministic example.
 Recovery-aware paper operations with failure circuit breaking are demonstrated by
 `python examples/paper_operations_demo.py`; database integrity is operator-readable.
+V3.1 adds immutable human-readable decision explanations covering evidence,
+agreement, disagreement, exclusions, Risk Manager rationale, assumptions, and uncertainty.
 
 HERMES-OS is an experimental Python multi-agent crypto decision system. The
 current release is the Paper Trading RC1 candidate, incorporating Foundations

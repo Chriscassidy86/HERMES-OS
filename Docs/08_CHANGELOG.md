@@ -8,6 +8,7 @@
 - V2.5 added daily, weekly, and monthly executive research briefings.
 - V2.6 added immutable, explicitly human-governed paper research experiments.
 - V2.7 strengthened paper operations, restart recovery, integrity, and operator commands.
+- V3.1 added explainable decision intelligence for command-center and executive views.
 
 - Hardened RC1 risk, portfolio-cost, and replay input validation and corrected
   default signal timestamps to be created per instance.

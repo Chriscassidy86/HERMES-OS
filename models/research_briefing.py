@@ -5,6 +5,7 @@ from datetime import datetime
 from enum import Enum
 
 from models.specialist_intelligence import SpecialistAssessment
+from models.decision_explanation import DecisionExplanation
 
 
 class BriefingPeriod(str, Enum):
@@ -27,6 +28,7 @@ class BriefingFacts:
     specialist_assessments: tuple[SpecialistAssessment, ...] = ()
     research_notes: tuple[str, ...] = ()
     limitations: tuple[str, ...] = ()
+    decision_explanations: tuple[DecisionExplanation, ...] = ()
 
 
 @dataclass(frozen=True)

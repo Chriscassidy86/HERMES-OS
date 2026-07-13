@@ -34,6 +34,10 @@ V2.7 adds a foreground, recovery-aware paper operations service with graceful
 shutdown, bounded summaries, and a consecutive-failure circuit breaker. SQLite
 integrity and backups are verified, and the operator CLI exposes read-only integrity.
 
+V3.1 adds a deterministic explanation service over immutable decision artifacts.
+Command-center and briefing presentation reuse that service; they do not reimplement
+decision, evidence, or risk logic.
+
 Foundation II supplies configuration, logging, events, registry, scheduler, and
 boot orchestration. Foundation III supplies frozen domain records, the
 `BaseSpecialist` contract, Trend specialist, evidence aggregation,

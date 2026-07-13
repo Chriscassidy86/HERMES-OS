@@ -14,6 +14,8 @@ Research experiments require explicit scoped human approval before supplied pape
 samples are evaluated, and their results cannot mutate production configuration.
 Paper operations can recover the latest portfolio snapshot, run controlled foreground
 batches, stop gracefully, and open a circuit after repeated complete batch failures.
+Each persisted recommendation can now be translated into a human-readable explanation
+of evidence, disagreement, exclusions, risk rationale, assumptions, and uncertainty.
 
 Hermes OS is at Paper Trading RC1 candidate status. It provides a synchronous,
 paper-only multi-specialist decision, simulation, persistence, reporting,

@@ -13,6 +13,8 @@ V2.6 added immutable, human-approved paper experiment evaluation with no product
 configuration write or self-approval path.
 V2.7 added restart recovery, controlled long-running paper batches, graceful stop,
 failure circuit breaking, database/backup integrity verification, and operator status.
+V3.1 added immutable decision explanations and exposed them through command-center
+and executive briefing views.
 
 Completed: Foundation II infrastructure; Foundation III models, Trend
 specialist, evidence, recommendation, risk and briefing; Foundation IV.1
