@@ -30,6 +30,10 @@ V2.6 provides immutable paper research definitions, scoped human approvals,
 unique observations, and deterministic baseline/candidate results. Experiment
 completion cannot apply configuration; adoption remains a separate human decision.
 
+V2.7 adds a foreground, recovery-aware paper operations service with graceful
+shutdown, bounded summaries, and a consecutive-failure circuit breaker. SQLite
+integrity and backups are verified, and the operator CLI exposes read-only integrity.
+
 Foundation II supplies configuration, logging, events, registry, scheduler, and
 boot orchestration. Foundation III supplies frozen domain records, the
 `BaseSpecialist` contract, Trend specialist, evidence aggregation,

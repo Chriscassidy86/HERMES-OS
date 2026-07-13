@@ -13,6 +13,8 @@ Daily, weekly, and monthly executive research briefs can be rendered with
 `python examples/research_briefings_demo.py` from explicitly supplied paper facts.
 Governed paper experiments require a scoped human approval record before evaluation;
 run `python examples/research_experiment_demo.py` for a deterministic example.
+Recovery-aware paper operations with failure circuit breaking are demonstrated by
+`python examples/paper_operations_demo.py`; database integrity is operator-readable.
 
 HERMES-OS is an experimental Python multi-agent crypto decision system. The
 current release is the Paper Trading RC1 candidate, incorporating Foundations

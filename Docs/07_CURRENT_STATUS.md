@@ -12,6 +12,8 @@ Executive research briefings are available at daily, weekly, and monthly periods
 they are immutable, read-only, and never present paper results as live performance.
 Research experiments require explicit scoped human approval before supplied paper
 samples are evaluated, and their results cannot mutate production configuration.
+Paper operations can recover the latest portfolio snapshot, run controlled foreground
+batches, stop gracefully, and open a circuit after repeated complete batch failures.
 
 Hermes OS is at Paper Trading RC1 candidate status. It provides a synchronous,
 paper-only multi-specialist decision, simulation, persistence, reporting,

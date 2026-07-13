@@ -11,6 +11,8 @@ V2.5 added deterministic daily, weekly, and monthly executive research briefings
 with explicit health, observations, risks, and limitations sections.
 V2.6 added immutable, human-approved paper experiment evaluation with no production
 configuration write or self-approval path.
+V2.7 added restart recovery, controlled long-running paper batches, graceful stop,
+failure circuit breaking, database/backup integrity verification, and operator status.
 
 Completed: Foundation II infrastructure; Foundation III models, Trend
 specialist, evidence, recommendation, risk and briefing; Foundation IV.1
