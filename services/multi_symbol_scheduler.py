@@ -5,10 +5,10 @@ from math import isfinite
 from models.multi_symbol import MultiSymbolRun,SymbolRuntimeState
 
 class MultiSymbolScheduler:
-    def __init__(self,session,journal,shutdown,*,clock,wait=None,history_limit=100):
+    def __init__(self,session,journal,shutdown,*,clock,wait=None,history_limit=100,observer=None):
         if not 1<=history_limit<=10000: raise ValueError("History limit is invalid.")
         self.session=session; self.journal=journal; self.shutdown=shutdown; self.clock=clock
-        self.wait=wait or shutdown.wait; self.history_limit=history_limit
+        self.wait=wait or shutdown.wait; self.history_limit=history_limit; self.observer=observer
     def run(self,schedules,*,timeframe="4H",interval_seconds=30,maximum_rounds=None):
         schedules=tuple(schedules)
         if not schedules or len({item.symbol for item in schedules})!=len(schedules): raise ValueError("Unique symbol schedules are required.")
@@ -23,6 +23,7 @@ class MultiSymbolScheduler:
                 offset=rounds%len(active); active=active[offset:]+active[:offset]
             for symbol in active:
                 now=self._now(); result=self.session.run_cycle(symbol,timeframe); ordering.append(symbol); old=states[symbol]
+                if self.observer is not None: self.observer(result)
                 failed=result.status.endswith("FAILURE")
                 history=(old.history+((now,result.status),))[-self.history_limit:]
                 cycle=result.cycle; regime=getattr(getattr(cycle,"snapshot",None),"market_trend",old.regime)

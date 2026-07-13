@@ -12,16 +12,20 @@ from services.multi_symbol_scheduler import MultiSymbolScheduler
 from services.paper_session import PaperTradingSession
 from services.provider_redundancy import RedundantPublicProvider
 from services.public_snapshot_provider import PublicSnapshotProvider
+from database.validation_repository import ValidationRepository
+from services.paper_validation_coordinator import PaperValidationCoordinator
 
 DEFAULT_SYMBOLS=("BTCUSDT","ETHUSDT","SOLUSDT","XRPUSDT")
 def main():
  settings=RuntimeSettings.from_env(); journal=SQLiteAuditJournal(settings.database_path); journal.initialize()
+ validation=ValidationRepository(settings.database_path); validation.initialize()
  symbols=tuple(item.strip().upper() for item in os.environ.get("HERMES_SYMBOLS",",".join(DEFAULT_SYMBOLS)).split(",") if item.strip())
  timeframe=os.environ.get("HERMES_TIMEFRAME","4H"); interval=float(os.environ.get("HERMES_CYCLE_INTERVAL_SECONDS","30"))
  redundancy=RedundantPublicProvider((BinanceUSPublicAdapter(),CoinbasePublicAdapter(),KrakenPublicAdapter()))
  provider=PublicSnapshotProvider(redundancy); shutdown=GracefulShutdown(); shutdown.install_signal_handlers()
  portfolio=PaperPortfolio(); session=PaperTradingSession(provider,portfolio,journal,provider.clock)
- scheduler=MultiSymbolScheduler(session,journal,shutdown,clock=provider.clock)
+ coordinator=PaperValidationCoordinator(journal,validation,provider.clock)
+ scheduler=MultiSymbolScheduler(session,journal,shutdown,clock=provider.clock,observer=coordinator.observe)
  print(f"HERMES PAPER MODE CONTINUOUS | symbols={','.join(symbols)} | timeframe={timeframe} | interval={interval}",flush=True)
  result=scheduler.run(tuple(SymbolSchedule(symbol) for symbol in symbols),timeframe=timeframe,interval_seconds=interval)
  print(f"HERMES PAPER MODE STOPPED | reason={result.stopped_reason} | cycles={result.cycles}",flush=True);return 0
