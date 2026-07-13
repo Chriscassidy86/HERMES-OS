@@ -8,6 +8,8 @@ Public Binance.US, Coinbase, and Kraken observation adapters are optional,
 unauthenticated, timeout-bounded, normalized, health-reported, and test-injected.
 Liquidity, probability, and portfolio-context specialists now provide immutable,
 explainable advisory assessments from validated supplied inputs.
+Executive research briefings are available at daily, weekly, and monthly periods;
+they are immutable, read-only, and never present paper results as live performance.
 
 Hermes OS is at Paper Trading RC1 candidate status. It provides a synchronous,
 paper-only multi-specialist decision, simulation, persistence, reporting,

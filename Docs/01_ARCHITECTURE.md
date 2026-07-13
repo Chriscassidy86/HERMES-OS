@@ -22,6 +22,10 @@ bounded evidence probability, and paper-portfolio concentration. These specialis
 are deliberately outside the authoritative decision and Risk Manager path; human
 review is required before research observations influence configuration.
 
+V2.5 builds immutable daily, weekly, and monthly executive research briefings
+from supplied validated facts and advisory assessments. Briefing generation is
+read-only presentation logic and always preserves paper-result limitations.
+
 Foundation II supplies configuration, logging, events, registry, scheduler, and
 boot orchestration. Foundation III supplies frozen domain records, the
 `BaseSpecialist` contract, Trend specialist, evidence aggregation,
