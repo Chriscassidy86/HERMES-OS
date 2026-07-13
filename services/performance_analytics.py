@@ -5,7 +5,7 @@ from math import isfinite, sqrt
 from statistics import mean, pstdev
 
 from core.research.provenance import stable_json
-from models.performance_analytics import AdvancedPerformanceReport, PerformanceGroup
+from models.performance_analytics import AdvancedPerformanceReport, PerformanceGroup,PortfolioAnalyticsProjection
 
 
 SOURCES = {"FIXTURE", "REPLAY", "PUBLIC_OBSERVATION", "PAPER"}
@@ -96,9 +96,28 @@ class PerformanceAnalyticsService:
 
     @staticmethod
     def serialize(report):
-        if not isinstance(report, AdvancedPerformanceReport):
+        if not isinstance(report, (AdvancedPerformanceReport,PortfolioAnalyticsProjection)):
             raise ValueError("An advanced performance report is required.")
         return stable_json(report)
+
+    def portfolio_projection(self,observations,*,starting_equity):
+        observations=tuple(sorted(observations,key=lambda item:(item.observed_at,item.observation_id)))
+        report=self.analyze(observations,starting_equity=starting_equity)
+        if not observations: return PortfolioAnalyticsProjection(report,(),(),(),None,None,(),"INSUFFICIENT_DATA",())
+        latest={}
+        for item in observations: latest[item.symbol]=item.exposure
+        total=sum(latest.values()); concentration=None if total==0 else round(max(latest.values())/total,6)
+        holdings=tuple(item.holding_seconds for item in observations if item.holding_seconds>0)
+        grouped=defaultdict(list)
+        for item in observations: grouped[item.symbol].append(item.realized_pnl)
+        correlations=[]
+        labels=sorted(grouped)
+        for index,left in enumerate(labels):
+            for right in labels[index+1:]:
+                a=grouped[left]; b=grouped[right]; size=min(len(a),len(b))
+                if size>=2 and pstdev(a[:size])>0 and pstdev(b[:size])>0:
+                    ma=mean(a[:size]); mb=mean(b[:size]); value=sum((x-ma)*(y-mb) for x,y in zip(a[:size],b[:size]))/size/pstdev(a[:size])/pstdev(b[:size]); correlations.append((left,right,round(value,6)))
+        return PortfolioAnalyticsProjection(report,tuple((x.observed_at,x.equity) for x in observations),tuple((x.observed_at,round(x.equity-x.exposure,6)) for x in observations),tuple((x.observed_at,x.exposure) for x in observations),concentration,self._mean(holdings),tuple(correlations),"AVAILABLE" if correlations else "INSUFFICIENT_DATA",tuple(sorted({x.source for x in observations})))
 
     @staticmethod
     def _validate(observations, starting_equity):
@@ -107,7 +126,7 @@ class PerformanceAnalyticsService:
         identifiers = set()
         for item in observations:
             values = (item.realized_pnl, item.unrealized_pnl, item.equity, item.exposure,
-                      item.turnover, item.fees, item.slippage, item.confidence)
+                      item.turnover, item.fees, item.slippage, item.confidence,item.holding_seconds)
             if item.observation_id in identifiers or not item.observation_id.strip():
                 raise ValueError("Performance observation identifiers must be unique.")
             identifiers.add(item.observation_id)
@@ -119,7 +138,7 @@ class PerformanceAnalyticsService:
                 raise ValueError("Performance observations require UTC-aware finite values.")
             if item.source not in SOURCES or item.outcome not in OUTCOMES:
                 raise ValueError("Performance source or outcome is invalid.")
-            if not 0 <= item.confidence <= 1 or item.equity < 0 or item.exposure < 0:
+            if not 0 <= item.confidence <= 1 or item.equity < 0 or item.exposure < 0 or item.holding_seconds<0:
                 raise ValueError("Performance bounds are invalid.")
 
     @staticmethod

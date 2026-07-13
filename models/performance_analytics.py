@@ -23,6 +23,7 @@ class PerformanceObservation:
     confidence: float
     correct: bool
     outcome: str
+    holding_seconds: float = 0
 
 
 @dataclass(frozen=True)
@@ -64,3 +65,15 @@ class AdvancedPerformanceReport:
     by_source: tuple[PerformanceGroup, ...]
     assumptions: tuple[str, ...]
     warnings: tuple[str, ...]
+
+@dataclass(frozen=True)
+class PortfolioAnalyticsProjection:
+    report: AdvancedPerformanceReport
+    equity_curve: tuple[tuple[datetime,float],...]
+    cash_curve: tuple[tuple[datetime,float],...]
+    exposure_curve: tuple[tuple[datetime,float],...]
+    concentration_risk: float|None
+    average_holding_seconds: float|None
+    correlations: tuple[tuple[str,str,float],...]
+    correlation_state: str
+    source_labels: tuple[str,...]
