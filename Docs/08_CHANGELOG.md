@@ -15,6 +15,7 @@
 - V3.5 improved post-trade learning with causal and calibration explanations.
 - V3.6 added research provenance, reproducibility, walk-forward evaluation,
   comparisons, calibration monitoring, and read-only local dashboard delivery.
+- V4.1 added the localhost-only web dashboard foundation.
 
 - Hardened RC1 risk, portfolio-cost, and replay input validation and corrected
   default signal timestamps to be created per instance.

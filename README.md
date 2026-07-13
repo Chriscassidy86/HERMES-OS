@@ -45,6 +45,7 @@ python examples/local_dashboard_demo.py
 To serve an existing journal locally, run
 `python scripts/read_only_dashboard.py data/hermes.sqlite3`. Only `GET /dashboard`
 and `GET /health` are supported; the listener binds to `127.0.0.1`.
+V4.1 adds stable HTML and JSON CEO dashboard views with all composition performed by `WebDashboardService`.
 
 HERMES-OS is an experimental Python multi-agent crypto decision system. The
 current release is the Paper Trading RC1 candidate, incorporating Foundations

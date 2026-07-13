@@ -68,6 +68,7 @@ Walk-forward splitting enforces ordered, non-overlapping training, validation, a
 test windows. Comparison and calibration services remain advisory and cannot mutate
 configuration. The localhost dashboard adapter accepts GET only and delegates all
 business composition to the CEO dashboard service.
+V4.1 adds an immutable web projection service and presentation-only HTML/JSON renderer over the localhost GET-only server.
 
 Foundation II supplies configuration, logging, events, registry, scheduler, and
 boot orchestration. Foundation III supplies frozen domain records, the

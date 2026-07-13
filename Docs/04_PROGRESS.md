@@ -26,6 +26,7 @@ confidence calibration, and recurring-mistake detection for human review.
 V3.6 added versioned research persistence, dataset provenance, deterministic run
 manifests, offline multi-dataset orchestration, walk-forward splits, artifact
 comparison, reproducibility export, calibration monitoring, and GET-only local delivery.
+V4.1 added the real localhost HTML/JSON dashboard foundation.
 
 Completed: Foundation II infrastructure; Foundation III models, Trend
 specialist, evidence, recommendation, risk and briefing; Foundation IV.1
