@@ -163,3 +163,7 @@ The validation path is one-way:
 `Persisted PAPER facts -> validation artifacts -> summaries/scoreboards -> dashboard/CLI`
 
 Nothing in that path can alter recommendations, weights, Risk Manager limits, or execution.
+The continuous scheduler invokes `PaperValidationCoordinator` only after a cycle has
+been persisted. It evaluates prior cycles at a one-hour horizon, discovers newly
+completed persisted trades, and materializes closed hourly/daily/weekly summaries.
+Coordinator failures cannot provide permission to bypass the trading safety path.

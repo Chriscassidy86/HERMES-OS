@@ -58,3 +58,5 @@ cards; specialist calls can be scored without changing weights; historical decis
 can be evaluated only after a declared horizon; deterministic session summaries and
 searchable validation endpoints are available; wall-clock soak control is prepared but
 no multi-day soak was started automatically.
+The continuous scheduler now materializes eligible validation artifacts after persisted
+cycles, so the operator views populate over time without feeding outcomes back into decisions.
