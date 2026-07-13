@@ -39,3 +39,6 @@ Run the six V3.6 examples listed in `README.md` for offline workflows. To view a
 existing operational journal, run `python scripts/read_only_dashboard.py DATABASE`.
 The server binds only to `127.0.0.1`, supports GET dashboard/health routes, exposes
 no order or configuration controls, and should be stopped before journal maintenance.
+The application rejects non-loopback bind requests at the server boundary. Complete
+the 12-step PAPER workflow daily; acknowledge local alerts only after checking the
+underlying condition.

@@ -68,6 +68,12 @@ Walk-forward splitting enforces ordered, non-overlapping training, validation, a
 test windows. Comparison and calibration services remain advisory and cannot mutate
 configuration. The localhost dashboard adapter accepts GET only and delegates all
 business composition to the CEO dashboard service.
+V4.1 adds an immutable web projection service and presentation-only HTML/JSON renderer over the localhost GET-only server.
+V4.2 adds a visualization projection service; frontend endpoints only serialize validated UTC chart series and never fetch market data.
+V4.3 adds an immutable bounded research-job state machine over the V3.6 repository and orchestrator.
+V4.4 adds immutable performance observations and a deterministic analytics service outside the UI.
+V4.5 adds local alert detection and an immutable PAPER operator checklist; external delivery is disabled.
+V4.6 hardens loopback delivery, bounded research identity, UTC analytics, and release operations.
 
 Foundation II supplies configuration, logging, events, registry, scheduler, and
 boot orchestration. Foundation III supplies frozen domain records, the
