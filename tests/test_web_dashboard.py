@@ -12,6 +12,7 @@ class WebDashboardTests(unittest.TestCase):
  def tearDown(self): self.tmp.cleanup()
  def test_localhost_default(self):
   server=self.app.serve(port=0); self.assertEqual("127.0.0.1",server.server_address[0]); server.server_close()
+  with self.assertRaises(ValueError): self.app.serve("0.0.0.0",0)
  def test_get_html_and_stable_json(self):
   self.assertIn(b"PAPER MODE ONLY",self.app.handle("GET","/")[2]); first=self.app.handle("GET","/api/dashboard")[2]; self.assertEqual(first,self.app.handle("GET","/api/dashboard")[2]); self.assertEqual("PAPER",json.loads(first)["mode"])
  def test_empty_healthy_and_failure_states(self):

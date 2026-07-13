@@ -45,3 +45,4 @@ positions because margin-safe short accounting is intentionally deferred.
 
 Evidence is deterministic and explainable but uses initial static weights. Those
 weights cannot be changed automatically and are not yet informed by scorecards.
+V4.6 status: localhost-only read-only dashboard, labeled visualization, bounded PAPER research jobs, advanced performance analytics, and local operator alerts/workflow are implemented. Live trading and authenticated exchange access remain absent.

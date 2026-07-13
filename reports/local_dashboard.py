@@ -24,11 +24,16 @@ class ReadOnlyDashboardApplication:
         return 200, {"content-type": "application/json", "cache-control": "no-store"}, body
 
     def serve(self, host="127.0.0.1", port=8765):
+        if host != "127.0.0.1":
+            raise ValueError("Dashboard binding is restricted to 127.0.0.1.")
+        if isinstance(port, bool) or not isinstance(port, int) or not 0 <= port <= 65535:
+            raise ValueError("Dashboard port is invalid.")
         application = self
         class Handler(BaseHTTPRequestHandler):
             def do_GET(self): self._respond("GET")
             def do_POST(self): self._respond("POST")
             def do_PUT(self): self._respond("PUT")
+            def do_PATCH(self): self._respond("PATCH")
             def do_DELETE(self): self._respond("DELETE")
             def _respond(self, method):
                 status, headers, body = application.handle(method, self.path)

@@ -111,7 +111,11 @@ class PerformanceAnalyticsService:
             if item.observation_id in identifiers or not item.observation_id.strip():
                 raise ValueError("Performance observation identifiers must be unique.")
             identifiers.add(item.observation_id)
-            if item.observed_at.tzinfo is None or any(not isfinite(value) for value in values):
+            if (
+                item.observed_at.tzinfo is None
+                or item.observed_at.utcoffset().total_seconds() != 0
+                or any(not isfinite(value) for value in values)
+            ):
                 raise ValueError("Performance observations require UTC-aware finite values.")
             if item.source not in SOURCES or item.outcome not in OUTCOMES:
                 raise ValueError("Performance source or outcome is invalid.")

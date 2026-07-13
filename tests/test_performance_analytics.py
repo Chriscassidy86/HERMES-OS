@@ -76,6 +76,7 @@ class PerformanceAnalyticsTests(unittest.TestCase):
 
     def test_naive_timestamp_rejected(self):
         with self.assertRaises(ValueError): self.service.analyze((observation(0, observed_at=NOW.replace(tzinfo=None)),), starting_equity=100)
+        with self.assertRaises(ValueError): self.service.analyze((observation(0, observed_at=NOW.astimezone(timezone(timedelta(hours=1)))),), starting_equity=100)
 
 
 if __name__ == "__main__": unittest.main()

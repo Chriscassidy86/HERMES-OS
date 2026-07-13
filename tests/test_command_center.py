@@ -34,7 +34,7 @@ class CommandCenterTests(unittest.TestCase):
     def test_rejected_cycle(self): self.populate(rejected=True); self.assertTrue(self.view().rejected_decisions)
     def test_unhealthy_provider(self): self.assertEqual("UNHEALTHY",self.view(Provider(False)).system_health)
     def test_unhealthy_database(self):
-        class Broken: 
+        class Broken:
             def validate_schema(self): raise OSError("broken")
         self.assertEqual("UNHEALTHY",CommandCenterService(Broken()).build().system_health)
     def test_learning_recommendation_display(self):

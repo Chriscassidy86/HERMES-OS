@@ -75,6 +75,15 @@ class WorkspaceTests(unittest.TestCase):
 
     def test_deterministic_id_and_duplicate_protection(self):
         self.assertEqual(self.definition()[0].job_id, self.definition()[0].job_id)
+        changed = self.workspace.define(
+            run_id="RUN-1",
+            kind="REPLAY",
+            dataset_rows={"replay": rows() + ({"id": "extra", "timestamp": NOW + timedelta(minutes=6), "close": 120},)},
+            configurations=(ResearchConfiguration("baseline", "changed", 0),),
+            symbols=("BTC/USD",),
+            timeframes=("5m",),
+        )[0]
+        self.assertNotEqual(self.definition()[0].job_id, changed.job_id)
         definition, data, configurations = self.definition()
         self.workspace.submit(definition, data, configurations)
         with self.assertRaises(ValueError):
@@ -88,8 +97,15 @@ class WorkspaceTests(unittest.TestCase):
         self.assertIsNone(self.repository.load_run("RUN-1"))
 
     def test_failed_job_is_isolated(self):
-        definition, _, configurations = self.definition()
-        self.workspace.submit(definition, {"missing": rows()}, configurations)
+        definition, data, configurations = self.workspace.define(
+            run_id="RUN-1",
+            kind="REPLAY",
+            dataset_rows={"missing": rows()},
+            configurations=(ResearchConfiguration("baseline", "base", 0),),
+            symbols=("BTC/USD",),
+            timeframes=("5m",),
+        )
+        self.workspace.submit(definition, data, configurations)
         self.assertEqual("FAILED", self.workspace.run(definition.job_id).state)
         self.assertIsNone(self.repository.load_run("RUN-1"))
 
@@ -107,6 +123,9 @@ class WorkspaceTests(unittest.TestCase):
         definition, data, configurations = self.definition()
         status = self.workspace.submit(definition, data, configurations)
         self.assertFalse(status.configuration_modified)
+        other, _, _ = self.definition("RUN-OTHER")
+        with self.assertRaises(ValueError):
+            self.workspace.submit(other, {"wrong": rows()}, configurations)
 
     def test_comparison_and_reproducibility_export(self):
         comparison = self.workspace.compare(

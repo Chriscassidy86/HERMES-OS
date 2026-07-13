@@ -71,8 +71,8 @@ class ResearchWorkspace:
         seed = (
             run_id,
             kind,
-            tuple(sorted(materialized_rows)),
-            tuple(configuration.label for configuration in configurations),
+            tuple((key, stable_checksum(value)) for key, value in sorted(materialized_rows.items())),
+            tuple((configuration.label, configuration.fingerprint, configuration.signal_threshold) for configuration in configurations),
             tuple(sorted(str(symbol) for symbol in symbols)),
             tuple(sorted(str(timeframe) for timeframe in timeframes)),
         )
@@ -97,6 +97,14 @@ class ResearchWorkspace:
             raise ValueError("An immutable research job definition is required.")
         if definition.mode != "PAPER":
             raise ValueError("Research workspace is PAPER-only.")
+        dataset_rows = {str(key): tuple(value) for key, value in dataset_rows.items()}
+        configurations = tuple(configurations)
+        if (
+            tuple(sorted(dataset_rows)) != definition.dataset_ids
+            or tuple(item.label for item in configurations) != definition.configuration_labels
+            or sum(len(value) for value in dataset_rows.values()) > definition.resource_limit
+        ):
+            raise ValueError("Submitted research inputs do not match the bounded definition.")
         if len(self.definitions) >= self.max_jobs:
             raise ValueError("Workspace job capacity reached.")
         if (
@@ -105,15 +113,15 @@ class ResearchWorkspace:
         ):
             raise ValueError("Duplicate research job or run.")
         self.definitions[definition.job_id] = definition
-        self.inputs[definition.job_id] = (dict(dataset_rows), tuple(configurations))
+        self.inputs[definition.job_id] = (dataset_rows, configurations)
         status = ResearchJobStatus(definition.job_id, "QUEUED", 0)
         self.statuses[definition.job_id] = status
         return status
 
     def cancel(self, job_id):
         status = self._status(job_id)
-        if status.state not in {"QUEUED", "RUNNING"}:
-            raise ValueError("Only active local jobs may be cancelled.")
+        if status.state != "QUEUED":
+            raise ValueError("Only queued jobs may be cancelled safely.")
         cancelled = ResearchJobStatus(
             job_id,
             "CANCELLED",
