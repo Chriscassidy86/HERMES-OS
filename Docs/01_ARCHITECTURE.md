@@ -42,6 +42,10 @@ V3.2 adds a dedicated regime research boundary with immutable validated inputs a
 classification results. Explicit ordered rules classify trend, range, flow,
 break, volatility, and transition regimes without altering trading eligibility.
 
+V3.3 adds a multi-timeframe aggregation boundary over supplied specialist signals.
+It explains short-, medium-, and long-term views per specialist; the recommendation
+engine requires complete alignment and still sends any direction to Risk Manager.
+
 Foundation II supplies configuration, logging, events, registry, scheduler, and
 boot orchestration. Foundation III supplies frozen domain records, the
 `BaseSpecialist` contract, Trend specialist, evidence aggregation,

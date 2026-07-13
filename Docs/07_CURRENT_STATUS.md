@@ -18,6 +18,8 @@ Each persisted recommendation can now be translated into a human-readable explan
 of evidence, disagreement, exclusions, risk rationale, assumptions, and uncertainty.
 A dedicated advisory regime engine now classifies bull, bear, sideways, accumulation,
 distribution, breakout, breakdown, volatility, and transition conditions.
+Validated 5m, 15m, 1h, 4h, and Daily specialist signals can now be composed into
+short-, medium-, and long-term views with explicit alignment and conflict.
 
 Hermes OS is at Paper Trading RC1 candidate status. It provides a synchronous,
 paper-only multi-specialist decision, simulation, persistence, reporting,
