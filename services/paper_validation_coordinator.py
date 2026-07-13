@@ -7,10 +7,12 @@ from services.trade_report_cards import TradeReportCardService
 
 class PaperValidationCoordinator:
  HORIZON=3600
- def __init__(self,journal,repository,clock): self.journal=journal; self.repository=repository; self.clock=clock
+ def __init__(self,journal,repository,clock): self.journal=journal; self.repository=repository; self.clock=clock; self.errors=[]
  def observe(self,result):
   if getattr(result,"cycle",None) is not None:
-   self._decisions(); self._report_cards(); self._summaries()
+   for operation in (self._decisions,self._report_cards,self._summaries):
+    try: operation()
+    except Exception as exc: self.errors=(self.errors+[f"{operation.__name__}: {type(exc).__name__}"])[-100:]
  def _decisions(self):
   cycles=tuple(reversed(self.journal.recent_cycles(1000))); existing={x.cycle_id for x in self.repository.decision_quality(1000)}
   for index,cycle in enumerate(cycles):

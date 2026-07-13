@@ -17,4 +17,8 @@ class CoordinatorTests(unittest.TestCase):
    first=make(NOW,100); later=make(NOW+timedelta(hours=1),105); journal.save_cycle(first); journal.save_cycle(later)
    PaperValidationCoordinator(journal,repo,lambda:NOW+timedelta(hours=2)).observe(Result(later))
    self.assertEqual(1,len(repo.decision_quality())); self.assertEqual(3,len(repo.session_summaries()))
+ def test_validation_failure_cannot_stop_paper_observer(self):
+  class Broken:
+   def recent_cycles(self,_): raise OSError("unavailable")
+  coordinator=PaperValidationCoordinator(Broken(),object(),lambda:NOW); coordinator.observe(Result(object())); self.assertTrue(coordinator.errors)
 if __name__=="__main__":unittest.main()

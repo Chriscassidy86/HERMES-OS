@@ -21,6 +21,7 @@ class DecisionQualityTests(unittest.TestCase):
  def test_no_lookahead_horizon_and_stale(self):
   with self.assertRaises(ValueError): self.s.evaluate(value(),({"timestamp":NOW,"price":105},),horizon_seconds=3600,evaluated_at=self.end)
   with self.assertRaises(ValueError): self.s.evaluate(value(),({"timestamp":NOW+timedelta(minutes=10),"price":105},),horizon_seconds=3600,evaluated_at=self.end)
+  accepted=self.s.evaluate(value(),({"timestamp":NOW+timedelta(hours=1,seconds=30),"price":105},),horizon_seconds=3600,evaluated_at=NOW+timedelta(hours=1,seconds=30)); self.assertEqual(3600,accepted.evaluation_horizon_seconds)
  def test_stable_persistence(self):
   record=self.s.evaluate(value(),points(5),horizon_seconds=3600,evaluated_at=self.end)
   with tempfile.TemporaryDirectory() as tmp:

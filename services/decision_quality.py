@@ -12,11 +12,11 @@ class DecisionQualityService:
   for item in checkpoints:
    timestamp=self._utc(item.get("timestamp")); price=float(item.get("price",0))
    if timestamp<=started: raise ValueError("No-look-ahead boundary requires later observations.")
-   if timestamp.timestamp()>cutoff: continue
+   if timestamp.timestamp()>cutoff+60: continue
    if price<=0: raise ValueError("Checkpoint price is invalid.")
    rows.append((timestamp.isoformat(),price))
   if not rows: raise ValueError("Fresh later price checkpoints are required.")
-  if max(self._utc(x[0]).timestamp() for x in rows)<cutoff-60: raise ValueError("Outcome checkpoints are stale for the requested horizon.")
+  if max(self._utc(x[0]).timestamp() for x in rows)<cutoff: raise ValueError("Outcome checkpoints are stale for the requested horizon.")
   snapshot=cycle.get("snapshot") or {}; start=float(snapshot.get("price",0)); action=(cycle.get("recommendation") or {}).get("action","WAIT")
   moves=[(price-start)/start*100 for _,price in rows]; final=moves[-1]; approved=bool((cycle.get("risk_assessment") or {}).get("approved"))
   classification=self._classify(action,final,approved); rejected=None
