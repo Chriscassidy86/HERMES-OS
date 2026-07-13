@@ -7,6 +7,7 @@ import sqlite3
 
 from models.trade_report_card import TradeReportCard
 from models.decision_quality import DecisionQualityRecord
+from models.session_summary import PaperSessionSummary
 
 VALIDATION_SCHEMA_VERSION = 1
 
@@ -25,6 +26,7 @@ class ValidationRepository:
             elif row[0] != VALIDATION_SCHEMA_VERSION: raise RuntimeError("Validation schema version is unsupported.")
             db.execute("CREATE TABLE IF NOT EXISTS trade_report_cards(trade_id TEXT PRIMARY KEY,exit_timestamp TEXT NOT NULL,payload TEXT NOT NULL)")
             db.execute("CREATE TABLE IF NOT EXISTS decision_quality(cycle_id TEXT PRIMARY KEY,evaluated_at TEXT NOT NULL,payload TEXT NOT NULL)")
+            db.execute("CREATE TABLE IF NOT EXISTS session_summaries(summary_id TEXT PRIMARY KEY,ended_at TEXT NOT NULL,payload TEXT NOT NULL)")
             db.commit()
 
     def save_report_card(self, card):
@@ -45,6 +47,18 @@ class ValidationRepository:
             for field in tuple_fields: payload[field]=tuple(payload[field])
             for field in ("entry_specialists","exit_specialists"): payload[field]=tuple(tuple(item) for item in payload[field])
             result.append(TradeReportCard(**payload))
+        return tuple(result)
+    def save_session_summary(self,summary):
+        if not isinstance(summary,PaperSessionSummary): raise ValueError("A PaperSessionSummary is required.")
+        payload=json.dumps(asdict(summary),sort_keys=True,separators=(",",":"))
+        try:
+            with closing(self.connect()) as db: db.execute("INSERT INTO session_summaries VALUES(?,?,?)",(summary.summary_id,summary.ended_at,payload)); db.commit()
+        except sqlite3.IntegrityError as exc: raise ValueError("Duplicate session summary.") from exc
+    def session_summaries(self,limit=100):
+        with closing(self.connect()) as db: rows=db.execute("SELECT payload FROM session_summaries ORDER BY ended_at DESC,summary_id LIMIT ?",(limit,)).fetchall()
+        result=[]
+        for row in rows:
+            value=json.loads(row[0]); value["alerts"]=tuple(value["alerts"]); value["learning_recommendations"]=tuple(value["learning_recommendations"]); value["limitations"]=tuple(value["limitations"]); result.append(PaperSessionSummary(**value))
         return tuple(result)
 
     def save_decision_quality(self,record):
