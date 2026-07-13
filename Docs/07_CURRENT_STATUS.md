@@ -2,6 +2,8 @@
 
 Development continues locally on `development/hermes-v2` after tagged Paper
 Trading RC1. V2.1 governance is established; live trading remains prohibited.
+The V2.2 command-center service provides immutable paper health, evidence, risk,
+portfolio, performance, replay, and learning views without execution controls.
 
 Hermes OS is at Paper Trading RC1 candidate status. It provides a synchronous,
 paper-only multi-specialist decision, simulation, persistence, reporting,

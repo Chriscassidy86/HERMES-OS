@@ -7,6 +7,12 @@ Human approval controls releases and configuration adoption; deterministic Risk
 Manager veto controls paper eligibility. Presentation and provider code cannot
 bypass domain services.
 
+## Command center service
+
+`CommandCenterService` creates an immutable, read-only operator/CEO view from the
+audit journal, provider health, replay state, and learning proposals. It exposes
+no action callbacks and keeps presentation concerns outside domain logic.
+
 Foundation II supplies configuration, logging, events, registry, scheduler, and
 boot orchestration. Foundation III supplies frozen domain records, the
 `BaseSpecialist` contract, Trend specialist, evidence aggregation,
