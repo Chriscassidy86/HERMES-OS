@@ -75,6 +75,7 @@ V4.4 adds immutable performance observations and a deterministic analytics servi
 V4.5 adds local alert detection and an immutable PAPER operator checklist; external delivery is disabled.
 V4.6 hardens loopback delivery, bounded research identity, UTC analytics, and release operations.
 V5.1 designates `PaperOperationsService` as the continuous market engine, preserving the existing session, decision, risk, portfolio, and journal pipeline.
+V5 connects that engine to explainable paper execution, the GET-only live dashboard, recommendation-only learning, and an accelerated reliability harness. Risk Manager remains the sole execution gate.
 
 Foundation II supplies configuration, logging, events, registry, scheduler, and
 boot orchestration. Foundation III supplies frozen domain records, the

@@ -18,4 +18,5 @@ class PaperExecutionOutcome:
     order: Any = None
     fill: Any = None
     trade: Any = None
+    trade_duration_seconds: float | None = None
     paper_only: bool = True
