@@ -54,6 +54,7 @@ V4.6 restricts dashboard binding at the API boundary, strengthens research input
 V5.1 extends the recovered paper operations loop with bounded cycle metrics, stale-data rejection, and read-only batch updates.
 V5.2 adds an explainable Risk-gated facade over the existing deterministic paper portfolio.
 V5.3 adds auto-refreshing continuous PAPER state to the existing GET-only dashboard.
+V5.4 adds bounded post-trade learning reports that require human review and never mutate configuration.
 
 HERMES-OS is an experimental Python multi-agent crypto decision system. The
 current release is the Paper Trading RC1 candidate, incorporating Foundations
