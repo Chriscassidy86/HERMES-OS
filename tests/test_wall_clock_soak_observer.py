@@ -3,6 +3,8 @@ from pathlib import Path
 import tempfile,unittest
 from services.wall_clock_soak import WallClockSoakService
 from services.wall_clock_soak_observer import WallClockSoakObserver
+from core.settings import RuntimeSettings
+from scripts.paper_service import build_soak_observer
 NOW=datetime(2026,7,13,12,tzinfo=timezone.utc)
 class Result:
  def __init__(self,status): self.status=status
@@ -14,4 +16,9 @@ class ObserverTests(unittest.TestCase):
  def test_restart_recovery_is_counted(self):
   with tempfile.TemporaryDirectory() as tmp:
    service=WallClockSoakService(Path(tmp)/"state.json",clock=lambda:NOW,rss_provider=lambda:None); service.start("72h"); WallClockSoakObserver(service); self.assertEqual(1,service.load().restart_count)
+ def test_paper_service_uses_runtime_log_directory(self):
+  with tempfile.TemporaryDirectory() as tmp:
+   root=Path(tmp); settings=RuntimeSettings("PAPER",root/"data.sqlite3",root/"logs",1000,1)
+   observer=build_soak_observer(settings,lambda:NOW,root/"soak.json")
+   self.assertEqual(settings.log_directory,observer.service.log_path)
 if __name__=="__main__":unittest.main()

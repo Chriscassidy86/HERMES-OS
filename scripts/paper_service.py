@@ -18,6 +18,8 @@ from services.wall_clock_soak import WallClockSoakService
 from services.wall_clock_soak_observer import WallClockSoakObserver
 
 DEFAULT_SYMBOLS=("BTCUSDT","ETHUSDT","SOLUSDT","XRPUSDT")
+def build_soak_observer(settings,clock,state_path="/app/data/hermes-soak.json"):
+ return WallClockSoakObserver(WallClockSoakService(state_path,clock=clock,database_path=settings.database_path,log_path=settings.log_directory))
 def main():
  settings=RuntimeSettings.from_env(); journal=SQLiteAuditJournal(settings.database_path); journal.initialize()
  validation=ValidationRepository(settings.database_path); validation.initialize()
@@ -27,7 +29,7 @@ def main():
  provider=PublicSnapshotProvider(redundancy); shutdown=GracefulShutdown(); shutdown.install_signal_handlers()
  portfolio=PaperPortfolio(); session=PaperTradingSession(provider,portfolio,journal,provider.clock)
  coordinator=PaperValidationCoordinator(journal,validation,provider.clock)
- soak=WallClockSoakObserver(WallClockSoakService("/app/data/hermes-soak.json",clock=provider.clock,database_path=settings.database_path,log_path=settings.log_dir))
+ soak=build_soak_observer(settings,provider.clock)
  def observe(result): coordinator.observe(result); soak.observe(result)
  scheduler=MultiSymbolScheduler(session,journal,shutdown,clock=provider.clock,observer=observe)
  print(f"HERMES PAPER MODE CONTINUOUS | symbols={','.join(symbols)} | timeframe={timeframe} | interval={interval}",flush=True)
