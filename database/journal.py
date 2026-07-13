@@ -87,6 +87,14 @@ class SQLiteAuditJournal:
     def current_portfolio(self):
         rows=self._query("SELECT payload FROM portfolio_snapshots ORDER BY created_at DESC, rowid DESC LIMIT 1")
         return rows[0] if rows else None
+    def portfolio_history(self,limit=200):
+        if isinstance(limit,bool) or not isinstance(limit,int) or not 1<=limit<=1000: raise ValueError("Portfolio history limit is invalid.")
+        with self.connect() as db:
+            rows=db.execute("SELECT created_at,payload FROM portfolio_snapshots ORDER BY created_at DESC,rowid DESC LIMIT ?",(limit,)).fetchall()
+        result=[]
+        for row in rows:
+            payload=json.loads(row[1]); payload["recorded_at"]=row[0]; result.append(payload)
+        return result
     def restore_portfolio(self,portfolio):
         from paper_trading.models import (OrderStatus,OrderTransition,PaperFill,
             PaperOrder,PaperPosition,PaperTrade)

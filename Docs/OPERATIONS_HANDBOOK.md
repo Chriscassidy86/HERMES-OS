@@ -53,3 +53,9 @@ V6 operators should enable only supported symbols, review per-symbol provider he
 ## Launch operation
 
 The supported launch path is `.\scripts\hermes.ps1 start`. Compose starts the continuous public-data PAPER service and a separate GET-only dashboard at `127.0.0.1:8765`. Stop with `.\scripts\hermes.ps1 stop`; restart with `.\scripts\hermes.ps1 restart`. Runtime stdout is inspected with `.\scripts\hermes.ps1 logs`. Follow `Docs/LAUNCH_GUIDE.md` for backup and read-only reports.
+
+The dashboard root is the human operator view; `/api/dashboard` is the stable raw
+debugging projection. The page refreshes every five seconds without mutating state.
+If refresh fails, it preserves the last display and shows a warning. Treat WAIT/HOLD
+as no approved directional action, REJECTED as a Risk Manager veto, and DATA STALE or
+PROVIDER FAILURE as fail-closed conditions. POST, PUT, PATCH and DELETE are prohibited.

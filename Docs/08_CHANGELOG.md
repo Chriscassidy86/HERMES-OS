@@ -105,3 +105,7 @@
 - Replaced the hardcoded morning meeting with a real pipeline example.
 - Added decision-cycle tests and operational/safety documentation.
 - Launch readiness connected the existing scheduler to public providers, added the loopback dashboard service, operator PowerShell entrypoint, source attribution, verified backup command, and beginner launch/session guides.
+- Launch dashboard presentation replaced the raw engineering root with a responsive
+  Hermes Quant Labs PAPER operator interface, stable debugging APIs, safe five-second
+  refresh, complete explanation panels, public-provider status, bounded activity and
+  local canvas charts without adding trading or configuration controls.

@@ -14,6 +14,13 @@ Set-Location 'D:\Desktop\HERMES-OS'
 
 The dashboard is [http://127.0.0.1:8765/](http://127.0.0.1:8765/) and is published on host loopback only. Look for `PAPER MODE ONLY` before trusting the display.
 
+It refreshes every five seconds and keeps the last known display if a refresh fails.
+Review the top health cards, portfolio, enabled markets, specialists, Risk Manager
+explanation, public providers, charts, and recent activity. Use
+[http://127.0.0.1:8765/api/dashboard](http://127.0.0.1:8765/api/dashboard) only for
+raw debugging JSON. `WAIT` is a valid safe outcome; `REJECTED` means Risk Manager
+blocked the recommendation. `DATA STALE` and `PROVIDER FAILURE` require investigation.
+
 Operational commands:
 
 ```powershell

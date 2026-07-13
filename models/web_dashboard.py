@@ -1,13 +1,50 @@
-"""Immutable local web dashboard projection."""
+"""Immutable, read-only projection for the local operator dashboard."""
+
 from dataclasses import dataclass
 from typing import Any
+
+
 @dataclass(frozen=True)
 class WebDashboardProjection:
-    banner:str; mode:str; version:str; system_health:str; provider_health:str; database_health:str
-    latest_decision:Any; market_regime:str; multi_timeframe_alignment:Any; specialists:tuple
-    agreements:tuple; disagreements:tuple; ignored_evidence:tuple; risk_decision:Any
-    cash:str; equity:str; exposure:str; open_positions:tuple; closed_trades:tuple
-    daily_pnl:str; weekly_pnl:str; total_return:str; maximum_drawdown:str
-    win_rate:str; profit_factor:str|None; warnings:tuple; executive_brief:Any
-    learning_explanation:Any; experiment_status:Any; research_run:Any; actions:tuple=()
-    latest_trade:Any=None; recent_alerts:tuple=(); operator_workflow:Any=None; refresh_seconds:int=5
+    banner: str
+    mode: str
+    version: str
+    updated_at: str
+    refresh_seconds: int
+    system_health: str
+    provider_health: str
+    database_health: str
+    active_provider: str
+    latest_cycle_time: str | None
+    current_recommendation: str
+    confidence: float
+    risk_status: str
+    risk_reason: str
+    market_regime: str
+    starting_balance: str
+    cash: str
+    equity: str
+    total_return: str
+    realized_pnl: str
+    unrealized_pnl: str
+    exposure: str
+    open_position_count: int
+    closed_trade_count: int
+    fees_paid: str
+    slippage_impact: str
+    maximum_drawdown: str
+    open_positions: tuple
+    closed_trades: tuple
+    markets: tuple
+    specialists: tuple
+    explanation: Any
+    providers: tuple
+    recent_cycles: tuple
+    recent_decisions: tuple
+    recent_fills: tuple
+    recent_trades: tuple
+    recent_alerts: tuple
+    learning_recommendations: tuple
+    charts: Any
+    warnings: tuple
+    actions: tuple = ()

@@ -49,3 +49,7 @@ V4.6 status: localhost-only read-only dashboard, labeled visualization, bounded 
 V5.6 status: the recovered continuous PAPER loop, explainable execution facade, live read-only dashboard, bounded learning loop, and accelerated 24-hour reliability harness are implemented. Authenticated exchange and live-order capabilities remain absent.
 V6.6 status: fair four-symbol scheduling, redundant public data, realistic Risk-gated PAPER fills, expanded portfolio projections, and accelerated soak validation are implemented. Live and authenticated exchange capabilities remain absent.
 Launch audit status: Compose now runs the continuous four-symbol public-observation PAPER engine and a healthy loopback-only dashboard. Operator start, stop, restart, health, logs, backup, portfolio, trades, provider and alert commands are available through `scripts/hermes.ps1`.
+Dashboard presentation status: the root now renders a professional responsive PAPER
+operator interface over the immutable web projection, with five-second safe refresh,
+dedicated debugging APIs, portfolio/market/specialist/provider views, human decision
+explanations, bounded activity and local charts. It remains localhost-only and GET-only.

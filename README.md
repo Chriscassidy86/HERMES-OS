@@ -43,8 +43,9 @@ python examples/local_dashboard_demo.py
 ```
 
 To serve an existing journal locally, run
-`python scripts/read_only_dashboard.py data/hermes.sqlite3`. Only `GET /dashboard`
-and `GET /health` are supported; the listener binds to `127.0.0.1`.
+`python scripts/read_only_dashboard.py data/hermes.sqlite3`. The polished operator
+dashboard is at `http://127.0.0.1:8765/`; stable debugging JSON is available at
+`GET /api/dashboard`. The listener is localhost-only and every mutation method is rejected.
 V4.1 adds stable HTML and JSON CEO dashboard views with all composition performed by `WebDashboardService`.
 V4.2 adds validated, labeled, paginated and downsampled chart projections for market, specialist, risk, portfolio, P&L, trade, and calibration histories.
 V4.3 adds a bounded local replay/research workspace with deterministic jobs, cancellation, persisted manifests, comparisons, and exports.
@@ -74,6 +75,11 @@ From Windows PowerShell in `D:\Desktop\HERMES-OS`:
 ```
 
 Stop safely with `.\scripts\hermes.ps1 stop`. See `Docs/LAUNCH_GUIDE.md` for every operator command and verified default.
+
+The dashboard refreshes its immutable projection every five seconds without a full
+page reload. It presents health, Risk Manager status, portfolio, four-symbol public
+observations, specialist evidence, decision explanations, providers, bounded activity,
+and local PAPER charts. A temporary refresh failure retains the last known display.
 
 HERMES-OS is an experimental Python multi-agent crypto decision system. The
 current release is the Paper Trading RC1 candidate, incorporating Foundations
@@ -113,7 +119,8 @@ The project currently uses only the Python standard library.
 ## Safety boundary
 
 - Paper execution eligibility is a decision flag only; it does not place orders.
-- No broker, exchange, API-key, or Binance.US integration exists.
+- Public Binance.US, Coinbase, and Kraken market-data observation is unauthenticated;
+  no broker, private exchange, API-key, withdrawal, or live-order integration exists.
 - `LIVE_TRADING` remains `False`.
 - Invalid or empty evidence and risk rejection always prevent eligibility.
 - Paper orders are local deterministic simulations only; no exchange is contacted.
