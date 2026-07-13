@@ -51,6 +51,13 @@ class DecisionCycle:
             and snapshot.timestamp.astimezone(timezone.utc) > timestamp + timedelta(seconds=60)
         ):
             rejection_reasons.append("Snapshot timestamp is in the future.")
+        if (
+            isinstance(snapshot, MarketSnapshot)
+            and isinstance(snapshot.timestamp, datetime)
+            and snapshot.timestamp.tzinfo is not None
+            and timestamp - snapshot.timestamp.astimezone(timezone.utc) > timedelta(minutes=5)
+        ):
+            rejection_reasons.append("Snapshot market data is stale.")
         symbol = (
             snapshot.symbol.strip()
             if isinstance(snapshot, MarketSnapshot)

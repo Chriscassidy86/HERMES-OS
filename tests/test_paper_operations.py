@@ -44,6 +44,18 @@ class PaperOperationsTests(unittest.TestCase):
         self.assertTrue(result.recovered_portfolio)
         self.assertEqual("BATCH_LIMIT_REACHED", result.stopped_reason)
         self.assertEqual((('NO_TRADE', 1), ('PAPER_FILLED', 1)), result.status_counts)
+        self.assertIn(("recent_cycles", "2"), result.cycle_metrics)
+
+    def test_batch_callback_and_memory_bound(self):
+        batches = []
+        service = PaperOperationsService(
+            FakeSession(("NO_TRADE", "NO_TRADE", "NO_TRADE")), FakeJournal(),
+            GracefulShutdown(), clock=lambda: NOW, wait=lambda _seconds: False,
+            on_batch=lambda timestamp, results: batches.append((timestamp, results)),
+        )
+        result = service.run(PaperOperationConfig(("BTC/USD",), interval_seconds=0, recent_cycle_limit=2), maximum_batches=3)
+        self.assertEqual(3, len(batches))
+        self.assertIn(("recent_cycles", "2"), result.cycle_metrics)
 
     def test_failure_circuit_opens_after_consecutive_batch_failures(self):
         session = FakeSession(("PROVIDER_FAILURE", "PROVIDER_FAILURE", "NO_TRADE"))
@@ -66,6 +78,7 @@ class PaperOperationsTests(unittest.TestCase):
         with self.assertRaises(ValueError): service.run(PaperOperationConfig(()), maximum_batches=1)
         with self.assertRaises(ValueError): service.run(PaperOperationConfig(("BTC/USD", "BTC/USD")), maximum_batches=1)
         with self.assertRaises(ValueError): service.run(PaperOperationConfig(("BTC/USD",), interval_seconds=float("nan")), maximum_batches=1)
+        with self.assertRaises(ValueError): service.run(PaperOperationConfig(("BTC/USD",), recent_cycle_limit=0), maximum_batches=1)
 
     def test_database_and_backup_integrity_verification(self):
         with tempfile.TemporaryDirectory() as directory:

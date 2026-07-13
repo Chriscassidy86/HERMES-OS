@@ -74,6 +74,7 @@ V4.3 adds an immutable bounded research-job state machine over the V3.6 reposito
 V4.4 adds immutable performance observations and a deterministic analytics service outside the UI.
 V4.5 adds local alert detection and an immutable PAPER operator checklist; external delivery is disabled.
 V4.6 hardens loopback delivery, bounded research identity, UTC analytics, and release operations.
+V5.1 designates `PaperOperationsService` as the continuous market engine, preserving the existing session, decision, risk, portfolio, and journal pipeline.
 
 Foundation II supplies configuration, logging, events, registry, scheduler, and
 boot orchestration. Foundation III supplies frozen domain records, the

@@ -21,6 +21,7 @@
 - V4.4 added deterministic performance analytics, groupings, calibration, and quality metrics.
 - V4.5 added local operational alerts and the PAPER daily workflow.
 - V4.6 enforced loopback binding, content-derived research identities, submission bounds, UTC analytics, expanded formatting coverage, and release documentation.
+- V5.1 added bounded continuous cycle metrics, batch projections, and stale-market rejection.
 
 - Hardened RC1 risk, portfolio-cost, and replay input validation and corrected
   default signal timestamps to be created per instance.
