@@ -15,6 +15,8 @@ V2.7 added restart recovery, controlled long-running paper batches, graceful sto
 failure circuit breaking, database/backup integrity verification, and operator status.
 V3.1 added immutable decision explanations and exposed them through command-center
 and executive briefing views.
+V3.2 added a deterministic ten-state market regime engine with confidence,
+evidence, explanation, uncertainty, and fail-closed input validation.
 
 Completed: Foundation II infrastructure; Foundation III models, Trend
 specialist, evidence, recommendation, risk and briefing; Foundation IV.1

@@ -17,6 +17,8 @@ Recovery-aware paper operations with failure circuit breaking are demonstrated b
 `python examples/paper_operations_demo.py`; database integrity is operator-readable.
 V3.1 adds immutable human-readable decision explanations covering evidence,
 agreement, disagreement, exclusions, Risk Manager rationale, assumptions, and uncertainty.
+V3.2 adds an explainable deterministic market-regime research engine covering ten
+regimes and failing closed when supplied evidence is insufficient or contradictory.
 
 HERMES-OS is an experimental Python multi-agent crypto decision system. The
 current release is the Paper Trading RC1 candidate, incorporating Foundations

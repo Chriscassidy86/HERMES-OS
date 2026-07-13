@@ -16,6 +16,8 @@ Paper operations can recover the latest portfolio snapshot, run controlled foreg
 batches, stop gracefully, and open a circuit after repeated complete batch failures.
 Each persisted recommendation can now be translated into a human-readable explanation
 of evidence, disagreement, exclusions, risk rationale, assumptions, and uncertainty.
+A dedicated advisory regime engine now classifies bull, bear, sideways, accumulation,
+distribution, breakout, breakdown, volatility, and transition conditions.
 
 Hermes OS is at Paper Trading RC1 candidate status. It provides a synchronous,
 paper-only multi-specialist decision, simulation, persistence, reporting,

@@ -38,6 +38,10 @@ V3.1 adds a deterministic explanation service over immutable decision artifacts.
 Command-center and briefing presentation reuse that service; they do not reimplement
 decision, evidence, or risk logic.
 
+V3.2 adds a dedicated regime research boundary with immutable validated inputs and
+classification results. Explicit ordered rules classify trend, range, flow,
+break, volatility, and transition regimes without altering trading eligibility.
+
 Foundation II supplies configuration, logging, events, registry, scheduler, and
 boot orchestration. Foundation III supplies frozen domain records, the
 `BaseSpecialist` contract, Trend specialist, evidence aggregation,
