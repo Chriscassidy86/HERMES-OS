@@ -27,6 +27,7 @@ V3.6 added versioned research persistence, dataset provenance, deterministic run
 manifests, offline multi-dataset orchestration, walk-forward splits, artifact
 comparison, reproducibility export, calibration monitoring, and GET-only local delivery.
 V4.1 added the real localhost HTML/JSON dashboard foundation.
+V4.2 added deterministic market and portfolio visualization projections.
 
 Completed: Foundation II infrastructure; Foundation III models, Trend
 specialist, evidence, recommendation, risk and briefing; Foundation IV.1

@@ -7,11 +7,16 @@ from reports.web_dashboard import WebDashboardRenderer
 
 
 class ReadOnlyDashboardApplication:
-    def __init__(self, view_provider): self.view_provider = view_provider; self.renderer = CEODashboardRenderer(); self.web_renderer=WebDashboardRenderer()
+    def __init__(self, view_provider, chart_provider=None): self.view_provider = view_provider; self.chart_provider=chart_provider; self.renderer = CEODashboardRenderer(); self.web_renderer=WebDashboardRenderer()
 
     def handle(self, method, path):
         if method != "GET": return 405, {"content-type": "application/json"}, b'{"error":"read-only"}'
         if path in {"/health","/api/health"}: return 200, {"content-type": "application/json"}, b'{"mode":"PAPER","status":"ok"}'
+        if path=="/api/charts":
+            if self.chart_provider is None: return 200,{"content-type":"application/json"},b'{"charts":[]}'
+            import json
+            from dataclasses import asdict
+            return 200,{"content-type":"application/json","cache-control":"no-store"},json.dumps({"charts":[asdict(item) for item in self.chart_provider()]},sort_keys=True,separators=(",",":")).encode()
         if path in {"/","/dashboard.html"}:
             view=self.view_provider(); body=(self.web_renderer.html(view) if hasattr(view,"latest_decision") else '<h1>PAPER MODE ONLY</h1><pre>'+self.renderer.to_json(view)+'</pre>').encode("utf-8"); return 200,{"content-type":"text/html; charset=utf-8","cache-control":"no-store"},body
         if path not in {"/dashboard","/api/dashboard"}: return 404, {"content-type": "application/json"}, b'{"error":"not-found"}'
