@@ -44,6 +44,8 @@ class MarketSnapshot:
     timestamp: datetime = field(
         default_factory=lambda: datetime.now(timezone.utc)
     )
+    source: str = "UNSPECIFIED"
+    source_timestamp: datetime | None = None
 
     def summary(self) -> str:
         return (

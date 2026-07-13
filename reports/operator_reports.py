@@ -25,6 +25,10 @@ class OperatorReports:
         cycle=self.latest_decision_cycle(); return cycle["risk_assessment"] if cycle else {"approved":False,"reason":"No decision cycle available."}
     def provider_health(self):
         health=getattr(self.provider,"health",None)
-        return {"healthy":health.healthy,"status":health.status,"last_error":health.last_error} if health else {"healthy":False,"status":"NOT_CONFIGURED","last_error":None}
+        if health: return {"healthy":health.healthy,"status":health.status,"last_error":health.last_error}
+        cycle=self.latest_decision_cycle(); snapshot=(cycle or {}).get("snapshot",{}); source=snapshot.get("source")
+        return {"healthy":bool(source),"status":source or "NOT_CONFIGURED","last_error":None}
+    def alerts(self,limit=20):
+        return tuple({"category":"RISK_OR_DATA_REJECTION","detail":item} for item in self.journal.rejection_history(limit))
     @staticmethod
     def to_json(value): return json.dumps(value,indent=2,sort_keys=True)

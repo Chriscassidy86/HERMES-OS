@@ -51,10 +51,11 @@ def restore_database(backup,target):
 
 def main():
     import argparse
-    parser=argparse.ArgumentParser(); parser.add_argument("operation",choices=("backup","restore","verify")); parser.add_argument("source"); parser.add_argument("destination",nargs="?"); args=parser.parse_args()
-    if args.operation in {"backup","restore"} and not args.destination: parser.error("destination is required for backup and restore")
+    parser=argparse.ArgumentParser(); parser.add_argument("operation",choices=("backup","restore","verify","verify-backup")); parser.add_argument("source"); parser.add_argument("destination",nargs="?"); args=parser.parse_args()
+    if args.operation in {"backup","restore","verify-backup"} and not args.destination: parser.error("destination is required for backup, restore, and backup verification")
     if args.operation=="backup": result=backup_database(args.source,args.destination)
     elif args.operation=="restore": result=restore_database(args.source,args.destination)
+    elif args.operation=="verify-backup": result=verify_backup(args.source,args.destination)
     else: result=verify_database(args.source)
     print(result)
 if __name__=="__main__": main()

@@ -5,6 +5,9 @@ services:
       HERMES_MODE: PAPER
       HERMES_DATABASE: /app/data/hermes.sqlite3
       HERMES_LOG_DIR: /app/logs
+      HERMES_SYMBOLS: BTCUSDT,ETHUSDT,SOLUSDT,XRPUSDT
+      HERMES_TIMEFRAME: 4H
+      HERMES_CYCLE_INTERVAL_SECONDS: "30"
     volumes:
       - hermes-data:/app/data
       - hermes-logs:/app/logs
@@ -14,6 +17,27 @@ services:
       interval: 30s
       timeout: 5s
       retries: 3
+  hermes-dashboard:
+    build: .
+    command: ["python", "scripts/read_only_dashboard.py", "/app/data/hermes.sqlite3", "--port", "8765", "--container-bridge"]
+    environment:
+      HERMES_MODE: PAPER
+      HERMES_DATABASE: /app/data/hermes.sqlite3
+      HERMES_LOG_DIR: /app/logs
+    depends_on:
+      hermes-paper:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8765:8765"
+    volumes:
+      - hermes-data:/app/data
+      - hermes-logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "from urllib.request import urlopen; assert urlopen('http://127.0.0.1:8765/health', timeout=3).status == 200"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
 volumes:
   hermes-data:
   hermes-logs:

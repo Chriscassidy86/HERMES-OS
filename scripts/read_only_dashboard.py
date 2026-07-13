@@ -9,11 +9,12 @@ from services.ceo_dashboard import CEODashboardService
 from services.command_center import CommandCenterService
 
 def main():
-    parser=argparse.ArgumentParser(); parser.add_argument("database"); parser.add_argument("--port",type=int,default=8765); args=parser.parse_args()
+    parser=argparse.ArgumentParser(); parser.add_argument("database"); parser.add_argument("--port",type=int,default=8765); parser.add_argument("--container-bridge",action="store_true"); args=parser.parse_args()
     journal=SQLiteAuditJournal(args.database); journal.validate_schema()
     provider=lambda:CEODashboardService(CommandCenterService(journal)).build()
-    server=ReadOnlyDashboardApplication(provider).serve("127.0.0.1",args.port)
-    print(f"PAPER MODE ONLY dashboard: http://127.0.0.1:{args.port}/dashboard",flush=True)
+    host="0.0.0.0" if args.container_bridge else "127.0.0.1"
+    server=ReadOnlyDashboardApplication(provider,allow_container_bridge=args.container_bridge).serve(host,args.port)
+    print(f"PAPER MODE ONLY dashboard: http://{host}:{args.port}/dashboard",flush=True)
     try: server.serve_forever()
     except KeyboardInterrupt: pass
     finally: server.server_close()

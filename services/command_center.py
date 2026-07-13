@@ -66,6 +66,8 @@ class CommandCenterService:
         latest = cycles[0] if cycles else None
         evidence = latest.get("evidence_summary", {}) if latest else {}
         snapshot = latest.get("snapshot") if latest else None
+        if self.provider is None and snapshot and snapshot.get("source"):
+            provider_status = snapshot["source"]
         specialists = tuple(latest.get("specialist_reports", ())) if latest else ()
         contributions = tuple(evidence.get("contributions", ()))
         included = tuple(item for item in contributions if item.get("included"))

@@ -7,7 +7,7 @@ from reports.web_dashboard import WebDashboardRenderer
 
 
 class ReadOnlyDashboardApplication:
-    def __init__(self, view_provider, chart_provider=None): self.view_provider = view_provider; self.chart_provider=chart_provider; self.renderer = CEODashboardRenderer(); self.web_renderer=WebDashboardRenderer()
+    def __init__(self, view_provider, chart_provider=None, *, allow_container_bridge=False): self.view_provider = view_provider; self.chart_provider=chart_provider; self.allow_container_bridge=allow_container_bridge; self.renderer = CEODashboardRenderer(); self.web_renderer=WebDashboardRenderer()
 
     def handle(self, method, path):
         if method != "GET": return 405, {"content-type": "application/json"}, b'{"error":"read-only"}'
@@ -24,7 +24,7 @@ class ReadOnlyDashboardApplication:
         return 200, {"content-type": "application/json", "cache-control": "no-store"}, body
 
     def serve(self, host="127.0.0.1", port=8765):
-        if host != "127.0.0.1":
+        if host != "127.0.0.1" and not (self.allow_container_bridge and host == "0.0.0.0"):
             raise ValueError("Dashboard binding is restricted to 127.0.0.1.")
         if isinstance(port, bool) or not isinstance(port, int) or not 0 <= port <= 65535:
             raise ValueError("Dashboard port is invalid.")

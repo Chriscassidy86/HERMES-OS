@@ -64,6 +64,17 @@ V6.4 adds dashboard-ready rolling portfolio curves, concentration, holding-perio
 V6.5 adds reproducible accelerated 24-hour, 72-hour, and one-week PAPER soak validation with explicit thresholds.
 V6.6 hardens timestamp, numeric, scheduling, execution, and soak injection boundaries for multi-symbol PAPER operation.
 
+## Start the continuous PAPER platform
+
+From Windows PowerShell in `D:\Desktop\HERMES-OS`:
+
+```powershell
+.\scripts\hermes.ps1 start
+.\scripts\hermes.ps1 dashboard
+```
+
+Stop safely with `.\scripts\hermes.ps1 stop`. See `Docs/LAUNCH_GUIDE.md` for every operator command and verified default.
+
 HERMES-OS is an experimental Python multi-agent crypto decision system. The
 current release is the Paper Trading RC1 candidate, incorporating Foundations
 IV.1 through X in a synchronous, paper-only platform.

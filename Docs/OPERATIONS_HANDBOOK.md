@@ -49,3 +49,7 @@ before cycling. The accelerated reliability harness validates 24-hour scheduling
 waiting for wall-clock duration; it does not replace an operator-observed soak test.
 
 V6 operators should enable only supported symbols, review per-symbol provider health, investigate conflict failures, and require passing soak thresholds before extended PAPER sessions. One symbol failure must not be treated as permission to bypass Risk Manager for another.
+
+## Launch operation
+
+The supported launch path is `.\scripts\hermes.ps1 start`. Compose starts the continuous public-data PAPER service and a separate GET-only dashboard at `127.0.0.1:8765`. Stop with `.\scripts\hermes.ps1 stop`; restart with `.\scripts\hermes.ps1 restart`. Runtime stdout is inspected with `.\scripts\hermes.ps1 logs`. Follow `Docs/LAUNCH_GUIDE.md` for backup and read-only reports.
