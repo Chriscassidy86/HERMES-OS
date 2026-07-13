@@ -14,3 +14,6 @@ platform exposes it, slow cycles, errors, alerts, stop reason, and completion. A
 running soak is rejected. No soak was automatically started by this upgrade.
 
 The exported artifact is PAPER-only evidence and does not prove profitability or live readiness.
+Once an operator starts a soak, the running PAPER service updates cycle, provider
+failover, error, alert, file-size, RSS, elapsed-time, and restart observations. With no
+active soak state the observer is dormant and performs no writes.

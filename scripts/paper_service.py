@@ -14,6 +14,8 @@ from services.provider_redundancy import RedundantPublicProvider
 from services.public_snapshot_provider import PublicSnapshotProvider
 from database.validation_repository import ValidationRepository
 from services.paper_validation_coordinator import PaperValidationCoordinator
+from services.wall_clock_soak import WallClockSoakService
+from services.wall_clock_soak_observer import WallClockSoakObserver
 
 DEFAULT_SYMBOLS=("BTCUSDT","ETHUSDT","SOLUSDT","XRPUSDT")
 def main():
@@ -25,7 +27,9 @@ def main():
  provider=PublicSnapshotProvider(redundancy); shutdown=GracefulShutdown(); shutdown.install_signal_handlers()
  portfolio=PaperPortfolio(); session=PaperTradingSession(provider,portfolio,journal,provider.clock)
  coordinator=PaperValidationCoordinator(journal,validation,provider.clock)
- scheduler=MultiSymbolScheduler(session,journal,shutdown,clock=provider.clock,observer=coordinator.observe)
+ soak=WallClockSoakObserver(WallClockSoakService("/app/data/hermes-soak.json",clock=provider.clock,database_path=settings.database_path,log_path=settings.log_dir))
+ def observe(result): coordinator.observe(result); soak.observe(result)
+ scheduler=MultiSymbolScheduler(session,journal,shutdown,clock=provider.clock,observer=observe)
  print(f"HERMES PAPER MODE CONTINUOUS | symbols={','.join(symbols)} | timeframe={timeframe} | interval={interval}",flush=True)
  result=scheduler.run(tuple(SymbolSchedule(symbol) for symbol in symbols),timeframe=timeframe,interval_seconds=interval)
  print(f"HERMES PAPER MODE STOPPED | reason={result.stopped_reason} | cycles={result.cycles}",flush=True);return 0
