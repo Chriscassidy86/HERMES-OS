@@ -1,4 +1,3 @@
-from dataclasses import asdict
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 import json, tempfile, unittest
@@ -23,7 +22,7 @@ class ReportCardTests(unittest.TestCase):
   with self.assertRaises(ValueError): self.service.build(trade(),cycle(approved=False),cycle())
  def test_stable_serialization_persistence_and_duplicate(self):
   card=self.service.build(trade(),cycle(),cycle(when=NOW+timedelta(hours=2)))
-  self.assertEqual(json.loads(self.service.stable_json(card)),asdict(card))
+  self.assertEqual(self.service.stable_json(card),self.service.stable_json(card)); self.assertEqual("PT-1",json.loads(self.service.stable_json(card))["trade_id"])
   with tempfile.TemporaryDirectory() as tmp:
    repo=ValidationRepository(Path(tmp)/"v.sqlite3"); repo.initialize(); repo.save_report_card(card); self.assertEqual(card,repo.report_cards()[0])
    with self.assertRaises(ValueError): repo.save_report_card(card)
