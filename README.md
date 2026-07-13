@@ -1,5 +1,9 @@
 # HERMES-OS
 
+Hermes OS is built by **Hermes Quant Labs** under the policies in
+`Docs/HERMES_COMPANY_MANUAL.md`. Release identity is recorded in `VERSION.md` and
+planned V2 milestones are in `Docs/V2_ROADMAP.md`.
+
 HERMES-OS is an experimental Python multi-agent crypto decision system. The
 current release is the Paper Trading RC1 candidate, incorporating Foundations
 IV.1 through X in a synchronous, paper-only platform.

@@ -1,5 +1,12 @@
 # HERMES-OS Architecture
 
+## Governance layer
+
+Company, engineering, AI, and risk governance constrain every application layer.
+Human approval controls releases and configuration adoption; deterministic Risk
+Manager veto controls paper eligibility. Presentation and provider code cannot
+bypass domain services.
+
 Foundation II supplies configuration, logging, events, registry, scheduler, and
 boot orchestration. Foundation III supplies frozen domain records, the
 `BaseSpecialist` contract, Trend specialist, evidence aggregation,

@@ -1,5 +1,8 @@
 # Current Status
 
+Development continues locally on `development/hermes-v2` after tagged Paper
+Trading RC1. V2.1 governance is established; live trading remains prohibited.
+
 Hermes OS is at Paper Trading RC1 candidate status. It provides a synchronous,
 paper-only multi-specialist decision, simulation, persistence, reporting,
 learning-proposal, replay, health, backup, and container stack. Run

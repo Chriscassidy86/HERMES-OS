@@ -1,5 +1,8 @@
 # Changelog
 
+- V2.1 established Hermes Quant Labs company, engineering, AI, risk, product,
+  release, security, research, and branch governance.
+
 - Hardened RC1 risk, portfolio-cost, and replay input validation and corrected
   default signal timestamps to be created per instance.
 
