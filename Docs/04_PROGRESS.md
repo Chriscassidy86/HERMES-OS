@@ -21,6 +21,8 @@ V3.3 added deterministic five-timeframe specialist aggregation, horizon explanat
 alignment/conflict reporting, and fail-closed multi-timeframe recommendations.
 V3.4 added a read-only CEO dashboard projection and serialization-only renderer
 covering portfolio, research intelligence, risk, health, learning, and experiments.
+V3.5 added deterministic successful/losing trade explanations, specialist attribution,
+confidence calibration, and recurring-mistake detection for human review.
 
 Completed: Foundation II infrastructure; Foundation III models, Trend
 specialist, evidence, recommendation, risk and briefing; Foundation IV.1

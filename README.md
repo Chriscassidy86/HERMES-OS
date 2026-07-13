@@ -24,6 +24,9 @@ horizons and returns `WAIT` whenever timeframe or specialist alignment conflicts
 V3.4 adds an immutable, read-only CEO dashboard projection and JSON renderer with
 PAPER banner, portfolio, specialists, regime, recommendation, risk, health, learning,
 and experiment status; it exposes no actions.
+V3.5 adds immutable post-trade explanations for successful and losing paper trades,
+specialist correctness, confidence calibration, and recurring mistakes without
+automatically changing strategies, weights, risk limits, or configuration.
 
 HERMES-OS is an experimental Python multi-agent crypto decision system. The
 current release is the Paper Trading RC1 candidate, incorporating Foundations

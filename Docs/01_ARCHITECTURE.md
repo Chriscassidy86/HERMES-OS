@@ -50,6 +50,10 @@ V3.4 composes the command-center, explanation, regime, multi-timeframe, learning
 and experiment artifacts into an immutable CEO dashboard view. The renderer only
 serializes that view and contains no health, recommendation, risk, or portfolio logic.
 
+V3.5 adds a post-trade learning explanation engine over validated closed paper
+outcomes. It emits immutable causal observations, specialist correctness,
+calibration, and repeated-pattern reports with no configuration write boundary.
+
 Foundation II supplies configuration, logging, events, registry, scheduler, and
 boot orchestration. Foundation III supplies frozen domain records, the
 `BaseSpecialist` contract, Trend specialist, evidence aggregation,
