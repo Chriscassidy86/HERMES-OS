@@ -24,6 +24,10 @@ The CEO dashboard foundation now presents paper portfolio and research state thr
 an immutable view with no order actions or production mutation controls.
 Closed paper outcomes can now produce immutable learning explanations identifying
 trade causes, specialist correctness, calibration, and repeated mistakes.
+Research datasets and artifacts are now versioned, checksum-verified, reloadable,
+and comparable. Offline runs record code, configuration, datasets, environment,
+versions, seeds, results, PAPER mode, and human-approval state. The local dashboard
+binds to localhost and rejects every mutation method.
 
 Hermes OS is at Paper Trading RC1 candidate status. It provides a synchronous,
 paper-only multi-specialist decision, simulation, persistence, reporting,

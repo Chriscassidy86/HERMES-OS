@@ -54,6 +54,21 @@ V3.5 adds a post-trade learning explanation engine over validated closed paper
 outcomes. It emits immutable causal observations, specialist correctness,
 calibration, and repeated-pattern reports with no configuration write boundary.
 
+V3.6 adds a dedicated research-provenance boundary alongside the operational audit
+journal. `ResearchRepository` owns explicitly versioned SQLite metadata plus dataset,
+run, and typed artifact tables. Initialization and migration are explicit; imports
+never write. Canonical UTC JSON and SHA-256 checksums make datasets, manifests, and
+exports stable and tamper-evident. Writes are transactional and exact retries are
+idempotent, while conflicting identifiers fail closed.
+
+`ResearchRunOrchestrator` accepts only cataloged and checksum-verified fixture,
+replay, public-observation, or paper datasets. It evaluates multiple symbols,
+timeframes, and immutable baseline/candidate configurations without network access.
+Walk-forward splitting enforces ordered, non-overlapping training, validation, and
+test windows. Comparison and calibration services remain advisory and cannot mutate
+configuration. The localhost dashboard adapter accepts GET only and delegates all
+business composition to the CEO dashboard service.
+
 Foundation II supplies configuration, logging, events, registry, scheduler, and
 boot orchestration. Foundation III supplies frozen domain records, the
 `BaseSpecialist` contract, Trend specialist, evidence aggregation,

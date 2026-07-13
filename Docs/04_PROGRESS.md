@@ -23,6 +23,9 @@ V3.4 added a read-only CEO dashboard projection and serialization-only renderer
 covering portfolio, research intelligence, risk, health, learning, and experiments.
 V3.5 added deterministic successful/losing trade explanations, specialist attribution,
 confidence calibration, and recurring-mistake detection for human review.
+V3.6 added versioned research persistence, dataset provenance, deterministic run
+manifests, offline multi-dataset orchestration, walk-forward splits, artifact
+comparison, reproducibility export, calibration monitoring, and GET-only local delivery.
 
 Completed: Foundation II infrastructure; Foundation III models, Trend
 specialist, evidence, recommendation, risk and briefing; Foundation IV.1

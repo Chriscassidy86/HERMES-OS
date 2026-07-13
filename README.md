@@ -27,6 +27,24 @@ and experiment status; it exposes no actions.
 V3.5 adds immutable post-trade explanations for successful and losing paper trades,
 specialist correctness, confidence calibration, and recurring mistakes without
 automatically changing strategies, weights, risk limits, or configuration.
+V3.6 adds a versioned research repository, immutable dataset catalog, deterministic
+run manifests, walk-forward splits, run/dataset/configuration comparisons, stable
+reproducibility exports, calibration monitoring, and localhost-only GET dashboard delivery.
+
+Run the V3.6 examples with:
+
+```powershell
+python examples/catalog_dataset_demo.py
+python examples/research_job_demo.py
+python examples/walk_forward_demo.py
+python examples/research_comparison_demo.py
+python examples/reproducibility_export_demo.py
+python examples/local_dashboard_demo.py
+```
+
+To serve an existing journal locally, run
+`python scripts/read_only_dashboard.py data/hermes.sqlite3`. Only `GET /dashboard`
+and `GET /health` are supported; the listener binds to `127.0.0.1`.
 
 HERMES-OS is an experimental Python multi-agent crypto decision system. The
 current release is the Paper Trading RC1 candidate, incorporating Foundations

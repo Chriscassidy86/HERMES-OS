@@ -26,3 +26,16 @@ and foreign-key verification. Backups are verified against source table row coun
 before its first batch. It runs synchronously in the foreground, respects graceful
 shutdown, keeps bounded aggregate status counts, and stops after the configured
 number of consecutive fully failed batches. Operators must investigate before restart.
+
+## V3.6 research provenance
+
+Research persistence is separate from operational audit tables and is initialized
+explicitly through `ResearchRepository.initialize()`. Catalog datasets before a run,
+verify their checksums on every rerun, and preserve exported stable JSON plus its
+checksum. Conflicting run identifiers fail closed. Do not put credentials, private
+keys, passwords, or access tokens in research metadata; secret-shaped fields are rejected.
+
+Run the six V3.6 examples listed in `README.md` for offline workflows. To view an
+existing operational journal, run `python scripts/read_only_dashboard.py DATABASE`.
+The server binds only to `127.0.0.1`, supports GET dashboard/health routes, exposes
+no order or configuration controls, and should be stopped before journal maintenance.
