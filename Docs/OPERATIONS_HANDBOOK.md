@@ -59,3 +59,13 @@ debugging projection. The page refreshes every five seconds without mutating sta
 If refresh fails, it preserves the last display and shows a warning. Treat WAIT/HOLD
 as no approved directional action, REJECTED as a Risk Manager veto, and DATA STALE or
 PROVIDER FAILURE as fail-closed conditions. POST, PUT, PATCH and DELETE are prohibited.
+
+Validation reports are read-only: `.\scripts\hermes.ps1 report`, `scoreboard`,
+`decisions`, and `summary`. Use report cards only for completed PAPER trades and
+decision-quality records only after their declared horizon. Small samples always carry
+an insufficiency warning and never justify automatic configuration changes.
+
+Start a real wall-clock validation only after normal health checks with
+`.\scripts\hermes.ps1 soak-start 24h` (or `72h` / `7d`). Inspect with `soak-status`,
+stop safely with `soak-stop`, and export with `soak-export`. Starting a soak does not
+enable live trading and a second simultaneous soak is rejected.

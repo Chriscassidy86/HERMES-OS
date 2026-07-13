@@ -149,3 +149,17 @@ Foundation IX hardens paper operation with validated environment settings,
 non-overridable paper mode, rotating JSON logs, startup/database/provider checks,
 graceful shutdown state, validated SQLite backup/restore, non-root container
 files, healthcheck, and non-deploying CI tests and secret scanning.
+## Paper Validation Intelligence
+
+`ValidationRepository` is a versioned SQLite boundary alongside the operational audit
+journal. Completed PAPER trades become immutable report cards; historical decisions
+may be evaluated only after an explicit horizon; report cards feed deterministic
+specialist scoreboards and session summaries. `ValidationDashboardService` applies
+allow-listed read-only filters before serialization. `WallClockSoakService` persists
+operator-controlled soak state and never starts itself or contacts an exchange.
+
+The validation path is one-way:
+
+`Persisted PAPER facts -> validation artifacts -> summaries/scoreboards -> dashboard/CLI`
+
+Nothing in that path can alter recommendations, weights, Risk Manager limits, or execution.

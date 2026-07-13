@@ -81,6 +81,12 @@ page reload. It presents health, Risk Manager status, portfolio, four-symbol pub
 observations, specialist evidence, decision explanations, providers, bounded activity,
 and local PAPER charts. A temporary refresh failure retains the last known display.
 
+Paper Validation Intelligence adds immutable completed-trade report cards,
+deterministic specialist scoreboards, later-horizon decision-quality records,
+hourly/daily/weekly summaries, searchable GET-only dashboard projections, and
+operator-controlled 24-hour, 72-hour, or seven-day wall-clock PAPER soak records.
+These artifacts are descriptive only and never mutate strategies, weights, or risk limits.
+
 HERMES-OS is an experimental Python multi-agent crypto decision system. The
 current release is the Paper Trading RC1 candidate, incorporating Foundations
 IV.1 through X in a synchronous, paper-only platform.

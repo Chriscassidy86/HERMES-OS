@@ -86,3 +86,11 @@ replay/session, operations, safety, incident, release, and limitation review.
 
 Not implemented: orchestrated sessions, performance learning, backtesting,
 production hardening, exchange connectivity, or live trading.
+## Paper Validation Intelligence
+
+- P1: versioned, persisted immutable PAPER trade report cards.
+- P2: deterministic eight-specialist scoreboards with sample warnings.
+- P3: no-look-ahead later-horizon decision-quality evaluation.
+- P4: hourly, daily, and weekly PAPER session summaries.
+- P5: searchable GET-only validation dashboard and JSON endpoints.
+- P6: persistent operator-controlled 24h, 72h, and 7d soak preparation.

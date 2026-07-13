@@ -20,6 +20,11 @@ the last successful display, shows a warning, and retries. Debugging endpoints a
 - `GET /api/providers`
 - `GET /api/trades`
 - `GET /api/alerts`
+- `GET /api/specialists`
+- `GET /api/report-cards`
+- `GET /api/decisions`
+- `GET /api/session-summary`
+- `GET /api/performance`
 
 `WAIT` or `HOLD` means Hermes has no approved directional action. `REJECTED` means
 Risk Manager vetoed a directional recommendation. `DATA STALE` and `PROVIDER FAILURE`
@@ -30,3 +35,9 @@ bridge while publishing port 8765 to host loopback only. Every route is GET-only
 POST, PUT, PATCH and DELETE return 405. There are no order controls, API-key forms,
 live controls, or configuration mutations. All calculations and risk decisions are
 performed in Python services before the immutable projection reaches the renderer.
+
+The Paper Validation Intelligence section adds display-only filters for symbol,
+recommendation, Risk result, trade result, and specialist. Server-side filters are
+allow-listed and invalid keys return HTTP 400. Scoreboards, latest report card,
+session summaries, decision-quality metrics, rejection/WAIT quality, and searchable
+decision/trade history remain stable JSON projections with bounded results.

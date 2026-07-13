@@ -18,3 +18,8 @@ Public observations carry their source and original candle timestamp. The curren
 The dashboard is display-only. It has no order, strategy, weight, risk-limit, or
 configuration controls. Raw projection data is available at `/api/dashboard` for
 debugging; never interpret `WAIT` or Risk rejection as a service failure by itself.
+
+After completed trades accumulate, inspect `report`, `scoreboard`, `decisions`, and
+`summary`. Report cards retain the thesis, risk approval, evidence, provider, costs,
+outcome, calibration, and limitations. Decision outcomes use later observations and
+must never be described as information available to the original live PAPER cycle.

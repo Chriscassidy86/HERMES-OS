@@ -53,3 +53,8 @@ Dashboard presentation status: the root now renders a professional responsive PA
 operator interface over the immutable web projection, with five-second safe refresh,
 dedicated debugging APIs, portfolio/market/specialist/provider views, human decision
 explanations, bounded activity and local charts. It remains localhost-only and GET-only.
+Paper Validation Intelligence status: completed trades can produce versioned report
+cards; specialist calls can be scored without changing weights; historical decisions
+can be evaluated only after a declared horizon; deterministic session summaries and
+searchable validation endpoints are available; wall-clock soak control is prepared but
+no multi-day soak was started automatically.

@@ -109,3 +109,7 @@
   Hermes Quant Labs PAPER operator interface, stable debugging APIs, safe five-second
   refresh, complete explanation panels, public-provider status, bounded activity and
   local canvas charts without adding trading or configuration controls.
+- Paper Validation Intelligence added immutable trade report cards, eight-specialist
+  scoreboards, later-horizon decision-quality evaluation, deterministic session
+  summaries, searchable validation dashboard projections, and operator-controlled
+  wall-clock PAPER soak preparation.
