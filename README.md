@@ -21,6 +21,9 @@ V3.2 adds an explainable deterministic market-regime research engine covering te
 regimes and failing closed when supplied evidence is insufficient or contradictory.
 V3.3 aggregates validated specialist evidence across 5m, 15m, 1h, 4h, and Daily
 horizons and returns `WAIT` whenever timeframe or specialist alignment conflicts.
+V3.4 adds an immutable, read-only CEO dashboard projection and JSON renderer with
+PAPER banner, portfolio, specialists, regime, recommendation, risk, health, learning,
+and experiment status; it exposes no actions.
 
 HERMES-OS is an experimental Python multi-agent crypto decision system. The
 current release is the Paper Trading RC1 candidate, incorporating Foundations

@@ -19,6 +19,8 @@ V3.2 added a deterministic ten-state market regime engine with confidence,
 evidence, explanation, uncertainty, and fail-closed input validation.
 V3.3 added deterministic five-timeframe specialist aggregation, horizon explanations,
 alignment/conflict reporting, and fail-closed multi-timeframe recommendations.
+V3.4 added a read-only CEO dashboard projection and serialization-only renderer
+covering portfolio, research intelligence, risk, health, learning, and experiments.
 
 Completed: Foundation II infrastructure; Foundation III models, Trend
 specialist, evidence, recommendation, risk and briefing; Foundation IV.1

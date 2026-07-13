@@ -46,6 +46,10 @@ V3.3 adds a multi-timeframe aggregation boundary over supplied specialist signal
 It explains short-, medium-, and long-term views per specialist; the recommendation
 engine requires complete alignment and still sends any direction to Risk Manager.
 
+V3.4 composes the command-center, explanation, regime, multi-timeframe, learning,
+and experiment artifacts into an immutable CEO dashboard view. The renderer only
+serializes that view and contains no health, recommendation, risk, or portfolio logic.
+
 Foundation II supplies configuration, logging, events, registry, scheduler, and
 boot orchestration. Foundation III supplies frozen domain records, the
 `BaseSpecialist` contract, Trend specialist, evidence aggregation,

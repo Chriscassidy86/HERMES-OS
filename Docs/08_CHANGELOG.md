@@ -11,6 +11,7 @@
 - V3.1 added explainable decision intelligence for command-center and executive views.
 - V3.2 added the validated, explainable ten-state market regime engine.
 - V3.3 added deterministic multi-timeframe intelligence and conflict-aware recommendations.
+- V3.4 expanded the command center into a read-only CEO dashboard foundation.
 
 - Hardened RC1 risk, portfolio-cost, and replay input validation and corrected
   default signal timestamps to be created per instance.

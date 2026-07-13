@@ -20,6 +20,8 @@ A dedicated advisory regime engine now classifies bull, bear, sideways, accumula
 distribution, breakout, breakdown, volatility, and transition conditions.
 Validated 5m, 15m, 1h, 4h, and Daily specialist signals can now be composed into
 short-, medium-, and long-term views with explicit alignment and conflict.
+The CEO dashboard foundation now presents paper portfolio and research state through
+an immutable view with no order actions or production mutation controls.
 
 Hermes OS is at Paper Trading RC1 candidate status. It provides a synchronous,
 paper-only multi-specialist decision, simulation, persistence, reporting,
