@@ -36,6 +36,7 @@ V5.1 completed the bounded continuous PAPER market loop.
 V5.2 completed explainable BUY/SELL/HOLD/WAIT paper execution.
 V5.3 completed the live read-only PAPER dashboard.
 V5.4 completed the recommendation-only continuous learning loop.
+V5.5 completed accelerated long-duration and bounded-memory validation.
 
 Completed: Foundation II infrastructure; Foundation III models, Trend
 specialist, evidence, recommendation, risk and briefing; Foundation IV.1

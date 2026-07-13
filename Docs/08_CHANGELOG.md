@@ -25,6 +25,7 @@
 - V5.2 added explainable paper execution outcomes over the existing portfolio.
 - V5.3 added auto-refresh and continuous operator state to the GET-only dashboard.
 - V5.4 added bounded completed-trade learning with duplicate protection.
+- V5.5 added accelerated 24-hour continuous-engine reliability validation.
 
 - Hardened RC1 risk, portfolio-cost, and replay input validation and corrected
   default signal timestamps to be created per instance.

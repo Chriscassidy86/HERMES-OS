@@ -55,6 +55,7 @@ V5.1 extends the recovered paper operations loop with bounded cycle metrics, sta
 V5.2 adds an explainable Risk-gated facade over the existing deterministic paper portfolio.
 V5.3 adds auto-refreshing continuous PAPER state to the existing GET-only dashboard.
 V5.4 adds bounded post-trade learning reports that require human review and never mutate configuration.
+V5.5 adds accelerated 24-hour reliability validation over the recovered continuous engine.
 
 HERMES-OS is an experimental Python multi-agent crypto decision system. The
 current release is the Paper Trading RC1 candidate, incorporating Foundations
