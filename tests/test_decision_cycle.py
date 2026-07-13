@@ -1,6 +1,7 @@
 """Tests for the Foundation IV.1 paper-only decision cycle."""
 
-from datetime import datetime, timezone
+from dataclasses import replace
+from datetime import datetime, timedelta, timezone
 import unittest
 from math import inf
 from unittest.mock import patch
@@ -105,6 +106,12 @@ class DecisionCycleTests(unittest.TestCase):
         second = self.cycle([TrendSpecialist()]).run(snapshot("Bullish"))
         self.assertEqual(first, second)
         self.assertEqual("BTC-USD-20260711T120000Z", first.cycle_id)
+
+    def test_stale_snapshot_fails_closed(self):
+        value = replace(snapshot("Bullish"), timestamp=FIXED_TIME - timedelta(minutes=6))
+        result = self.cycle([TrendSpecialist()]).run(value)
+        self.assertFalse(result.paper_execution_eligible)
+        self.assertIn("Snapshot market data is stale.", result.rejection_reasons)
 
 
 if __name__ == "__main__":

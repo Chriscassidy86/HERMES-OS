@@ -42,3 +42,8 @@ no order or configuration controls, and should be stopped before journal mainten
 The application rejects non-loopback bind requests at the server boundary. Complete
 the 12-step PAPER workflow daily; acknowledge local alerts only after checking the
 underlying condition.
+
+For continuous PAPER operation use `PaperOperationsService` with a positive interval,
+bounded recent-cycle limit, and failure circuit. Always restore and validate the journal
+before cycling. The accelerated reliability harness validates 24-hour scheduling without
+waiting for wall-clock duration; it does not replace an operator-observed soak test.

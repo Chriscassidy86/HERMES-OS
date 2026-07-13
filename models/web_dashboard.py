@@ -10,3 +10,4 @@ class WebDashboardProjection:
     daily_pnl:str; weekly_pnl:str; total_return:str; maximum_drawdown:str
     win_rate:str; profit_factor:str|None; warnings:tuple; executive_brief:Any
     learning_explanation:Any; experiment_status:Any; research_run:Any; actions:tuple=()
+    latest_trade:Any=None; recent_alerts:tuple=(); operator_workflow:Any=None; refresh_seconds:int=5

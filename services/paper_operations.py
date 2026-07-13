@@ -21,6 +21,7 @@ class PaperOperationConfig:
     timeframe: str = "4H"
     interval_seconds: float = 30.0
     max_consecutive_failures: int = 3
+    recent_cycle_limit: int = 100
 
 
 @dataclass(frozen=True)
@@ -32,16 +33,18 @@ class PaperOperationSummary:
     status_counts: tuple[tuple[str, int], ...]
     consecutive_failures: int
     stopped_reason: str
+    cycle_metrics: tuple[tuple[str, str], ...] = ()
     paper_mode_only: bool = True
 
 
 class PaperOperationsService:
-    def __init__(self, session, journal, shutdown, *, clock=None, wait=None):
+    def __init__(self, session, journal, shutdown, *, clock=None, wait=None, on_batch=None):
         self.session = session
         self.journal = journal
         self.shutdown = shutdown
         self.clock = clock or (lambda: datetime.now(timezone.utc))
         self.wait = wait or shutdown.wait
+        self.on_batch = on_batch
 
     def recover(self) -> bool:
         self.journal.validate_schema()
@@ -55,10 +58,16 @@ class PaperOperationsService:
         recovered = self.recover()
         scheduled = ScheduledPaperSession(self.session)
         counts: dict[str, int] = {}
+        recent = []
         batches = consecutive = 0
         stopped_reason = "SHUTDOWN_REQUESTED"
         while not self.shutdown.requested:
             results = scheduled.run_once(config.symbols, config.timeframe)
+            batch_time = self._now()
+            recent.extend((batch_time, item.status, item.symbol) for item in results)
+            del recent[:-config.recent_cycle_limit]
+            if self.on_batch is not None:
+                self.on_batch(batch_time, results)
             batches += 1
             for result in results:
                 counts[result.status] = counts.get(result.status, 0) + 1
@@ -83,6 +92,8 @@ class PaperOperationsService:
             tuple(sorted(counts.items())),
             consecutive,
             stopped_reason,
+            (("recent_cycles", str(len(recent))), ("symbols", str(len(config.symbols))),
+             ("interval_seconds", str(config.interval_seconds))),
         )
 
     def _now(self) -> datetime:
@@ -107,6 +118,10 @@ class PaperOperationsService:
                 or not isinstance(config.max_consecutive_failures, int)
                 or config.max_consecutive_failures < 1):
             raise ValueError("Failure circuit threshold must be a positive integer.")
+        if (isinstance(config.recent_cycle_limit, bool)
+                or not isinstance(config.recent_cycle_limit, int)
+                or not 1 <= config.recent_cycle_limit <= 10_000):
+            raise ValueError("Recent cycle limit must be between 1 and 10000.")
         if maximum_batches is not None and (
             isinstance(maximum_batches, bool) or not isinstance(maximum_batches, int) or maximum_batches < 1
         ):

@@ -32,6 +32,12 @@ V4.3 added the safe replay and research workspace.
 V4.4 added advanced, source-labeled performance analytics.
 V4.5 added local alerts, acknowledgement, deduplication, and the daily workflow.
 V4.6 completed the local operator platform release audit and hardening.
+V5.1 completed the bounded continuous PAPER market loop.
+V5.2 completed explainable BUY/SELL/HOLD/WAIT paper execution.
+V5.3 completed the live read-only PAPER dashboard.
+V5.4 completed the recommendation-only continuous learning loop.
+V5.5 completed accelerated long-duration and bounded-memory validation.
+V5.6 completed the continuous PAPER platform audit.
 
 Completed: Foundation II infrastructure; Foundation III models, Trend
 specialist, evidence, recommendation, risk and briefing; Foundation IV.1
