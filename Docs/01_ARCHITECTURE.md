@@ -1,5 +1,39 @@
 # HERMES-OS Architecture
 
+## Governance layer
+
+Company, engineering, AI, and risk governance constrain every application layer.
+Human approval controls releases and configuration adoption; deterministic Risk
+Manager veto controls paper eligibility. Presentation and provider code cannot
+bypass domain services.
+
+## Command center service
+
+`CommandCenterService` creates an immutable, read-only operator/CEO view from the
+audit journal, provider health, replay state, and learning proposals. It exposes
+no action callbacks and keeps presentation concerns outside domain logic.
+
+V2.3 adds injected, unauthenticated Binance.US, Coinbase, and Kraken public candle
+adapters plus normalized comparison and deterministic failover. No adapter exposes
+credentials or an order method; offline fixtures remain the test default.
+
+V2.4 adds immutable validated inputs and advisory assessments for quoted liquidity,
+bounded evidence probability, and paper-portfolio concentration. These specialists
+are deliberately outside the authoritative decision and Risk Manager path; human
+review is required before research observations influence configuration.
+
+V2.5 builds immutable daily, weekly, and monthly executive research briefings
+from supplied validated facts and advisory assessments. Briefing generation is
+read-only presentation logic and always preserves paper-result limitations.
+
+V2.6 provides immutable paper research definitions, scoped human approvals,
+unique observations, and deterministic baseline/candidate results. Experiment
+completion cannot apply configuration; adoption remains a separate human decision.
+
+V2.7 adds a foreground, recovery-aware paper operations service with graceful
+shutdown, bounded summaries, and a consecutive-failure circuit breaker. SQLite
+integrity and backups are verified, and the operator CLI exposes read-only integrity.
+
 Foundation II supplies configuration, logging, events, registry, scheduler, and
 boot orchestration. Foundation III supplies frozen domain records, the
 `BaseSpecialist` contract, Trend specialist, evidence aggregation,
