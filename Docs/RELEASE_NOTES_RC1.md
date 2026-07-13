@@ -18,11 +18,10 @@ paper session smoke test. Never reuse this RC as a live execution service.
 
 The full 107-test suite, healthcheck, formatting/compile checks, fresh install,
 schema/backup tests, paper session, replay, standard-library dependency inventory,
-and forbidden private-exchange capability scan passed on 2026-07-12. Docker image
-validation could not run because the Docker CLI is unavailable in the final
-audit environment. The repository manifest, non-root user,
-PAPER environment, startup supervisor, and healthcheck are test-covered and need
-no Docker-specific source changes.
+and forbidden private-exchange capability scan passed on 2026-07-12. The Docker
+image build, Compose startup, non-root `hermes` user, writable persistent data
+and log volumes, PAPER environment, startup supervisor, and container healthcheck
+were also validated successfully. No Docker-specific source changes were needed.
 
 The final audit also verified the replay summary exposes total return, win/loss,
 drawdown, profit factor, expectancy, holding time, trade/rejection/no-trade

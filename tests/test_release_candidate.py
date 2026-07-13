@@ -12,8 +12,8 @@ class ReleaseCandidateTests(unittest.TestCase):
         readme=(self.root/"README.md").read_text(encoding="utf-8")
         notes=(self.root/"Docs"/"RELEASE_NOTES_RC1.md").read_text(encoding="utf-8")
         self.assertIn("Paper Trading RC1 candidate",readme)
-        self.assertIn("Docker CLI is unavailable",notes)
-        self.assertIn("no Docker-specific source changes",notes)
+        self.assertIn("Docker\nimage build, Compose startup",notes)
+        self.assertIn("No Docker-specific source changes",notes)
     def test_fresh_install_health(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory); settings=RuntimeSettings("PAPER",root/"data"/"fresh.sqlite3",root/"logs",1000,1); journal=SQLiteAuditJournal(settings.database_path); journal.initialize(); self.assertTrue(StartupChecks(settings,journal).run().healthy)
