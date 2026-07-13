@@ -29,6 +29,7 @@
 - V5.6 added trade-duration reporting and completed continuous PAPER release documentation.
 - V6.1 added fair, isolated and bounded multi-symbol PAPER scheduling.
 - V6.2 added attributed public-provider redundancy, health scoring, cooldown, and recovery.
+- V6.3 added spread, slippage, latency, impact, precision, partial-fill, timeout, and protective-order simulation.
 
 - Hardened RC1 risk, portfolio-cost, and replay input validation and corrected
   default signal timestamps to be created per instance.
