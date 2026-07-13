@@ -29,6 +29,21 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
+class EvidenceContribution:
+    source: str
+    direction: str
+    configured_weight: float
+    confidence: float
+    strength: float
+    freshness_factor: float
+    timeframe_factor: float
+    reliability: float
+    weighted_score: float
+    included: bool
+    reason: str
+
+
+@dataclass(frozen=True)
 class EvidenceSummary:
     """
     Represents the combined evidence from Hermes specialists.
@@ -43,6 +58,11 @@ class EvidenceSummary:
     average_confidence: float
 
     signal_count: int
+    directional_score: float = 0.0
+    final_confidence: float = 0.0
+    contributions: tuple[EvidenceContribution, ...] = ()
+    conflicting_evidence: tuple[str, ...] = ()
+    excluded_evidence: tuple[str, ...] = ()
 
     def summary(self) -> str:
         return (

@@ -19,8 +19,13 @@ def main() -> None:
         market_trend="Bullish",
         volatility=2.8,
         fear_greed_index=74,
+        previous_price=106_000.00,
+        average_volume=35_000_000_000,
+        short_moving_average=107_500.00,
+        long_moving_average=104_000.00,
+        timeframe="4H",
     )
-    result = DecisionCycle([TrendSpecialist()]).run(snapshot)
+    result = DecisionCycle().run(snapshot)
 
     print("=" * 58)
     print("HERMES PAPER-ONLY OPERATIONAL DECISION CYCLE")
@@ -30,6 +35,8 @@ def main() -> None:
     for report in result.specialist_reports:
         print(f"Specialist: {report.summary()}")
     print(f"Evidence: {result.evidence_summary.summary()}")
+    for contribution in result.evidence_summary.contributions:
+        print(f"  - {contribution.source}: {contribution.direction}, score={contribution.weighted_score:.4f}, {contribution.reason}")
     print(f"Recommendation: {result.recommendation.summary()}")
     print(f"Risk: {result.risk_assessment.summary()}")
     print(f"Final status: {result.final_status}")

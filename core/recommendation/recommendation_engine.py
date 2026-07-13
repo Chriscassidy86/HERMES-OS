@@ -28,7 +28,7 @@ class RecommendationEngine:
     """
 
     def recommend(self, summary: EvidenceSummary) -> Recommendation:
-        if summary.bullish > summary.bearish and summary.average_confidence >= 70:
+        if summary.directional_score >= 0.25 and summary.final_confidence >= 70:
             return Recommendation(
                 symbol=summary.symbol,
                 action="LONG",
@@ -36,7 +36,7 @@ class RecommendationEngine:
                 reason="Bullish evidence exceeds bearish evidence with acceptable confidence.",
             )
 
-        if summary.bearish > summary.bullish and summary.average_confidence >= 70:
+        if summary.directional_score <= -0.25 and summary.final_confidence >= 70:
             return Recommendation(
                 symbol=summary.symbol,
                 action="SHORT",

@@ -18,7 +18,8 @@ III - Intelligence Layer
 ===============================================================================
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
 
 
 @dataclass(frozen=True)
@@ -36,6 +37,8 @@ class Signal:
     strength: float
     timeframe: str
     priority: int
+    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    evidence: tuple[str, ...] = ()
 
     def summary(self) -> str:
         return (

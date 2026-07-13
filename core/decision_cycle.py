@@ -2,11 +2,16 @@
 
 from collections.abc import Callable, Iterable
 from dataclasses import replace
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from math import isfinite
 from typing import Any
 
 from agents.base.base_specialist import BaseSpecialist
+from agents.market_regime.market_regime_specialist import MarketRegimeSpecialist
+from agents.momentum.momentum_specialist import MomentumSpecialist
+from agents.trend.trend_specialist import TrendSpecialist
+from agents.volatility.volatility_specialist import VolatilitySpecialist
+from agents.volume_agent.volume_specialist import VolumeSpecialist
 from core.evidence.evidence_analyzer import EvidenceAnalyzer
 from core.recommendation.recommendation_engine import RecommendationEngine
 from core.risk.risk_manager import RiskManager
@@ -23,11 +28,14 @@ class DecisionCycle:
 
     def __init__(
         self,
-        specialists: Iterable[BaseSpecialist],
+        specialists: Iterable[BaseSpecialist] | None = None,
         *,
         clock: Callable[[], datetime] | None = None,
     ) -> None:
-        self._specialists = tuple(specialists)
+        self._specialists = tuple(specialists) if specialists is not None else (
+            TrendSpecialist(), MarketRegimeSpecialist(), MomentumSpecialist(),
+            VolumeSpecialist(), VolatilitySpecialist(),
+        )
         self._clock = clock or (lambda: datetime.now(timezone.utc))
         self._evidence = EvidenceAnalyzer()
         self._recommendations = RecommendationEngine()
@@ -36,6 +44,13 @@ class DecisionCycle:
     def run(self, snapshot: MarketSnapshot) -> DecisionCycleResult:
         timestamp = self._normalized_timestamp(self._clock())
         rejection_reasons = self._validate_snapshot(snapshot)
+        if (
+            isinstance(snapshot, MarketSnapshot)
+            and isinstance(snapshot.timestamp, datetime)
+            and snapshot.timestamp.tzinfo is not None
+            and snapshot.timestamp.astimezone(timezone.utc) > timestamp + timedelta(seconds=60)
+        ):
+            rejection_reasons.append("Snapshot timestamp is in the future.")
         symbol = (
             snapshot.symbol.strip()
             if isinstance(snapshot, MarketSnapshot)
@@ -73,7 +88,25 @@ class DecisionCycle:
             signals=tuple(signals),
             created_at=timestamp,
         )
-        evidence_summary = self._evidence.analyze(packet)
+        evidence_summary = self._evidence.analyze(packet, as_of=timestamp)
+        if evidence_summary.conflicting_evidence:
+            rejection_reasons.extend(
+                f"Contradictory evidence: {reason}"
+                for reason in evidence_summary.conflicting_evidence
+            )
+        invalid_exclusions = tuple(
+            reason
+            for reason in evidence_summary.excluded_evidence
+            if any(
+                marker in reason.lower()
+                for marker in ("stale", "future", "incompatible", "no configured trust")
+            )
+        )
+        if invalid_exclusions:
+            rejection_reasons.extend(
+                f"Excluded evidence: {reason}"
+                for reason in invalid_exclusions
+            )
 
         if rejection_reasons:
             recommendation = Recommendation(
@@ -141,6 +174,18 @@ class DecisionCycle:
             or not 0 <= snapshot.fear_greed_index <= 100
         ):
             errors.append("Fear and greed index must be between 0 and 100.")
+        for name, value in (
+            ("previous price", snapshot.previous_price),
+            ("average volume", snapshot.average_volume),
+            ("short moving average", snapshot.short_moving_average),
+            ("long moving average", snapshot.long_moving_average),
+        ):
+            if value is not None and (not DecisionCycle._is_number(value) or value <= 0):
+                errors.append(f"Snapshot {name} must be finite and greater than zero.")
+        if not isinstance(snapshot.timeframe, str) or not snapshot.timeframe.strip():
+            errors.append("Snapshot timeframe is required.")
+        if not isinstance(snapshot.timestamp, datetime) or snapshot.timestamp.tzinfo is None:
+            errors.append("Snapshot timestamp must be timezone-aware.")
         return errors
 
     @staticmethod
@@ -158,6 +203,10 @@ class DecisionCycle:
             return f"{specialist.name}: malformed AgentReport."
         if not isinstance(signal, Signal):
             return f"{specialist.name}: malformed Signal."
+        if not isinstance(signal.timestamp, datetime) or signal.timestamp.tzinfo is None:
+            return f"{specialist.name}: signal timestamp is invalid."
+        if not signal.evidence:
+            return f"{specialist.name}: signal evidence is missing."
         if report.agent_name != specialist.name or signal.source != specialist.name:
             return f"{specialist.name}: report or signal source mismatch."
         if signal.direction not in {"LONG", "SHORT", "WAIT"}:

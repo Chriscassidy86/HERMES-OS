@@ -19,11 +19,17 @@ II - The Nervous System
 """
 
 import logging
+import json
+from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from core.config import config
 
 
-def setup_logger(name: str = "hermes") -> logging.Logger:
+class JsonFormatter(logging.Formatter):
+    def format(self,record):
+        return json.dumps({"timestamp":self.formatTime(record),"level":record.levelname,"logger":record.name,"message":record.getMessage()},sort_keys=True)
+
+def setup_logger(name: str = "hermes", max_bytes: int = 5_000_000, backup_count: int = 5) -> logging.Logger:
     """
     Create and configure the Hermes logger.
     """
@@ -38,14 +44,12 @@ def setup_logger(name: str = "hermes") -> logging.Logger:
     if logger.handlers:
         return logger
 
-    formatter = logging.Formatter(
-        "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
-    )
+    formatter = JsonFormatter()
 
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(formatter)
 
-    file_handler = logging.FileHandler(log_file, encoding="utf-8")
+    file_handler = RotatingFileHandler(log_file, maxBytes=max_bytes, backupCount=backup_count, encoding="utf-8")
     file_handler.setFormatter(formatter)
 
     logger.addHandler(console_handler)

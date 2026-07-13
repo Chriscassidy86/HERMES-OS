@@ -2,10 +2,14 @@
 
 from datetime import datetime, timezone
 import unittest
+from math import inf
+from unittest.mock import patch
 
 from agents.base.base_specialist import BaseSpecialist
 from agents.trend.trend_specialist import TrendSpecialist
 from core.decision_cycle import DecisionCycle
+from core.risk.risk_manager import RiskManager
+from models.recommendation import Recommendation
 from models.signal import Signal
 from reports.market_snapshot import MarketSnapshot
 
@@ -31,16 +35,32 @@ class MalformedSpecialist(BaseSpecialist):
 
 class LowConfidenceSpecialist(BaseSpecialist):
     def __init__(self) -> None:
-        super().__init__("Low Confidence Specialist")
+        super().__init__("Momentum Specialist")
 
     def analyze(self, snapshot):
         return (
             self.create_report("BULLISH", 60.0, ["Weak trend"], [], "CAUTION"),
-            Signal(self.name, "LONG", 60.0, 0.55, "4H", 3),
+            Signal(self.name, "LONG", 60.0, 0.55, "4H", 3, FIXED_TIME, ("Weak trend",)),
         )
 
 
 class DecisionCycleTests(unittest.TestCase):
+    def test_signal_default_timestamp_is_created_per_instance(self):
+        with patch("models.signal.datetime") as clock:
+            clock.now.return_value = FIXED_TIME
+            signal = Signal("test", "WAIT", 0, 0, "4H", 1)
+        self.assertEqual(FIXED_TIME, signal.timestamp)
+
+    def test_risk_manager_rejects_invalid_recommendations(self):
+        manager = RiskManager()
+        for action, confidence in (("WAIT", 100), ("TRANSFER", 100), ("LONG", inf)):
+            with self.subTest(action=action, confidence=confidence):
+                assessment = manager.evaluate(
+                    Recommendation("BTC/USD", action, confidence, "test")
+                )
+                self.assertFalse(assessment.approved)
+                self.assertEqual(0.0, assessment.max_position_size)
+
     def cycle(self, specialists) -> DecisionCycle:
         return DecisionCycle(specialists, clock=lambda: FIXED_TIME)
 

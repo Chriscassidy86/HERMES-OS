@@ -23,8 +23,8 @@ logs/
 
 # Data
 data/
-paper_trading/
-backtests/
+data/paper_trading/
+data/backtests/
 exports/
 
 # VS Code
