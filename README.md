@@ -5,6 +5,8 @@ Hermes OS is built by **Hermes Quant Labs** under the policies in
 planned V2 milestones are in `Docs/V2_ROADMAP.md`.
 Operators can compose a read-only system view with
 `services.command_center.CommandCenterService`; it contains no trading controls.
+Optional public candle observation adapters support Binance.US, Coinbase, and
+Kraken without authentication; tests use injected fixtures and never need internet.
 
 HERMES-OS is an experimental Python multi-agent crypto decision system. The
 current release is the Paper Trading RC1 candidate, incorporating Foundations

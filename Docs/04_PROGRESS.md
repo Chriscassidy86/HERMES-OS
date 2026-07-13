@@ -4,6 +4,7 @@ V2.1 established company identity, engineering standards, AI/risk governance,
 product vision, version identity, and the milestone roadmap.
 
 V2.2 added the read-only operator and CEO command-center application service.
+V2.3 added three read-only public candle adapters, comparison, and failover.
 
 Completed: Foundation II infrastructure; Foundation III models, Trend
 specialist, evidence, recommendation, risk and briefing; Foundation IV.1
