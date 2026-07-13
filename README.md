@@ -7,6 +7,8 @@ Operators can compose a read-only system view with
 `services.command_center.CommandCenterService`; it contains no trading controls.
 Optional public candle observation adapters support Binance.US, Coinbase, and
 Kraken without authentication; tests use injected fixtures and never need internet.
+V2.4 adds validated advisory liquidity, probability, and portfolio-context
+assessments. They cannot change evidence weights, risk limits, or execution state.
 
 HERMES-OS is an experimental Python multi-agent crypto decision system. The
 current release is the Paper Trading RC1 candidate, incorporating Foundations

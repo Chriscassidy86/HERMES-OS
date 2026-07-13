@@ -6,6 +6,8 @@ The V2.2 command-center service provides immutable paper health, evidence, risk,
 portfolio, performance, replay, and learning views without execution controls.
 Public Binance.US, Coinbase, and Kraken observation adapters are optional,
 unauthenticated, timeout-bounded, normalized, health-reported, and test-injected.
+Liquidity, probability, and portfolio-context specialists now provide immutable,
+explainable advisory assessments from validated supplied inputs.
 
 Hermes OS is at Paper Trading RC1 candidate status. It provides a synchronous,
 paper-only multi-specialist decision, simulation, persistence, reporting,

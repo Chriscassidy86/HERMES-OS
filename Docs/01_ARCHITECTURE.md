@@ -17,6 +17,11 @@ V2.3 adds injected, unauthenticated Binance.US, Coinbase, and Kraken public cand
 adapters plus normalized comparison and deterministic failover. No adapter exposes
 credentials or an order method; offline fixtures remain the test default.
 
+V2.4 adds immutable validated inputs and advisory assessments for quoted liquidity,
+bounded evidence probability, and paper-portfolio concentration. These specialists
+are deliberately outside the authoritative decision and Risk Manager path; human
+review is required before research observations influence configuration.
+
 Foundation II supplies configuration, logging, events, registry, scheduler, and
 boot orchestration. Foundation III supplies frozen domain records, the
 `BaseSpecialist` contract, Trend specialist, evidence aggregation,

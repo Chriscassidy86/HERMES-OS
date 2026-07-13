@@ -4,6 +4,7 @@
   release, security, research, and branch governance.
 - V2.2 added a read-only operator and CEO command center with no order actions.
 - V2.3 added unauthenticated public candle adapters, comparison, and failover.
+- V2.4 added validated advisory liquidity, probability, and portfolio-context intelligence.
 
 - Hardened RC1 risk, portfolio-cost, and replay input validation and corrected
   default signal timestamps to be created per instance.
