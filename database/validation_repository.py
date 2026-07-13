@@ -6,6 +6,7 @@ import json
 import sqlite3
 
 from models.trade_report_card import TradeReportCard
+from models.decision_quality import DecisionQualityRecord
 
 VALIDATION_SCHEMA_VERSION = 1
 
@@ -23,6 +24,7 @@ class ValidationRepository:
             if row is None: db.execute("INSERT INTO validation_metadata VALUES(?)",(VALIDATION_SCHEMA_VERSION,))
             elif row[0] != VALIDATION_SCHEMA_VERSION: raise RuntimeError("Validation schema version is unsupported.")
             db.execute("CREATE TABLE IF NOT EXISTS trade_report_cards(trade_id TEXT PRIMARY KEY,exit_timestamp TEXT NOT NULL,payload TEXT NOT NULL)")
+            db.execute("CREATE TABLE IF NOT EXISTS decision_quality(cycle_id TEXT PRIMARY KEY,evaluated_at TEXT NOT NULL,payload TEXT NOT NULL)")
             db.commit()
 
     def save_report_card(self, card):
@@ -43,4 +45,17 @@ class ValidationRepository:
             for field in tuple_fields: payload[field]=tuple(payload[field])
             for field in ("entry_specialists","exit_specialists"): payload[field]=tuple(tuple(item) for item in payload[field])
             result.append(TradeReportCard(**payload))
+        return tuple(result)
+
+    def save_decision_quality(self,record):
+        if not isinstance(record,DecisionQualityRecord): raise ValueError("A DecisionQualityRecord is required.")
+        payload=json.dumps(asdict(record),sort_keys=True,separators=(",",":"))
+        try:
+            with closing(self.connect()) as db: db.execute("INSERT INTO decision_quality VALUES(?,?,?)",(record.cycle_id,record.evaluated_at,payload)); db.commit()
+        except sqlite3.IntegrityError as exc: raise ValueError("Duplicate decision-quality record.") from exc
+    def decision_quality(self,limit=100):
+        with closing(self.connect()) as db: rows=db.execute("SELECT payload FROM decision_quality ORDER BY evaluated_at DESC,cycle_id LIMIT ?",(limit,)).fetchall()
+        result=[]
+        for row in rows:
+            value=json.loads(row[0]); value["specialist_evidence"]=tuple(tuple(x) for x in value["specialist_evidence"]); value["later_price_checkpoints"]=tuple(tuple(x) for x in value["later_price_checkpoints"]); result.append(DecisionQualityRecord(**value))
         return tuple(result)
