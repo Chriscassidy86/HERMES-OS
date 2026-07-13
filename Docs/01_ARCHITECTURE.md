@@ -26,6 +26,10 @@ V2.5 builds immutable daily, weekly, and monthly executive research briefings
 from supplied validated facts and advisory assessments. Briefing generation is
 read-only presentation logic and always preserves paper-result limitations.
 
+V2.6 provides immutable paper research definitions, scoped human approvals,
+unique observations, and deterministic baseline/candidate results. Experiment
+completion cannot apply configuration; adoption remains a separate human decision.
+
 Foundation II supplies configuration, logging, events, registry, scheduler, and
 boot orchestration. Foundation III supplies frozen domain records, the
 `BaseSpecialist` contract, Trend specialist, evidence aggregation,

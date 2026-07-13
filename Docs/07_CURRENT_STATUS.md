@@ -10,6 +10,8 @@ Liquidity, probability, and portfolio-context specialists now provide immutable,
 explainable advisory assessments from validated supplied inputs.
 Executive research briefings are available at daily, weekly, and monthly periods;
 they are immutable, read-only, and never present paper results as live performance.
+Research experiments require explicit scoped human approval before supplied paper
+samples are evaluated, and their results cannot mutate production configuration.
 
 Hermes OS is at Paper Trading RC1 candidate status. It provides a synchronous,
 paper-only multi-specialist decision, simulation, persistence, reporting,

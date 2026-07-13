@@ -6,6 +6,7 @@
 - V2.3 added unauthenticated public candle adapters, comparison, and failover.
 - V2.4 added validated advisory liquidity, probability, and portfolio-context intelligence.
 - V2.5 added daily, weekly, and monthly executive research briefings.
+- V2.6 added immutable, explicitly human-governed paper research experiments.
 
 - Hardened RC1 risk, portfolio-cost, and replay input validation and corrected
   default signal timestamps to be created per instance.
