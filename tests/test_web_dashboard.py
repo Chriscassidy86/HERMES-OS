@@ -22,4 +22,7 @@ class WebDashboardTests(unittest.TestCase):
  def test_no_controls_or_secrets(self):
   text=self.app.handle("GET","/")[2].decode().lower(); self.assertNotIn("api-key",text); self.assertNotIn("withdraw",text); self.assertNotIn("place order",text); self.assertNotIn("live mode",text)
  def test_business_logic_outside_renderer(self): self.assertFalse(hasattr(self.app.web_renderer,"command_center")); self.assertEqual((),self.service.build().actions)
+ def test_live_dashboard_auto_refresh_is_read_only(self):
+  status,_,body=self.app.handle("GET","/"); self.assertEqual(200,status); self.assertIn(b'http-equiv="refresh"',body)
+  for method in ("POST","PUT","PATCH","DELETE"): self.assertEqual(405,self.app.handle(method,"/")[0])
 if __name__=="__main__":unittest.main()

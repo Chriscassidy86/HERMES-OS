@@ -23,6 +23,7 @@
 - V4.6 enforced loopback binding, content-derived research identities, submission bounds, UTC analytics, expanded formatting coverage, and release documentation.
 - V5.1 added bounded continuous cycle metrics, batch projections, and stale-market rejection.
 - V5.2 added explainable paper execution outcomes over the existing portfolio.
+- V5.3 added auto-refresh and continuous operator state to the GET-only dashboard.
 
 - Hardened RC1 risk, portfolio-cost, and replay input validation and corrected
   default signal timestamps to be created per instance.

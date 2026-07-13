@@ -34,6 +34,7 @@ V4.5 added local alerts, acknowledgement, deduplication, and the daily workflow.
 V4.6 completed the local operator platform release audit and hardening.
 V5.1 completed the bounded continuous PAPER market loop.
 V5.2 completed explainable BUY/SELL/HOLD/WAIT paper execution.
+V5.3 completed the live read-only PAPER dashboard.
 
 Completed: Foundation II infrastructure; Foundation III models, Trend
 specialist, evidence, recommendation, risk and briefing; Foundation IV.1
