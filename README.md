@@ -49,6 +49,7 @@ V4.1 adds stable HTML and JSON CEO dashboard views with all composition performe
 V4.2 adds validated, labeled, paginated and downsampled chart projections for market, specialist, risk, portfolio, P&L, trade, and calibration histories.
 V4.3 adds a bounded local replay/research workspace with deterministic jobs, cancellation, persisted manifests, comparisons, and exports.
 V4.4 adds deterministic advanced performance analytics with explicit sample gates and source separation.
+V4.5 adds local structured alerts and the 12-step PAPER daily operator workflow.
 
 HERMES-OS is an experimental Python multi-agent crypto decision system. The
 current release is the Paper Trading RC1 candidate, incorporating Foundations

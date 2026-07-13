@@ -19,6 +19,7 @@
 - V4.2 added market and portfolio visualization services and chart JSON.
 - V4.3 added replay and governed research workspace jobs.
 - V4.4 added deterministic performance analytics, groupings, calibration, and quality metrics.
+- V4.5 added local operational alerts and the PAPER daily workflow.
 
 - Hardened RC1 risk, portfolio-cost, and replay input validation and corrected
   default signal timestamps to be created per instance.

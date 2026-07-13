@@ -30,6 +30,7 @@ V4.1 added the real localhost HTML/JSON dashboard foundation.
 V4.2 added deterministic market and portfolio visualization projections.
 V4.3 added the safe replay and research workspace.
 V4.4 added advanced, source-labeled performance analytics.
+V4.5 added local alerts, acknowledgement, deduplication, and the daily workflow.
 
 Completed: Foundation II infrastructure; Foundation III models, Trend
 specialist, evidence, recommendation, risk and briefing; Foundation IV.1
