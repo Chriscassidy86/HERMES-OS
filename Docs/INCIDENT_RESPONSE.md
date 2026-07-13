@@ -8,5 +8,6 @@
 6. Reproduce with tests/replay, document cause, and require review before changes.
 7. Restore only a schema-validated backup while the process is stopped.
 8. If dashboard exposure is suspected, stop the listener, confirm it was bound to `127.0.0.1`, preserve logs, and do not add a public proxy during response.
+9. For provider conflict or repeated failover, stop affected symbols, preserve attributed candles and health state, and never substitute unvalidated data manually.
 
 There is no live-account containment procedure because RC1 cannot connect to one.

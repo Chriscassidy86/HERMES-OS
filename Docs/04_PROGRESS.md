@@ -38,6 +38,12 @@ V5.3 completed the live read-only PAPER dashboard.
 V5.4 completed the recommendation-only continuous learning loop.
 V5.5 completed accelerated long-duration and bounded-memory validation.
 V5.6 completed the continuous PAPER platform audit.
+V6.1 completed deterministic multi-symbol scheduling.
+V6.2 completed resilient public provider failover.
+V6.3 completed realistic deterministic PAPER execution simulation.
+V6.4 completed expanded deterministic portfolio analytics.
+V6.5 completed formal accelerated long-duration soak validation.
+V6.6 completed the multi-symbol PAPER platform release audit.
 
 Completed: Foundation II infrastructure; Foundation III models, Trend
 specialist, evidence, recommendation, risk and briefing; Foundation IV.1

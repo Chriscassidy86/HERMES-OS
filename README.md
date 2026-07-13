@@ -57,6 +57,12 @@ V5.3 adds auto-refreshing continuous PAPER state to the existing GET-only dashbo
 V5.4 adds bounded post-trade learning reports that require human review and never mutate configuration.
 V5.5 adds accelerated 24-hour reliability validation over the recovered continuous engine.
 V5.6 hardens and documents the continuous PAPER platform; live execution remains absent.
+V6.1 adds fair bounded scheduling for BTCUSDT, ETHUSDT, SOLUSDT, and XRPUSDT over the shared PAPER portfolio.
+V6.2 adds deterministic Binance.US, Coinbase, and Kraken public-data redundancy with fail-closed validation.
+V6.3 adds Risk-gated deterministic PAPER simulation for market, limit, protective and trailing orders.
+V6.4 adds dashboard-ready rolling portfolio curves, concentration, holding-period, and correlation analytics.
+V6.5 adds reproducible accelerated 24-hour, 72-hour, and one-week PAPER soak validation with explicit thresholds.
+V6.6 hardens timestamp, numeric, scheduling, execution, and soak injection boundaries for multi-symbol PAPER operation.
 
 HERMES-OS is an experimental Python multi-agent crypto decision system. The
 current release is the Paper Trading RC1 candidate, incorporating Foundations
