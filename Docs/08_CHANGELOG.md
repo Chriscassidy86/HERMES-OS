@@ -31,6 +31,7 @@
 - V6.2 added attributed public-provider redundancy, health scoring, cooldown, and recovery.
 - V6.3 added spread, slippage, latency, impact, precision, partial-fill, timeout, and protective-order simulation.
 - V6.4 added rolling portfolio curves, concentration, holding duration, and gated correlation exposure.
+- V6.5 added bounded accelerated soak metrics, injection, thresholds, manifests, and artifact export.
 
 - Hardened RC1 risk, portfolio-cost, and replay input validation and corrected
   default signal timestamps to be created per instance.

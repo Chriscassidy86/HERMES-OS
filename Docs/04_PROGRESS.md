@@ -42,6 +42,7 @@ V6.1 completed deterministic multi-symbol scheduling.
 V6.2 completed resilient public provider failover.
 V6.3 completed realistic deterministic PAPER execution simulation.
 V6.4 completed expanded deterministic portfolio analytics.
+V6.5 completed formal accelerated long-duration soak validation.
 
 Completed: Foundation II infrastructure; Foundation III models, Trend
 specialist, evidence, recommendation, risk and briefing; Foundation IV.1
