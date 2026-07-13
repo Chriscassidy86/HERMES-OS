@@ -8,6 +8,13 @@
 - V2.5 added daily, weekly, and monthly executive research briefings.
 - V2.6 added immutable, explicitly human-governed paper research experiments.
 - V2.7 strengthened paper operations, restart recovery, integrity, and operator commands.
+- V3.1 added explainable decision intelligence for command-center and executive views.
+- V3.2 added the validated, explainable ten-state market regime engine.
+- V3.3 added deterministic multi-timeframe intelligence and conflict-aware recommendations.
+- V3.4 expanded the command center into a read-only CEO dashboard foundation.
+- V3.5 improved post-trade learning with causal and calibration explanations.
+- V3.6 added research provenance, reproducibility, walk-forward evaluation,
+  comparisons, calibration monitoring, and read-only local dashboard delivery.
 
 - Hardened RC1 risk, portfolio-cost, and replay input validation and corrected
   default signal timestamps to be created per instance.

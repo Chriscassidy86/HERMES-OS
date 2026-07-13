@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 from typing import Any
+from core.explanation import DecisionExplainer
 
 
 @dataclass(frozen=True)
@@ -19,6 +20,8 @@ class CommandCenterView:
     agreements: tuple[str, ...]
     disagreements: tuple[str, ...]
     exclusions: tuple[str, ...]
+    decision_explanation: Any
+    executive_summary: str
     risk_decision: Any
     paper_execution_status: str
     cash: Decimal
@@ -70,6 +73,8 @@ class CommandCenterService:
         agreements = tuple(sorted(directions)) if len(directions) == 1 else ()
         disagreements = tuple(evidence.get("conflicting_evidence", ()))
         exclusions = tuple(evidence.get("excluded_evidence", ()))
+        explanation = DecisionExplainer().explain(latest) if latest else None
+        executive_summary = explanation.executive_summary() if explanation else "No decision cycle is available."
         account = (portfolio or {}).get("account", {})
         cash = Decimal(account.get("cash_balance", "0")); equity = Decimal(account.get("equity_balance", "0"))
         pnls = [Decimal(item.get("realized_pnl", "0")) for item in trades]
@@ -85,6 +90,7 @@ class CommandCenterService:
             "PAPER MODE ONLY", "HEALTHY" if healthy else "UNHEALTHY", provider_status,
             database_health, latest, snapshot, (snapshot or {}).get("market_trend", "UNKNOWN"),
             specialists, contributions, agreements, disagreements, exclusions,
+            explanation, executive_summary,
             latest.get("risk_assessment") if latest else None,
             latest.get("final_status", "NO_CYCLE") if latest else "NO_CYCLE",
             cash, equity, tuple((portfolio or {}).get("positions", ())), trades, daily, weekly,

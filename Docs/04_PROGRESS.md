@@ -13,6 +13,19 @@ V2.6 added immutable, human-approved paper experiment evaluation with no product
 configuration write or self-approval path.
 V2.7 added restart recovery, controlled long-running paper batches, graceful stop,
 failure circuit breaking, database/backup integrity verification, and operator status.
+V3.1 added immutable decision explanations and exposed them through command-center
+and executive briefing views.
+V3.2 added a deterministic ten-state market regime engine with confidence,
+evidence, explanation, uncertainty, and fail-closed input validation.
+V3.3 added deterministic five-timeframe specialist aggregation, horizon explanations,
+alignment/conflict reporting, and fail-closed multi-timeframe recommendations.
+V3.4 added a read-only CEO dashboard projection and serialization-only renderer
+covering portfolio, research intelligence, risk, health, learning, and experiments.
+V3.5 added deterministic successful/losing trade explanations, specialist attribution,
+confidence calibration, and recurring-mistake detection for human review.
+V3.6 added versioned research persistence, dataset provenance, deterministic run
+manifests, offline multi-dataset orchestration, walk-forward splits, artifact
+comparison, reproducibility export, calibration monitoring, and GET-only local delivery.
 
 Completed: Foundation II infrastructure; Foundation III models, Trend
 specialist, evidence, recommendation, risk and briefing; Foundation IV.1

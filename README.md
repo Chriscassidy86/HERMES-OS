@@ -15,6 +15,36 @@ Governed paper experiments require a scoped human approval record before evaluat
 run `python examples/research_experiment_demo.py` for a deterministic example.
 Recovery-aware paper operations with failure circuit breaking are demonstrated by
 `python examples/paper_operations_demo.py`; database integrity is operator-readable.
+V3.1 adds immutable human-readable decision explanations covering evidence,
+agreement, disagreement, exclusions, Risk Manager rationale, assumptions, and uncertainty.
+V3.2 adds an explainable deterministic market-regime research engine covering ten
+regimes and failing closed when supplied evidence is insufficient or contradictory.
+V3.3 aggregates validated specialist evidence across 5m, 15m, 1h, 4h, and Daily
+horizons and returns `WAIT` whenever timeframe or specialist alignment conflicts.
+V3.4 adds an immutable, read-only CEO dashboard projection and JSON renderer with
+PAPER banner, portfolio, specialists, regime, recommendation, risk, health, learning,
+and experiment status; it exposes no actions.
+V3.5 adds immutable post-trade explanations for successful and losing paper trades,
+specialist correctness, confidence calibration, and recurring mistakes without
+automatically changing strategies, weights, risk limits, or configuration.
+V3.6 adds a versioned research repository, immutable dataset catalog, deterministic
+run manifests, walk-forward splits, run/dataset/configuration comparisons, stable
+reproducibility exports, calibration monitoring, and localhost-only GET dashboard delivery.
+
+Run the V3.6 examples with:
+
+```powershell
+python examples/catalog_dataset_demo.py
+python examples/research_job_demo.py
+python examples/walk_forward_demo.py
+python examples/research_comparison_demo.py
+python examples/reproducibility_export_demo.py
+python examples/local_dashboard_demo.py
+```
+
+To serve an existing journal locally, run
+`python scripts/read_only_dashboard.py data/hermes.sqlite3`. Only `GET /dashboard`
+and `GET /health` are supported; the listener binds to `127.0.0.1`.
 
 HERMES-OS is an experimental Python multi-agent crypto decision system. The
 current release is the Paper Trading RC1 candidate, incorporating Foundations

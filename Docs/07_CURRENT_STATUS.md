@@ -14,6 +14,20 @@ Research experiments require explicit scoped human approval before supplied pape
 samples are evaluated, and their results cannot mutate production configuration.
 Paper operations can recover the latest portfolio snapshot, run controlled foreground
 batches, stop gracefully, and open a circuit after repeated complete batch failures.
+Each persisted recommendation can now be translated into a human-readable explanation
+of evidence, disagreement, exclusions, risk rationale, assumptions, and uncertainty.
+A dedicated advisory regime engine now classifies bull, bear, sideways, accumulation,
+distribution, breakout, breakdown, volatility, and transition conditions.
+Validated 5m, 15m, 1h, 4h, and Daily specialist signals can now be composed into
+short-, medium-, and long-term views with explicit alignment and conflict.
+The CEO dashboard foundation now presents paper portfolio and research state through
+an immutable view with no order actions or production mutation controls.
+Closed paper outcomes can now produce immutable learning explanations identifying
+trade causes, specialist correctness, calibration, and repeated mistakes.
+Research datasets and artifacts are now versioned, checksum-verified, reloadable,
+and comparable. Offline runs record code, configuration, datasets, environment,
+versions, seeds, results, PAPER mode, and human-approval state. The local dashboard
+binds to localhost and rejects every mutation method.
 
 Hermes OS is at Paper Trading RC1 candidate status. It provides a synchronous,
 paper-only multi-specialist decision, simulation, persistence, reporting,

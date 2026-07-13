@@ -22,6 +22,9 @@ class ResearchBriefingService:
         end = facts.period_end.astimezone(timezone.utc)
         generated = facts.generated_at.astimezone(timezone.utc)
         observations = list(facts.research_notes)
+        for explanation in facts.decision_explanations:
+            observations.append(explanation.executive_summary())
+            observations.extend(f"Uncertainty: {item}" for item in explanation.uncertainties)
         for assessment in sorted(facts.specialist_assessments, key=lambda item: item.source):
             observations.append(
                 f"{assessment.source}: {assessment.status}; score={assessment.score:.4f}; advisory only."
@@ -75,4 +78,6 @@ class ResearchBriefingService:
             raise ValueError("System health is required.")
         if any(not item.advisory_only for item in facts.specialist_assessments):
             raise ValueError("Only advisory specialist assessments may enter research briefings.")
+        if any(item.generated_at > facts.generated_at for item in facts.decision_explanations):
+            raise ValueError("Future decision explanations cannot enter a briefing.")
 

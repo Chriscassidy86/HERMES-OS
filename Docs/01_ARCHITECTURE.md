@@ -34,6 +34,41 @@ V2.7 adds a foreground, recovery-aware paper operations service with graceful
 shutdown, bounded summaries, and a consecutive-failure circuit breaker. SQLite
 integrity and backups are verified, and the operator CLI exposes read-only integrity.
 
+V3.1 adds a deterministic explanation service over immutable decision artifacts.
+Command-center and briefing presentation reuse that service; they do not reimplement
+decision, evidence, or risk logic.
+
+V3.2 adds a dedicated regime research boundary with immutable validated inputs and
+classification results. Explicit ordered rules classify trend, range, flow,
+break, volatility, and transition regimes without altering trading eligibility.
+
+V3.3 adds a multi-timeframe aggregation boundary over supplied specialist signals.
+It explains short-, medium-, and long-term views per specialist; the recommendation
+engine requires complete alignment and still sends any direction to Risk Manager.
+
+V3.4 composes the command-center, explanation, regime, multi-timeframe, learning,
+and experiment artifacts into an immutable CEO dashboard view. The renderer only
+serializes that view and contains no health, recommendation, risk, or portfolio logic.
+
+V3.5 adds a post-trade learning explanation engine over validated closed paper
+outcomes. It emits immutable causal observations, specialist correctness,
+calibration, and repeated-pattern reports with no configuration write boundary.
+
+V3.6 adds a dedicated research-provenance boundary alongside the operational audit
+journal. `ResearchRepository` owns explicitly versioned SQLite metadata plus dataset,
+run, and typed artifact tables. Initialization and migration are explicit; imports
+never write. Canonical UTC JSON and SHA-256 checksums make datasets, manifests, and
+exports stable and tamper-evident. Writes are transactional and exact retries are
+idempotent, while conflicting identifiers fail closed.
+
+`ResearchRunOrchestrator` accepts only cataloged and checksum-verified fixture,
+replay, public-observation, or paper datasets. It evaluates multiple symbols,
+timeframes, and immutable baseline/candidate configurations without network access.
+Walk-forward splitting enforces ordered, non-overlapping training, validation, and
+test windows. Comparison and calibration services remain advisory and cannot mutate
+configuration. The localhost dashboard adapter accepts GET only and delegates all
+business composition to the CEO dashboard service.
+
 Foundation II supplies configuration, logging, events, registry, scheduler, and
 boot orchestration. Foundation III supplies frozen domain records, the
 `BaseSpecialist` contract, Trend specialist, evidence aggregation,
