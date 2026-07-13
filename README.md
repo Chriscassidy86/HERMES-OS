@@ -58,6 +58,7 @@ V5.4 adds bounded post-trade learning reports that require human review and neve
 V5.5 adds accelerated 24-hour reliability validation over the recovered continuous engine.
 V5.6 hardens and documents the continuous PAPER platform; live execution remains absent.
 V6.1 adds fair bounded scheduling for BTCUSDT, ETHUSDT, SOLUSDT, and XRPUSDT over the shared PAPER portfolio.
+V6.2 adds deterministic Binance.US, Coinbase, and Kraken public-data redundancy with fail-closed validation.
 
 HERMES-OS is an experimental Python multi-agent crypto decision system. The
 current release is the Paper Trading RC1 candidate, incorporating Foundations

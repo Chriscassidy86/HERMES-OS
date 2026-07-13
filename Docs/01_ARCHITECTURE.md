@@ -77,6 +77,7 @@ V4.6 hardens loopback delivery, bounded research identity, UTC analytics, and re
 V5.1 designates `PaperOperationsService` as the continuous market engine, preserving the existing session, decision, risk, portfolio, and journal pipeline.
 V5 connects that engine to explainable paper execution, the GET-only live dashboard, recommendation-only learning, and an accelerated reliability harness. Risk Manager remains the sole execution gate.
 V6.1 adds a fair scheduler above the existing session, with isolated per-symbol runtime state and one recovered shared PAPER portfolio.
+V6.2 composes existing unauthenticated candle adapters behind per-symbol health, cooldown, conflict validation, and deterministic priority.
 
 Foundation II supplies configuration, logging, events, registry, scheduler, and
 boot orchestration. Foundation III supplies frozen domain records, the
