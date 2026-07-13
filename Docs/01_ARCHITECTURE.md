@@ -70,6 +70,7 @@ configuration. The localhost dashboard adapter accepts GET only and delegates al
 business composition to the CEO dashboard service.
 V4.1 adds an immutable web projection service and presentation-only HTML/JSON renderer over the localhost GET-only server.
 V4.2 adds a visualization projection service; frontend endpoints only serialize validated UTC chart series and never fetch market data.
+V4.3 adds an immutable bounded research-job state machine over the V3.6 repository and orchestrator.
 
 Foundation II supplies configuration, logging, events, registry, scheduler, and
 boot orchestration. Foundation III supplies frozen domain records, the
