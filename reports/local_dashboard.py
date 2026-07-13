@@ -3,17 +3,17 @@
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from dataclasses import asdict
 import json
-from urllib.parse import urlsplit
+from urllib.parse import parse_qs, urlsplit
 
 from reports.web_dashboard import WebDashboardRenderer
 
 
 class ReadOnlyDashboardApplication:
-    def __init__(self, view_provider, chart_provider=None, *, allow_container_bridge=False): self.view_provider = view_provider; self.chart_provider=chart_provider; self.allow_container_bridge=allow_container_bridge; self.web_renderer=WebDashboardRenderer()
+    def __init__(self, view_provider, chart_provider=None, validation_provider=None, *, allow_container_bridge=False): self.view_provider = view_provider; self.chart_provider=chart_provider; self.validation_provider=validation_provider; self.allow_container_bridge=allow_container_bridge; self.web_renderer=WebDashboardRenderer()
 
     def handle(self, method, path):
         if method != "GET": return 405, {"content-type": "application/json"}, b'{"error":"read-only"}'
-        path=urlsplit(path).path
+        target=urlsplit(path); path=target.path
         if path in {"/health","/api/health"}: return 200, {"content-type": "application/json"}, b'{"mode":"PAPER","status":"ok"}'
         if path=="/api/charts":
             if self.chart_provider is None: return 200,{"content-type":"application/json"},b'{"charts":[]}'
@@ -27,6 +27,15 @@ class ReadOnlyDashboardApplication:
             "/api/trades": ("recent_fills","recent_trades","closed_trades"),
             "/api/alerts": ("recent_alerts","warnings"),
         }
+        validation_endpoints={"/api/validation":None,"/api/specialists":"specialists","/api/report-cards":"report_cards","/api/decisions":"decisions","/api/session-summary":"session_summaries","/api/performance":"performance"}
+        if path in validation_endpoints:
+            if self.validation_provider is None: payload={validation_endpoints[path] or "validation":()}
+            else:
+                try:
+                    filters={key:values[-1] for key,values in parse_qs(target.query,keep_blank_values=False).items()}; projection=self.validation_provider(filters)
+                except ValueError as exc: return 400,{"content-type":"application/json"},json.dumps({"error":str(exc)},sort_keys=True,separators=(",",":")).encode()
+                key=validation_endpoints[path]; payload=projection if key is None else {key:projection[key],"filters":projection["filters"]}
+            return 200,{"content-type":"application/json","cache-control":"no-store"},json.dumps(payload,default=str,sort_keys=True,separators=(",",":")).encode()
         if path in {"/dashboard","/api/dashboard"}:
             body=self.web_renderer.json(self.view_provider()).encode("utf-8")
         elif path in endpoints:
