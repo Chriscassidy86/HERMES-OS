@@ -22,3 +22,7 @@ sources remain disabled until a permitted machine-readable access method exists.
 M2 adds a governed registry whose sources are inactive by default. Explicit
 configuration may activate only implemented public, fixture, or import adapters;
 unavailable, deferred, and unconfigured licensed sources fail closed.
+
+M3 adapters use injected transports, bounded retries, UTC and freshness checks,
+health records, and deterministic fixtures. They expose no credential, private
+endpoint, HTML scraping, order, or withdrawal interface.

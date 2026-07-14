@@ -14,5 +14,12 @@ enabled source ID.
 | Analyst/community | Export | Manual permitted import | Import-only; no scraping |
 | Licensed on-chain | Licensed | Licensed dataset | Not configured |
 
+The first adapter release derives price trend, relative volume, volatility
+context, momentum, enabled-symbol breadth, and provider agreement from snapshots
+already validated by Hermes. Deterministic parsers exist for Fear and Greed and
+CoinGecko-shaped fixtures, but their production sources remain disabled pending
+current access and terms review. Derivatives remain fixture-only; on-chain and
+analyst/community evidence accept bounded, attributed manual imports only.
+
 No source record stores secrets. Unsupported websites, private APIs, paywalls,
 CAPTCHAs, robots restrictions, or rate limits are never bypassed.

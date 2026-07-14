@@ -5,10 +5,10 @@
 - Release type: Paper Trading Release Candidate with V4 Local Operator Platform
 - Mode: PAPER only
 - Live trading: disabled
-- Verified tests: 337 passing at the Market Consensus M2 checkpoint
+- Verified tests: 345 passing at the Market Consensus M3 checkpoint
 - Development milestone: PAPER Trading Launch Readiness
 - Research schema: 1
-- Current development validation: Governed Market Consensus source registry
+- Current development validation: Governed public evidence and fixture/import adapters
 - Docker: image build, Compose startup, non-root user, writable volumes, and health verified
 - GitHub Actions: `test` and `secret-scan` passed for RC1
 - Limitations: synchronous single-process operation, SQLite storage, artificial replay fixtures, fixed demonstration risk caps, long-only simulation, no default internet provider, and no profitability claim
