@@ -80,6 +80,11 @@ V6.1 adds a fair scheduler above the existing session, with isolated per-symbol 
 V6.2 composes existing unauthenticated candle adapters behind per-symbol health, cooldown, conflict validation, and deterministic priority.
 V6 completes one shared-portfolio PAPER pipeline: fair multi-symbol scheduling, attributed public redundancy, Risk-gated realistic simulation, portfolio projections, and reproducible soak artifacts.
 
+Market Consensus M1 introduces a separate immutable evidence domain. Outside
+opinions use consensus directions rather than BUY/SELL, retain UTC provenance,
+trust, reliability, checksums, limitations, and explicit eligibility, and cannot
+enter the DecisionPacket, Risk Manager, execution, or portfolio boundaries.
+
 Foundation II supplies configuration, logging, events, registry, scheduler, and
 boot orchestration. Foundation III supplies frozen domain records, the
 `BaseSpecialist` contract, Trend specialist, evidence aggregation,
