@@ -26,3 +26,9 @@ unavailable, deferred, and unconfigured licensed sources fail closed.
 M3 adapters use injected transports, bounded retries, UTC and freshness checks,
 health records, and deterministic fixtures. They expose no credential, private
 endpoint, HTML scraping, order, or withdrawal interface.
+
+M4 normalization validates and orders each observation, applies category-specific
+freshness decay, reliability/confidence/strength adjustments, discounts broad
+market evidence, caps category influence, and prevents repeated sources or shared
+datasets from appearing independent. Directional consensus and crowding risk are
+separate. Every exclusion and contribution remains explainable.
