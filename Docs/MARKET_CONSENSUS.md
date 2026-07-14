@@ -18,3 +18,7 @@ Outside evidence uses bullish, bearish, neutral, or unknown observation labels.
 It never overloads BUY or SELL. Public popularity does not establish correctness,
 fixtures and limited PAPER results do not prove profitability, and inaccessible
 sources remain disabled until a permitted machine-readable access method exists.
+
+M2 adds a governed registry whose sources are inactive by default. Explicit
+configuration may activate only implemented public, fixture, or import adapters;
+unavailable, deferred, and unconfigured licensed sources fail closed.
