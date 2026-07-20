@@ -1,0 +1,88 @@
+[
+  {
+    "idea_id": "TI-JSON-001",
+    "trader_id": "trader-fixture-001",
+    "trader_display_name": "Fixture Trader Alpha",
+    "source_id": "json-source-001",
+    "source_name": "JSON Import Fixture",
+    "source_reference": "fixture-trader-ideas.json",
+    "published_at": "2025-01-15T12:00:00+00:00",
+    "symbol": "BTC/USD",
+    "timeframe": "4H",
+    "market_regime": "BULL_TREND",
+    "direction": "BULLISH",
+    "stated_confidence": 0.75,
+    "explanation": "Artificial fixture thesis: price is above the moving average with confirming volume. This is not real trading advice.",
+    "supporting_evidence": [
+      "MA alignment",
+      "Volume confirmation"
+    ],
+    "invalidation_conditions": [
+      "Price below short MA"
+    ],
+    "assumptions": [
+      "Public market data is accurate"
+    ],
+    "uncertainty": [
+      "Patterns may not persist"
+    ],
+    "entry_zone_low": 95000.0,
+    "entry_zone_high": 96000.0,
+    "stop_loss": 92000.0,
+    "target_prices": [
+      105000.0,
+      110000.0
+    ],
+    "suggested_action": "ENTER_LONG",
+    "edited_after_publication": false,
+    "ingestion_label": "JSON_IMPORT",
+    "attribution": "Fixture Trader Alpha via JSON import fixture",
+    "warnings": [],
+    "limitations": [
+      "This is an artificial fixture not real trading advice"
+    ]
+  },
+  {
+    "idea_id": "TI-JSON-002",
+    "trader_id": "trader-fixture-002",
+    "trader_display_name": "Fixture Trader Beta",
+    "source_id": "json-source-001",
+    "source_name": "JSON Import Fixture",
+    "source_reference": "fixture-trader-ideas.json",
+    "published_at": "2025-01-15T14:00:00+00:00",
+    "symbol": "ETH/USD",
+    "timeframe": "4H",
+    "market_regime": "RANGE",
+    "direction": "LEAN_BEARISH",
+    "stated_confidence": 0.45,
+    "explanation": "Artificial fixture thesis: price is near the top of a range with declining momentum. This is not real trading advice.",
+    "supporting_evidence": [
+      "RSI divergence",
+      "Declining volume on advances"
+    ],
+    "invalidation_conditions": [
+      "Close above range high"
+    ],
+    "assumptions": [
+      "Range structure remains intact"
+    ],
+    "uncertainty": [
+      "Breakout can occur without warning"
+    ],
+    "entry_zone_low": 3000.0,
+    "entry_zone_high": 3100.0,
+    "stop_loss": 3250.0,
+    "target_prices": [
+      2700.0,
+      2500.0
+    ],
+    "suggested_action": "REDUCE_EXPOSURE",
+    "edited_after_publication": false,
+    "ingestion_label": "JSON_IMPORT",
+    "attribution": "Fixture Trader Beta via JSON import fixture",
+    "warnings": [],
+    "limitations": [
+      "This is an artificial fixture not real trading advice"
+    ]
+  }
+]

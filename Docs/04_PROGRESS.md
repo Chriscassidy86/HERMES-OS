@@ -78,6 +78,11 @@ was added; the operator layer remains read-only and paper-mode only.
 Foundation VIII completed: deterministic replay, no-look-ahead separation,
 fees/slippage, portfolio history, benchmarks, metrics, and exports.
 
+Foundation VIII Market Intelligence framework completed: immutable advisory-only
+domain models, deterministic indicator functions, abstract specialist base, and
+four production specialists (Trend, Momentum, Volume, Volatility) with
+deterministic serialization, future/stale timestamp handling, and full unit tests.
+
 Foundation IX completed: configuration, logging, lifecycle/health checks,
 backup/restore, paper-only containers, CI, and deployment documentation.
 
