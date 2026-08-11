@@ -7,12 +7,14 @@ import unittest
 from unittest.mock import patch
 
 from core.health import GracefulShutdown
+from data_providers.market_data import ProviderHealth
+from data_providers.public_adapters import PublicCandle
 from database.journal import SQLiteAuditJournal
 from database.maintenance import backup_database, verify_backup, verify_database
 from paper_trading.portfolio import PaperPortfolio
+from reports.operator_cli import main as operator_main
 from services.paper_operations import PaperOperationConfig, PaperOperationsService
 from services.paper_session import PaperSessionResult
-from reports.operator_cli import main as operator_main
 
 
 NOW = datetime(2026, 7, 13, 12, tzinfo=timezone.utc)
@@ -102,6 +104,47 @@ class PaperOperationsTests(unittest.TestCase):
                 operator_main()
             self.assertIn('"healthy": true', output.getvalue())
             self.assertEqual([], SQLiteAuditJournal(path).recent_cycles())
+
+
+class PaperServiceScriptTests(unittest.TestCase):
+    def test_paper_service_requires_fixture_when_fixture_source_is_selected(self):
+        from scripts.paper_service import main
+        with tempfile.TemporaryDirectory() as directory:
+            env = {"HERMES_DATABASE": str(Path(directory) / "paper.sqlite3"), "HERMES_PAPER_DATA_SOURCE": "fixture"}
+            output = StringIO()
+            with redirect_stdout(output):
+                code = main(env)
+            self.assertEqual(2, code)
+            self.assertIn("HERMES_PAPER_FIXTURES is required when HERMES_PAPER_DATA_SOURCE=fixture.", output.getvalue())
+
+    def test_paper_service_runs_bounded_batch_from_public_adapter(self):
+        from scripts import paper_service
+
+        class FakePublicAdapter:
+            name = "FakePublic"
+
+            def __init__(self, **_kwargs):
+                self.health = ProviderHealth(True, "READY", 0)
+
+            def get_candle(self, symbol, timeframe="4H"):
+                self.health = ProviderHealth(True, "HEALTHY", 1)
+                return PublicCandle(self.name, symbol, timeframe, NOW, 102, 1500)
+
+        with tempfile.TemporaryDirectory() as directory:
+            env = {
+                "HERMES_DATABASE": str(Path(directory) / "paper.sqlite3"),
+                "HERMES_PAPER_DATA_SOURCE": "public",
+                "HERMES_PAPER_PUBLIC_PROVIDERS": "fake",
+                "HERMES_PAPER_SYMBOLS": "BTC/USD",
+                "HERMES_PAPER_MAX_BATCHES": "1",
+                "HERMES_PAPER_INTERVAL_SECONDS": "0",
+            }
+            output = StringIO()
+            with patch.dict(paper_service.PUBLIC_ADAPTERS, {"fake": FakePublicAdapter}, clear=True), redirect_stdout(output):
+                code = paper_service.main(env)
+            self.assertEqual(0, code)
+            self.assertIn("data_source=public", output.getvalue())
+            self.assertIn("BATCH_LIMIT_REACHED", output.getvalue())
 
 
 if __name__ == "__main__":
