@@ -16,6 +16,18 @@ rejected without mutating the simulated position or account.
 Artificial replay profit is test output, not a profitability claim. Learning
 output is a proposal requiring human approval and never changes production rules.
 
+## Historical import step
+
+Use the historical import step when you want to turn a CSV OHLCV file into replay-ready candles before running a long backtest. The importer normalizes timestamps, rolling averages, volatility, and trend so replay runs stay deterministic.
+
+Example:
+
+```bash
+python scripts/run_historical_replay.py data/historical.csv --symbol BTC/USD --timeframe 15m
+```
+
+Add `--export reports/replay_run` if you want the replay artifacts saved after the run.
+
 ## Foreground service handoff
 
 `scripts/paper_service.py` is the final operator handoff entrypoint for PAPER
@@ -49,20 +61,11 @@ Useful environment variables:
 Example bounded public handoff run:
 
 ```bash
-HERMES_DATABASE=data/hermes.sqlite3 \
-HERMES_PAPER_DATA_SOURCE=public \
-HERMES_PAPER_SYMBOLS=BTC/USD,ETH/USD,SOL/USD,XRP/USD \
-HERMES_PAPER_MAX_BATCHES=1 \
-python scripts/paper_service.py
+HERMES_DATABASE=data/hermes.sqlite3 HERMES_PAPER_DATA_SOURCE=public HERMES_PAPER_SYMBOLS=BTC/USD,ETH/USD,SOL/USD,XRP/USD HERMES_PAPER_MAX_BATCHES=1 python scripts/paper_service.py
 ```
 
 Example bounded fixture handoff run:
 
 ```bash
-HERMES_DATABASE=data/hermes.sqlite3 \
-HERMES_PAPER_DATA_SOURCE=fixture \
-HERMES_PAPER_FIXTURES=data/paper_fixtures.json \
-HERMES_PAPER_SYMBOLS=BTC/USD,ETH/USD,SOL/USD,XRP/USD \
-HERMES_PAPER_MAX_BATCHES=1 \
-python scripts/paper_service.py
+HERMES_DATABASE=data/hermes.sqlite3 HERMES_PAPER_DATA_SOURCE=fixture HERMES_PAPER_FIXTURES=data/paper_fixtures.json HERMES_PAPER_SYMBOLS=BTC/USD,ETH/USD,SOL/USD,XRP/USD HERMES_PAPER_MAX_BATCHES=1 python scripts/paper_service.py
 ```

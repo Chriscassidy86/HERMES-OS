@@ -119,6 +119,8 @@ Use `python -m reports.operator_cli <database> <report>` for read-only local JSO
 Run `python examples/replay_demo.py` for an artificial deterministic fixture.
 Fixture results are never presented as evidence of real profitability.
 
+Run `python scripts/run_historical_replay.py data/historical.csv --symbol BTC/USD --timeframe 15m` to import CSV OHLCV history into replay-ready candles and run the deterministic replay engine against it.
+
 See `Docs/DEPLOYMENT.md` for paper-only Docker and VPS guidance. Live mode is
 rejected by configuration validation and no exchange credentials are supported.
 
