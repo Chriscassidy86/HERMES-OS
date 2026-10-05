@@ -10,6 +10,7 @@ It provides:
 from dataclasses import dataclass
 from datetime import datetime, timezone
 import json
+from math import isfinite
 from time import sleep
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
@@ -173,6 +174,12 @@ class PublicCandleAdapter:
                     )
                 )
 
+                for index in range(1, len(candles)):
+                    if candles[index].timestamp <= candles[index - 1].timestamp:
+                        raise MarketDataError(
+                            f"{self.name} candles must be strictly chronological."
+                        )
+
                 for candle in candles[:-1]:
                     self._validate_structure(
                         candle,
@@ -244,6 +251,7 @@ class PublicCandleAdapter:
             if (
                 isinstance(value, bool)
                 or not isinstance(value, (int, float))
+                or not isfinite(value)
             ):
                 raise MarketDataError(
                     f"Provider {name} price is invalid."
@@ -271,6 +279,7 @@ class PublicCandleAdapter:
             if (
                 isinstance(candle.volume, bool)
                 or not isinstance(candle.volume, (int, float))
+                or not isfinite(candle.volume)
                 or candle.volume < 0
             ):
                 raise MarketDataError(
@@ -565,7 +574,10 @@ class ProviderComparison:
 
 
 class PublicProviderGroup:
-    """Compare healthy providers and select the closest price to the mean."""
+    """Compare healthy providers and select a deterministic source."""
+
+    MAX_HISTORICAL_LIMIT = 200
+    HISTORICAL_PRICE_TOLERANCE_PERCENT = 2.0
 
     def __init__(self, providers):
         self.providers = tuple(providers)
@@ -634,6 +646,220 @@ class PublicProviderGroup:
             selected.provider,
             "Selected healthy source closest to the provider mean.",
         )
+
+    def get_candles(
+        self,
+        symbol,
+        timeframe="4H",
+        limit=100,
+    ):
+        """
+        Return a deterministic historical OHLCV series.
+
+        Each public provider is queried independently. Provider failures
+        are isolated. The selected provider is the healthy provider whose
+        latest close is closest to the mean latest close.
+
+        The method is deliberately separate from get_candle() so the
+        existing single-candle API remains unchanged.
+        """
+        normalized = normalize_symbol(symbol)
+
+        if timeframe != "4H":
+            raise MarketDataError(
+                "Historical public provider timeframe must be 4H."
+            )
+
+        if (
+            isinstance(limit, bool)
+            or not isinstance(limit, int)
+            or not 1 <= limit <= self.MAX_HISTORICAL_LIMIT
+        ):
+            raise ValueError(
+                "Historical public candle limit must be between "
+                f"1 and {self.MAX_HISTORICAL_LIMIT}."
+            )
+
+        successful = []
+
+        for index, provider in enumerate(self.providers):
+            try:
+                candles = tuple(
+                    provider.get_candles(
+                        normalized,
+                        timeframe,
+                        limit=limit,
+                    )
+                )
+
+                if not candles:
+                    raise MarketDataError(
+                        f"{provider.name} returned no historical candles."
+                    )
+
+                candles = tuple(
+                    sorted(
+                        candles,
+                        key=lambda item: item.timestamp,
+                    )
+                )
+
+                if len(candles) > limit:
+                    candles = candles[-limit:]
+
+                previous_timestamp = None
+
+                for candle in candles:
+                    if candle.provider != provider.name:
+                        raise MarketDataError(
+                            "Historical provider attribution mismatch."
+                        )
+
+                    if candle.symbol != normalized:
+                        raise MarketDataError(
+                            "Historical provider symbol mismatch."
+                        )
+
+                    if candle.timeframe != timeframe:
+                        raise MarketDataError(
+                            "Historical provider timeframe mismatch."
+                        )
+
+                    if (
+                        not isinstance(candle.timestamp, datetime)
+                        or candle.timestamp.tzinfo is None
+                    ):
+                        raise MarketDataError(
+                            "Historical candle timestamp must be timezone-aware."
+                        )
+
+                    if (
+                        previous_timestamp is not None
+                        and candle.timestamp <= previous_timestamp
+                    ):
+                        raise MarketDataError(
+                            "Historical candles must be strictly chronological."
+                        )
+
+                    if (
+                        not isinstance(candle.open, (int, float))
+                        or isinstance(candle.open, bool)
+                        or not isfinite(candle.open)
+                        or candle.open <= 0
+                    ):
+                        raise MarketDataError(
+                            "Historical candle open is invalid."
+                        )
+
+                    if (
+                        not isinstance(candle.high, (int, float))
+                        or isinstance(candle.high, bool)
+                        or not isfinite(candle.high)
+                        or candle.high <= 0
+                    ):
+                        raise MarketDataError(
+                            "Historical candle high is invalid."
+                        )
+
+                    if (
+                        not isinstance(candle.low, (int, float))
+                        or isinstance(candle.low, bool)
+                        or not isfinite(candle.low)
+                        or candle.low <= 0
+                    ):
+                        raise MarketDataError(
+                            "Historical candle low is invalid."
+                        )
+
+                    if (
+                        not isinstance(candle.close, (int, float))
+                        or isinstance(candle.close, bool)
+                        or not isfinite(candle.close)
+                        or candle.close <= 0
+                    ):
+                        raise MarketDataError(
+                            "Historical candle close is invalid."
+                        )
+
+                    if candle.high < candle.low:
+                        raise MarketDataError(
+                            "Historical candle high is below low."
+                        )
+
+                    if not (
+                        candle.low <= candle.open <= candle.high
+                        and candle.low <= candle.close <= candle.high
+                    ):
+                        raise MarketDataError(
+                            "Historical OHLC values are internally inconsistent."
+                        )
+
+                    if candle.volume is not None:
+                        if (
+                            isinstance(candle.volume, bool)
+                            or not isinstance(candle.volume, (int, float))
+                            or not isfinite(candle.volume)
+                            or candle.volume < 0
+                        ):
+                            raise MarketDataError(
+                                "Historical candle volume is invalid."
+                            )
+
+                    previous_timestamp = candle.timestamp
+
+                successful.append(
+                    (
+                        index,
+                        provider.name,
+                        candles,
+                    )
+                )
+
+            except (
+                MarketDataError,
+                TimeoutError,
+                OSError,
+                TypeError,
+                ValueError,
+                KeyError,
+                IndexError,
+                StopIteration,
+            ):
+                continue
+
+        if not successful:
+            raise MarketDataError(
+                "All public providers failed to return historical data."
+            )
+
+        latest_prices = [
+            candles[-1].close
+            for _, _, candles in successful
+        ]
+
+        if len(latest_prices) > 1:
+            spread = (
+                (max(latest_prices) - min(latest_prices))
+                / min(latest_prices)
+                * 100
+            )
+
+            if spread > self.HISTORICAL_PRICE_TOLERANCE_PERCENT:
+                raise MarketDataError(
+                    "Public historical provider prices conflict beyond tolerance."
+                )
+
+        mean_price = sum(latest_prices) / len(latest_prices)
+
+        _, _, selected_candles = min(
+            successful,
+            key=lambda item: (
+                abs(item[2][-1].close - mean_price),
+                item[0],
+            ),
+        )
+
+        return tuple(selected_candles)
 
     def get_candle(self, symbol, timeframe="4H"):
         report = self.compare(
