@@ -25,7 +25,7 @@ def normalize_symbol(symbol):
     return value
 
 class SnapshotBuilder:
-    REQUIRED=("symbol","price","volume_24h","market_trend","volatility","fear_greed_index","timestamp")
+    REQUIRED=("symbol","price","volume_24h","market_trend","volatility","timestamp")
     def __init__(self,clock=None,max_age_seconds=14400,max_future_skew_seconds=60): self.clock=clock or (lambda:datetime.now(timezone.utc)); self.max_age_seconds=max_age_seconds; self.max_future_skew_seconds=max_future_skew_seconds
     def build(self,data:dict[str,Any],timeframe="4H"):
         missing=[key for key in self.REQUIRED if key not in data]
@@ -37,7 +37,11 @@ class SnapshotBuilder:
         if age>self.max_age_seconds: raise StaleMarketDataError("Market data is stale.")
         try:
             snapshot=MarketSnapshot(symbol=normalize_symbol(data["symbol"]),price=float(data["price"]),volume_24h=float(data["volume_24h"]),
-                market_trend=str(data["market_trend"]),volatility=float(data["volatility"]),fear_greed_index=int(data["fear_greed_index"]),
+                market_trend=str(data["market_trend"]),volatility=float(data["volatility"]),fear_greed_index=(
+    int(data["fear_greed_index"])
+    if data.get("fear_greed_index") is not None
+    else None
+),
                 previous_price=float(data["previous_price"]) if data.get("previous_price") is not None else None,
                 average_volume=float(data["average_volume"]) if data.get("average_volume") is not None else None,
                 short_moving_average=float(data["short_moving_average"]) if data.get("short_moving_average") is not None else None,

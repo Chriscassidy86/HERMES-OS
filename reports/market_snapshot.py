@@ -33,7 +33,7 @@ class MarketSnapshot:
     volume_24h: float
     market_trend: str
     volatility: float
-    fear_greed_index: int
+    fear_greed_index: int | None = None
 
     previous_price: float | None = None
     average_volume: float | None = None
