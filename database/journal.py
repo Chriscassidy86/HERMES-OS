@@ -93,7 +93,17 @@ class SQLiteAuditJournal:
         state=self.current_portfolio()
         if state is None: return False
         portfolio.cash=Decimal(state["account"]["cash_balance"])
-        portfolio.positions={item["symbol"]:PaperPosition(item["symbol"],Decimal(item["quantity"]),Decimal(item["average_entry_price"]),Decimal(item["current_price"]),Decimal(item["entry_fees"])) for item in state["positions"]}
+        portfolio.positions={
+    item["symbol"]: PaperPosition(
+        item["symbol"],
+        Decimal(item["quantity"]),
+        Decimal(item["average_entry_price"]),
+        Decimal(item["current_price"]),
+        Decimal(item["entry_fees"]),
+        item.get("side", "LONG"),
+    )
+    for item in state["positions"]
+}
         portfolio.orders={item["order_id"]:PaperOrder(item["order_id"],item["cycle_id"],item["symbol"],item["side"],Decimal(item["quantity"]),Decimal(item["reference_price"]),OrderStatus(item["status"]),datetime.fromisoformat(item["created_at"]),tuple(item.get("rejection_reasons",()))) for item in state.get("orders",())}
         portfolio.fills={item["fill_id"]:PaperFill(item["fill_id"],item["order_id"],Decimal(item["quantity"]),Decimal(item["price"]),Decimal(item["fee"]),Decimal(item["slippage"]),datetime.fromisoformat(item["timestamp"])) for item in state.get("fills",())}
         portfolio.trades=[PaperTrade(item["trade_id"],item["symbol"],Decimal(item["quantity"]),Decimal(item["entry_price"]),Decimal(item["exit_price"]),Decimal(item["fees"]),Decimal(item["realized_pnl"]),datetime.fromisoformat(item["closed_at"])) for item in state.get("trades",())]

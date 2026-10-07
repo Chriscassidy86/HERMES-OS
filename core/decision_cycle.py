@@ -66,7 +66,7 @@ class DecisionCycle:
             and isinstance(snapshot.timestamp, datetime)
             and snapshot.timestamp.tzinfo is not None
             and timestamp - snapshot.timestamp.astimezone(timezone.utc)
-            > timedelta(minutes=5)
+            > timedelta(hours=4)
         ):
             rejection_reasons.append("Snapshot market data is stale.")
 

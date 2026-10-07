@@ -15,12 +15,36 @@ class PaperAccount:
 
 @dataclass(frozen=True)
 class PaperPosition:
-    symbol: str; quantity: Decimal; average_entry_price: Decimal
-    current_price: Decimal; entry_fees: Decimal = Decimal("0")
+    symbol: str
+    quantity: Decimal
+    average_entry_price: Decimal
+    current_price: Decimal
+    entry_fees: Decimal = Decimal("0")
+    side: str = "LONG"
+
+    def __post_init__(self):
+        if self.side not in {"LONG", "SHORT"}:
+            raise ValueError("Paper position side must be LONG or SHORT.")
+
     @property
-    def market_value(self): return self.quantity * self.current_price
+    def market_value(self):
+        if self.side == "SHORT":
+            return -(self.quantity * self.current_price)
+        return self.quantity * self.current_price
+
     @property
-    def unrealized_pnl(self): return (self.current_price-self.average_entry_price)*self.quantity-self.entry_fees
+    def unrealized_pnl(self):
+        if self.side == "SHORT":
+            return (
+                (self.average_entry_price - self.current_price)
+                * self.quantity
+                - self.entry_fees
+            )
+        return (
+            (self.current_price - self.average_entry_price)
+            * self.quantity
+            - self.entry_fees
+        )
 
 @dataclass(frozen=True)
 class PaperOrder:

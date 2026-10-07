@@ -380,7 +380,7 @@ class PaperServiceScriptTests(unittest.TestCase):
                 output.getvalue(),
             )
 
-    def test_paper_service_runs_bounded_batch_from_public_adapter(self):
+    def test_paper_service_runs_bounded_round_from_public_adapter(self):
         from scripts import paper_service
 
         class FakePublicAdapter:
@@ -480,14 +480,214 @@ class PaperServiceScriptTests(unittest.TestCase):
                 code,
             )
 
+            text = output.getvalue()
+
             self.assertIn(
                 "data_source=public",
-                output.getvalue(),
+                text,
             )
 
             self.assertIn(
-                "BATCH_LIMIT_REACHED",
-                output.getvalue(),
+                "symbols=BTC/USD",
+                text,
+            )
+
+            self.assertIn(
+                "historical_candles=30",
+                text,
+            )
+
+            self.assertIn(
+                "ROUND 1/1",
+                text,
+            )
+
+            self.assertIn(
+                "ROUND 1 COMPLETE",
+                text,
+            )
+
+            self.assertIn(
+                "HERMES PAPER RUN COMPLETE",
+                text,
+            )
+
+            self.assertIn(
+                "ROUND_LIMIT_REACHED",
+                text,
+            )
+
+            self.assertIn(
+                "FINAL BTC/USD SUCCESS=1 FAILED=0",
+                text,
+            )
+
+            self.assertIn(
+                "REGIME=Bullish",
+                text,
+            )
+
+    def test_paper_service_supports_multiple_symbols(self):
+        from scripts import paper_service
+
+        class FakePublicAdapter:
+            name = "FakePublic"
+
+            def __init__(self, **_kwargs):
+                self.health = ProviderHealth(
+                    True,
+                    "READY",
+                    0,
+                )
+
+            def get_candles(
+                self,
+                symbol,
+                timeframe="4H",
+                limit=100,
+            ):
+                self.health = ProviderHealth(
+                    True,
+                    "HEALTHY",
+                    1,
+                )
+
+                count = min(
+                    int(limit),
+                    30,
+                )
+
+                candles = []
+
+                base_timestamp = (
+                    NOW.replace(
+                        minute=0,
+                        second=0,
+                        microsecond=0,
+                    )
+                )
+
+                for index in range(count):
+                    timestamp = (
+                        base_timestamp
+                        - timedelta(
+                            hours=(count - index) * 4
+                        )
+                    )
+
+                    price = (
+                        100.0
+                        + index
+                    )
+
+                    candles.append(
+                        PublicCandle(
+                            provider=self.name,
+                            symbol=symbol,
+                            timeframe=timeframe,
+                            timestamp=timestamp,
+                            open=price - 1.0,
+                            high=price + 2.0,
+                            low=price - 2.0,
+                            close=price,
+                            volume=1000.0 + index * 10.0,
+                        )
+                    )
+
+                return tuple(candles)
+
+        with tempfile.TemporaryDirectory() as directory:
+            env = {
+                "HERMES_DATABASE": str(
+                    Path(directory)
+                    / "paper.sqlite3"
+                ),
+                "HERMES_PAPER_DATA_SOURCE": "public",
+                "HERMES_PAPER_PUBLIC_PROVIDERS": "fake",
+                "HERMES_PAPER_SYMBOLS": (
+                    "BTC/USD,ETH/USD,SOL/USD,XRP/USD"
+                ),
+                "HERMES_PAPER_HISTORICAL_CANDLES": "30",
+                "HERMES_PAPER_MAX_BATCHES": "1",
+                "HERMES_PAPER_INTERVAL_SECONDS": "0",
+            }
+
+            output = StringIO()
+
+            with patch.dict(
+                paper_service.PUBLIC_ADAPTERS,
+                {
+                    "fake": FakePublicAdapter,
+                },
+                clear=True,
+            ), redirect_stdout(output):
+                code = paper_service.main(env)
+
+            self.assertEqual(
+                0,
+                code,
+            )
+
+            text = output.getvalue()
+
+            self.assertIn(
+                "symbols=BTC/USD,ETH/USD,SOL/USD,XRP/USD",
+                text,
+            )
+
+            self.assertIn(
+                "ROUND 1/1",
+                text,
+            )
+
+            self.assertIn(
+                "  BTC/USD",
+                text,
+            )
+
+            self.assertIn(
+                "  ETH/USD",
+                text,
+            )
+
+            self.assertIn(
+                "  SOL/USD",
+                text,
+            )
+
+            self.assertIn(
+                "  XRP/USD",
+                text,
+            )
+
+            self.assertIn(
+                "ROUND 1 COMPLETE",
+                text,
+            )
+
+            self.assertIn(
+                "FINAL BTC/USD SUCCESS=1 FAILED=0",
+                text,
+            )
+
+            self.assertIn(
+                "FINAL ETH/USD SUCCESS=1 FAILED=0",
+                text,
+            )
+
+            self.assertIn(
+                "FINAL SOL/USD SUCCESS=1 FAILED=0",
+                text,
+            )
+
+            self.assertIn(
+                "FINAL XRP/USD SUCCESS=1 FAILED=0",
+                text,
+            )
+
+            self.assertIn(
+                "ROUND_LIMIT_REACHED",
+                text,
             )
 
 

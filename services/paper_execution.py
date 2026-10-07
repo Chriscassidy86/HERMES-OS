@@ -12,15 +12,37 @@ class PaperExecutionEngine:
         regime=getattr(cycle.snapshot,"market_trend","UNKNOWN")
         explanation=recommendation.reason
         order=fill=trade=None; duration=None; status="NO_ACTION"
-        if not risk.approved: status="RISK_REJECTED"
-        elif action=="BUY" and cycle.paper_execution_eligible:
-            order=self.portfolio.propose(cycle,price)
-            if order.status.value=="VALIDATED": order,fill=self.portfolio.execute_market(order.order_id); status="PAPER_FILLED"
-            else: status="PAPER_REJECTED"
-        elif action=="SELL" and cycle.snapshot.symbol in self.portfolio.positions:
-            entries=tuple(item.timestamp for item in self.portfolio.fills.values() if self.portfolio.orders[item.order_id].symbol==cycle.snapshot.symbol)
-            trade=self.portfolio.close_position(cycle.snapshot.symbol,price); status="PAPER_CLOSED"
-            if entries: duration=(trade.closed_at-min(entries)).total_seconds()
+        if not risk.approved:
+            status="RISK_REJECTED"
+        elif action in {"BUY","SELL"} and cycle.paper_execution_eligible:
+            symbol = cycle.snapshot.symbol
+            position = self.portfolio.positions.get(symbol)
+
+            if position is not None:
+                should_close = (
+                    (position.side == "LONG" and action == "SELL")
+                    or (position.side == "SHORT" and action == "BUY")
+                )
+
+                if should_close:
+                    entries=tuple(
+                        item.timestamp
+                        for item in self.portfolio.fills.values()
+                        if self.portfolio.orders[item.order_id].symbol==symbol
+                    )
+                    trade=self.portfolio.close_position(symbol,price)
+                    status="PAPER_CLOSED"
+                    if entries:
+                        duration=(trade.closed_at-min(entries)).total_seconds()
+                else:
+                    status="NO_ACTION"
+            else:
+                order=self.portfolio.propose(cycle,price)
+                if order.status.value=="VALIDATED":
+                    order,fill=self.portfolio.execute_market(order.order_id)
+                    status="PAPER_FILLED"
+                else:
+                    status="PAPER_REJECTED"
         return PaperExecutionOutcome(action,status,cycle.snapshot.symbol,cycle.timestamp,recommendation.confidence,risk.approved,risk.reason,regime,reports,explanation,order,fill,trade,duration)
 
 class RealisticPaperSimulator:

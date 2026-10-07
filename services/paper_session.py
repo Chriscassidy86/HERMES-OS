@@ -5,6 +5,7 @@ from typing import Any
 from core.decision_cycle import DecisionCycle
 from database.journal import DuplicateCycleError
 from data_providers.market_data import MarketDataError
+from services.paper_execution import PaperExecutionEngine
 
 @dataclass(frozen=True)
 class PaperSessionResult:
@@ -29,17 +30,55 @@ class PaperTradingSession:
         except Exception as exc:
             return self._result("PERSISTENCE_FAILURE",symbol,cycle.cycle_id,cycle=cycle,errors=(f"{type(exc).__name__}: {exc}",))
         order=fill=None
+        status="NO_TRADE"
+
         if cycle.paper_execution_eligible:
             try:
-                order=self.portfolio.propose(cycle,snapshot.price)
-                if order.status.value=="VALIDATED": order,fill=self.portfolio.execute_market(order.order_id)
+                outcome = PaperExecutionEngine(self.portfolio).execute(
+                    cycle,
+                    snapshot.price,
+                )
+                order = outcome.order
+                fill = outcome.fill
+
+                if outcome.status in {"PAPER_FILLED", "PAPER_CLOSED"}:
+                    status = outcome.status
+
             except Exception as exc:
-                return self._result("PAPER_EXECUTION_FAILURE",symbol,cycle.cycle_id,cycle=cycle,order=order,errors=(f"{type(exc).__name__}: {exc}",))
-        try: self.journal.save_portfolio(self.portfolio,cycle.cycle_id)
+                return self._result(
+                    "PAPER_EXECUTION_FAILURE",
+                    symbol,
+                    cycle.cycle_id,
+                    cycle=cycle,
+                    order=order,
+                    fill=fill,
+                    errors=(f"{type(exc).__name__}: {exc}",),
+                )
+
+        try:
+            self.journal.save_portfolio(
+                self.portfolio,
+                cycle.cycle_id,
+            )
         except Exception as exc:
-            return self._result("PERSISTENCE_FAILURE",symbol,cycle.cycle_id,cycle=cycle,order=order,fill=fill,errors=(f"{type(exc).__name__}: {exc}",))
-        status="PAPER_FILLED" if fill else "NO_TRADE"
-        return self._result(status,symbol,cycle.cycle_id,cycle=cycle,order=order,fill=fill)
+            return self._result(
+                "PERSISTENCE_FAILURE",
+                symbol,
+                cycle.cycle_id,
+                cycle=cycle,
+                order=order,
+                fill=fill,
+                errors=(f"{type(exc).__name__}: {exc}",),
+            )
+
+        return self._result(
+            status,
+            symbol,
+            cycle.cycle_id,
+            cycle=cycle,
+            order=order,
+            fill=fill,
+        )
     def _result(self,status,symbol,cycle_id,**values):
         health=(("session",status),("provider",getattr(self.provider.health,"status","UNKNOWN")),("paper_mode","ENFORCED"))
         return PaperSessionResult(status,symbol,cycle_id,health=health,**values)

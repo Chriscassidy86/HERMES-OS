@@ -108,7 +108,7 @@ class DecisionCycleTests(unittest.TestCase):
         self.assertEqual("BTC-USD-20260711T120000Z", first.cycle_id)
 
     def test_stale_snapshot_fails_closed(self):
-        value = replace(snapshot("Bullish"), timestamp=FIXED_TIME - timedelta(minutes=6))
+        value = replace(snapshot("Bullish"), timestamp=FIXED_TIME - timedelta(hours=4, minutes=1))
         result = self.cycle([TrendSpecialist()]).run(value)
         self.assertFalse(result.paper_execution_eligible)
         self.assertIn("Snapshot market data is stale.", result.rejection_reasons)

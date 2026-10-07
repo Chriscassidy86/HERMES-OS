@@ -9,7 +9,7 @@ class MultiSymbolScheduler:
         if not 1<=history_limit<=10000: raise ValueError("History limit is invalid.")
         self.session=session; self.journal=journal; self.shutdown=shutdown; self.clock=clock
         self.wait=wait or shutdown.wait; self.history_limit=history_limit
-    def run(self,schedules,*,timeframe="4H",interval_seconds=30,maximum_rounds=None):
+    def run(self,schedules,*,timeframe="4H",interval_seconds=30,maximum_rounds=None,on_round=None):
         schedules=tuple(schedules)
         if not schedules or len({item.symbol for item in schedules})!=len(schedules): raise ValueError("Unique symbol schedules are required.")
         if not isfinite(interval_seconds) or interval_seconds<0: raise ValueError("Interval is invalid.")
@@ -21,8 +21,9 @@ class MultiSymbolScheduler:
             active=[item.symbol for item in schedules if item.enabled]
             if active:
                 offset=rounds%len(active); active=active[offset:]+active[:offset]
+            round_results=[]
             for symbol in active:
-                now=self._now(); result=self.session.run_cycle(symbol,timeframe); ordering.append(symbol); old=states[symbol]
+                now=self._now(); result=self.session.run_cycle(symbol,timeframe); round_results.append(result); ordering.append(symbol); old=states[symbol]
                 failed=result.status.endswith("FAILURE")
                 history=(old.history+((now,result.status),))[-self.history_limit:]
                 cycle=result.cycle; regime=getattr(getattr(cycle,"snapshot",None),"market_trend",old.regime)
@@ -32,6 +33,12 @@ class MultiSymbolScheduler:
                 if not item.enabled:
                     old=states[item.symbol]; states[item.symbol]=replace(old,skipped_cycles=old.skipped_cycles+1)
             rounds+=1
+            if on_round is not None:
+                on_round(
+                    rounds,
+                    tuple(round_results),
+                    tuple(states[key] for key in sorted(states)),
+                )
             if maximum_rounds is not None and rounds>=maximum_rounds: reason="ROUND_LIMIT_REACHED"; break
             if self.wait(interval_seconds): break
         return MultiSymbolRun(rounds,tuple(states[key] for key in sorted(states)),tuple(ordering),recovered,reason)

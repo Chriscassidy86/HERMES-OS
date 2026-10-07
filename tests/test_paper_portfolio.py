@@ -29,10 +29,19 @@ class PaperPortfolioTests(unittest.TestCase):
     def test_open_long_position(self):
         book=portfolio(); order=book.propose(eligible_cycle(),"100"); order,fill=book.execute_market(order.order_id)
         self.assertEqual(OrderStatus.FILLED,order.status); self.assertIn("BTC/USD",book.positions)
-    def test_short_is_safely_rejected(self):
+    def test_open_short_position(self):
         snap=MarketSnapshot("BTC/USD",98,1500,"Bearish",2,55,100,1000,99,101,"4H",NOW)
-        result=DecisionCycle(clock=lambda:NOW).run(snap); order=portfolio().propose(result,"98")
-        self.assertEqual(OrderStatus.REJECTED,order.status)
+        result=DecisionCycle(clock=lambda:NOW).run(snap)
+        book=portfolio()
+        order=book.propose(result,"98")
+
+        self.assertEqual(OrderStatus.VALIDATED,order.status)
+        order,fill=book.execute_market(order.order_id)
+
+        self.assertEqual(OrderStatus.FILLED,order.status)
+        self.assertIn("BTC/USD",book.positions)
+        self.assertEqual("SHORT",book.positions["BTC/USD"].side)
+        self.assertLess(book.positions["BTC/USD"].market_value,0)
     def test_insufficient_funds(self):
         book=portfolio("1"); order=book.propose(eligible_cycle(),"100")
         rejected=book.execute_market(order.order_id)
@@ -47,6 +56,20 @@ class PaperPortfolioTests(unittest.TestCase):
     def test_unrealized_pnl(self):
         book=portfolio(); order=book.propose(eligible_cycle(),"100"); book.execute_market(order.order_id)
         book.mark_price("BTC/USD","110"); self.assertGreater(book.positions["BTC/USD"].unrealized_pnl,0)
+    def test_short_unrealized_and_realized_pnl(self):
+        snap=MarketSnapshot("BTC/USD",98,1500,"Bearish",2,55,100,1000,99,101,"4H",NOW)
+        result=DecisionCycle(clock=lambda:NOW).run(snap)
+        book=portfolio()
+        order=book.propose(result,"98")
+        order,fill=book.execute_market(order.order_id)
+
+        book.mark_price("BTC/USD","90")
+        self.assertGreater(book.positions["BTC/USD"].unrealized_pnl,0)
+
+        trade=book.close_position("BTC/USD","90")
+        self.assertGreater(trade.realized_pnl,0)
+        self.assertNotIn("BTC/USD",book.positions)
+
     def test_close_and_realized_pnl(self):
         book=portfolio(); order=book.propose(eligible_cycle(),"100"); book.execute_market(order.order_id)
         trade=book.close_position("BTC/USD","110")
