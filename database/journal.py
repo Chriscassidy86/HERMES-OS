@@ -69,9 +69,10 @@ class SQLiteAuditJournal:
         now=portfolio.clock().astimezone(timezone.utc).isoformat()
         with self.connect() as db:
             for table,records,key in (("paper_orders",portfolio.orders.values(),"order_id"),("fills",portfolio.fills.values(),"fill_id"),("positions",portfolio.positions.values(),"symbol"),("trades",portfolio.trades,"trade_id")):
+                if table == "positions":
+                    db.execute("DELETE FROM positions")
                 for record in records:
                     rid=getattr(record,key)
-                    if table=="positions": rid=f"{cycle_id or 'none'}:{rid}"
                     db.execute(f"INSERT OR REPLACE INTO {table} VALUES(?,?,?,?)",(rid,cycle_id,now,serialize(record)))
             rid=f"portfolio-{cycle_id or 'none'}-{now}-{len(portfolio.transitions)}-{len(portfolio.trades)}"
             payload={"account":portfolio.account(),"positions":tuple(portfolio.positions.values()),

@@ -64,5 +64,5 @@ class JournalTests(unittest.TestCase):
         with self.journal.connect() as db:
             snapshots=db.execute("SELECT COUNT(*) FROM portfolio_snapshots").fetchone()[0]
             positions=db.execute("SELECT COUNT(*) FROM positions").fetchone()[0]
-        self.assertEqual(2,snapshots); self.assertEqual(2,positions); self.assertEqual(str(book.account().cash_balance),self.journal.current_portfolio()["account"]["cash_balance"])
+        self.assertEqual(2,snapshots); self.assertEqual(1,positions); self.assertEqual(str(book.account().cash_balance),self.journal.current_portfolio()["account"]["cash_balance"])
 if __name__=="__main__": unittest.main()
