@@ -73,7 +73,13 @@ class SQLiteAuditJournal:
                     db.execute("DELETE FROM positions")
                 for record in records:
                     rid=getattr(record,key)
-                    db.execute(f"INSERT OR REPLACE INTO {table} VALUES(?,?,?,?)",(rid,cycle_id,now,serialize(record)))
+                    record_cycle_id = cycle_id
+                    if table == "trades":
+                        record_cycle_id = record.close_cycle_id or cycle_id
+                    db.execute(
+                        f"INSERT OR REPLACE INTO {table} VALUES(?,?,?,?)",
+                        (rid,record_cycle_id,now,serialize(record)),
+                    )
             rid=f"portfolio-{cycle_id or 'none'}-{now}-{len(portfolio.transitions)}-{len(portfolio.trades)}"
             payload={"account":portfolio.account(),"positions":tuple(portfolio.positions.values()),
                      "orders":tuple(portfolio.orders.values()),"fills":tuple(portfolio.fills.values()),
@@ -107,7 +113,21 @@ class SQLiteAuditJournal:
 }
         portfolio.orders={item["order_id"]:PaperOrder(item["order_id"],item["cycle_id"],item["symbol"],item["side"],Decimal(item["quantity"]),Decimal(item["reference_price"]),OrderStatus(item["status"]),datetime.fromisoformat(item["created_at"]),tuple(item.get("rejection_reasons",()))) for item in state.get("orders",())}
         portfolio.fills={item["fill_id"]:PaperFill(item["fill_id"],item["order_id"],Decimal(item["quantity"]),Decimal(item["price"]),Decimal(item["fee"]),Decimal(item["slippage"]),datetime.fromisoformat(item["timestamp"])) for item in state.get("fills",())}
-        portfolio.trades=[PaperTrade(item["trade_id"],item["symbol"],Decimal(item["quantity"]),Decimal(item["entry_price"]),Decimal(item["exit_price"]),Decimal(item["fees"]),Decimal(item["realized_pnl"]),datetime.fromisoformat(item["closed_at"])) for item in state.get("trades",())]
+        portfolio.trades=[
+            PaperTrade(
+                item["trade_id"],
+                item["symbol"],
+                Decimal(item["quantity"]),
+                Decimal(item["entry_price"]),
+                Decimal(item["exit_price"]),
+                Decimal(item["fees"]),
+                Decimal(item["realized_pnl"]),
+                datetime.fromisoformat(item["closed_at"]),
+                item.get("entry_cycle_id"),
+                item.get("close_cycle_id"),
+            )
+            for item in state.get("trades",())
+        ]
         portfolio.transitions=[OrderTransition(item["order_id"],OrderStatus(item["previous_status"]),OrderStatus(item["new_status"]),datetime.fromisoformat(item["timestamp"]),item["reason"]) for item in state.get("transitions",())]
         next_trade=max((int(item.trade_id.removeprefix("PT-")) for item in portfolio.trades),default=0)+1
         portfolio._ids=count(next_trade)

@@ -59,8 +59,16 @@ class PaperFill:
 
 @dataclass(frozen=True)
 class PaperTrade:
-    trade_id: str; symbol: str; quantity: Decimal; entry_price: Decimal
-    exit_price: Decimal; fees: Decimal; realized_pnl: Decimal; closed_at: datetime
+    trade_id: str
+    symbol: str
+    quantity: Decimal
+    entry_price: Decimal
+    exit_price: Decimal
+    fees: Decimal
+    realized_pnl: Decimal
+    closed_at: datetime
+    entry_cycle_id: str | None = None
+    close_cycle_id: str | None = None
 
 @dataclass(frozen=True)
 class OrderTransition:

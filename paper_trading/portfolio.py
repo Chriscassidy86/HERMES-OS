@@ -97,8 +97,24 @@ class PaperPortfolio:
         if not price.is_finite() or price<=0: raise ValueError("Mark price must be finite and positive.")
         self.positions[symbol]=replace(self.positions[symbol],current_price=price)
 
-    def close_position(self,symbol,price):
+    def close_position(self,symbol,price,close_cycle_id=None):
         position=self.positions[symbol]; price=Decimal(str(price)); now=self.clock()
+
+        entry_cycle_id = None
+        entry_candidates = tuple(
+            fill
+            for fill in self.fills.values()
+            if (
+                fill.order_id in self.orders
+                and self.orders[fill.order_id].symbol == symbol
+            )
+        )
+        if entry_candidates:
+            latest_entry = max(
+                entry_candidates,
+                key=lambda item: item.timestamp,
+            )
+            entry_cycle_id = self.orders[latest_entry.order_id].cycle_id
         if not price.is_finite() or price<=0: raise ValueError("Close price must be finite and positive.")
         if position.side == "SHORT":
             fill_price=(price*(Decimal("1")+self.slippage_bps/Decimal("10000"))).quantize(CENT)
@@ -117,7 +133,18 @@ class PaperPortfolio:
             self.cash+=proceeds-fee
             pnl=(fill_price-position.average_entry_price)*position.quantity-position.entry_fees-fee
 
-        trade=PaperTrade(f"PT-{next(self._ids):06d}",symbol,position.quantity,position.average_entry_price,fill_price,position.entry_fees+fee,pnl.quantize(CENT),now)
+        trade=PaperTrade(
+            f"PT-{next(self._ids):06d}",
+            symbol,
+            position.quantity,
+            position.average_entry_price,
+            fill_price,
+            position.entry_fees+fee,
+            pnl.quantize(CENT),
+            now,
+            entry_cycle_id,
+            close_cycle_id,
+        )
         self.trades.append(trade); del self.positions[symbol]
         for order in tuple(self.orders.values()):
             if order.symbol==symbol and order.status==OrderStatus.FILLED: self._transition(order,OrderStatus.CLOSED,"Position closed.")

@@ -30,7 +30,11 @@ class PaperExecutionEngine:
                         for item in self.portfolio.fills.values()
                         if self.portfolio.orders[item.order_id].symbol==symbol
                     )
-                    trade=self.portfolio.close_position(symbol,price)
+                    trade=self.portfolio.close_position(
+                        symbol,
+                        price,
+                        close_cycle_id=cycle.cycle_id,
+                    )
                     status="PAPER_CLOSED"
                     if entries:
                         duration=(trade.closed_at-min(entries)).total_seconds()
