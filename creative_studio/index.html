@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#101411">
+  <title>Creative Studio · Hermes</title>
+  <style>
+    :root{color-scheme:dark;--bg:#101411;--panel:#171e19;--line:#2a372e;--text:#eff4ef;--muted:#9ba99f;--green:#a9ed67;--red:#ff8d82;--radius:18px;font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% -10%,#243d2a 0,transparent 38%),var(--bg);color:var(--text);min-height:100vh}button,textarea,select{font:inherit}button{cursor:pointer}.app{max-width:1240px;margin:auto;padding:28px 34px 50px}.top{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:22px}.brand{display:flex;align-items:center;gap:12px}.mark{height:38px;width:38px;border-radius:12px;background:var(--green);display:grid;place-items:center;color:#11180e;font-weight:900}.brand strong{display:block;font-size:15px;letter-spacing:.02em}.brand small,.status{color:var(--muted);font-size:12px}.status{display:flex;align-items:center;gap:8px}.dot{width:8px;height:8px;background:#d4a85b;border-radius:50%}.dot.ready{background:var(--green);box-shadow:0 0 12px #a9ed6780}.hero{padding:42px 0 26px}.eyebrow{text-transform:uppercase;letter-spacing:.15em;color:var(--green);font-size:11px;font-weight:750}.hero h1{font-size:clamp(30px,5vw,47px);line-height:1.12;margin:10px 0}.hero p{color:var(--muted);max-width:690px;margin:0}.layout{display:grid;grid-template-columns:390px 1fr;gap:20px;align-items:start}.panel{border:1px solid var(--line);background:linear-gradient(160deg,#1a221c,#151b17);border-radius:var(--radius);overflow:hidden}.controls{padding:22px}.tabs{display:flex;gap:7px;padding:5px;background:#101511;border:1px solid var(--line);border-radius:13px;margin-bottom:22px}.tab{flex:1;border:0;border-radius:9px;padding:10px 6px;background:transparent;color:var(--muted);font-weight:650}.tab.active{background:#2a382d;color:var(--text)}label{display:block;font-size:13px;font-weight:650;margin:17px 0 8px}.hint{color:var(--muted);font-size:12px;font-weight:400;margin-top:3px}textarea,select{width:100%;background:#101511;border:1px solid var(--line);border-radius:11px;color:var(--text);padding:12px;outline:none}textarea{resize:vertical;min-height:145px}textarea:focus,select:focus{border-color:#729657;box-shadow:0 0 0 3px #a9ed6717}.selectrow{display:grid;grid-template-columns:1fr 1fr;gap:12px}.selectrow label{margin-top:12px}.primary{border:0;border-radius:12px;background:var(--green);color:#10170c;font-weight:800;padding:13px 16px;width:100%;margin-top:20px;transition:transform .15s,filter .15s}.primary:hover{filter:brightness(1.06);transform:translateY(-1px)}.primary:disabled{opacity:.55;cursor:wait;transform:none}.note{border-top:1px solid var(--line);padding:14px 20px;color:var(--muted);font-size:11px}.stage{min-height:560px;display:flex;flex-direction:column}.stagehead{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1px solid var(--line)}.stagehead strong{font-size:14px}.stagebody{padding:20px;flex:1;display:grid;place-items:center;min-height:490px}.empty{text-align:center;max-width:350px;color:var(--muted)}.empty .glyph{font-size:32px;color:#728375;margin-bottom:8px}.empty strong{display:block;color:var(--text);font-size:15px;margin-bottom:6px}.result{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}.result img,.result video{max-width:100%;max-height:610px;object-fit:contain;border-radius:12px;background:#0b0e0c;border:1px solid var(--line)}.result video{width:100%}.download{border:1px solid #42533f;background:#213024;color:var(--green);border-radius:10px;text-decoration:none;padding:9px 14px;font-size:13px;font-weight:700}.progress{width:min(100%,360px);text-align:center;color:var(--muted)}.bar{height:5px;background:#29332c;border-radius:9px;margin:15px 0;overflow:hidden}.bar i{display:block;height:100%;width:25%;background:var(--green);border-radius:inherit;animation:move 1.5s ease-in-out infinite alternate}@keyframes move{to{width:78%}}.error{color:var(--red);font-size:13px;text-align:center;max-width:440px}.footer{color:#748177;font-size:11px;text-align:center;margin-top:18px}.hidden{display:none!important}@media(max-width:850px){.layout{grid-template-columns:1fr}.app{padding:20px}.stage{min-height:420px}.stagebody{min-height:340px}.hero{padding-top:32px}}@media(max-width:470px){.app{padding:16px}.controls{padding:16px}.selectrow{grid-template-columns:1fr}.status{font-size:0}.status .dot{width:9px;height:9px}}
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="top"><div class="brand"><div class="mark">H</div><div><strong>HERMES · CREATIVE STUDIO</strong><small>Make an idea visible</small></div></div><div class="status"><i id="statusDot" class="dot"></i><span id="statusText">Checking setup…</span></div></header>
+    <section class="hero"><div class="eyebrow">Your creative workspace</div><h1>What should we make?</h1><p>Describe an image or a short video. Choose a few simple settings, then generate and save your result.</p></section>
+    <section class="layout">
+      <div class="panel"><div class="controls">
+        <div class="tabs" role="tablist"><button class="tab active" id="imageTab" role="tab" aria-selected="true">▧ &nbsp;Image</button><button class="tab" id="videoTab" role="tab" aria-selected="false">▷ &nbsp;Video</button></div>
+        <label for="prompt">Describe what you want <div class="hint" id="promptHint">Be specific about the subject, setting, style, and lighting.</div></label>
+        <textarea id="prompt" maxlength="4000" placeholder="A cozy cabin beside a mountain lake at sunrise, wildflowers in the foreground, cinematic photography…"></textarea>
+        <div id="imageOptions" class="selectrow"><label>Shape<select id="imageSize"><option value="1024x1024">Square</option><option value="1536x1024">Landscape</option><option value="1024x1536">Portrait</option></select></label><label>Quality<select id="quality"><option value="medium">Standard</option><option value="low">Draft</option><option value="high">High</option></select></label></div>
+        <div id="videoOptions" class="hidden"><div class="selectrow"><label>Length<select id="seconds"><option value="4">4 seconds</option><option value="8">8 seconds</option><option value="12">12 seconds</option></select></label><label>Shape<select id="videoSize"><option value="1280x720">Landscape</option><option value="720x1280">Portrait</option></select></label></div><div class="hint">Video generation can take a few minutes.</div></div>
+        <button id="generate" class="primary">Generate image</button>
+      </div><div class="note">Generation runs through a paid API account. Your secret key stays on this computer.</div></div>
+      <div class="panel stage"><div class="stagehead"><strong>Your result</strong><span class="hint" id="resultMeta">Nothing generated yet</span></div><div class="stagebody" id="stage"><div class="empty"><div class="glyph">✧</div><strong>Your creation will appear here</strong><span>Start with a short description, then adjust it and try again.</span></div></div></div>
+    </section><div class="footer">Creative Studio is a separate local tool. It does not connect to HERMES trading or paper-trading controls.</div>
+  </main>
+<script>
+  const $ = (id) => document.getElementById(id);
+  let mode = 'image', busy = false;
+  function setMode(next) {
+    mode = next;
+    $('imageTab').classList.toggle('active', mode === 'image'); $('videoTab').classList.toggle('active', mode === 'video');
+    $('imageTab').setAttribute('aria-selected', mode === 'image'); $('videoTab').setAttribute('aria-selected', mode === 'video');
+    $('imageOptions').classList.toggle('hidden', mode !== 'image'); $('videoOptions').classList.toggle('hidden', mode !== 'video');
+    $('generate').textContent = mode === 'image' ? 'Generate image' : 'Generate video';
+    $('prompt').placeholder = mode === 'image' ? 'A cozy cabin beside a mountain lake at sunrise, wildflowers in the foreground, cinematic photography…' : 'A slow cinematic shot of ocean waves rolling onto a quiet beach at golden hour…';
+    $('promptHint').textContent = mode === 'image' ? 'Be specific about the subject, setting, style, and lighting.' : 'Describe the scene and how the camera or subjects should move.';
+  }
+  function escapeHtml(value) { return String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function showError(message) { $('stage').innerHTML = `<div class="error">${escapeHtml(message)}</div>`; }
+  function showProgress(title, detail = 'This can take a little while.') { $('stage').innerHTML = `<div class="progress"><strong>${escapeHtml(title)}</strong><div class="bar"><i></i></div>${escapeHtml(detail)}</div>`; }
+  async function request(path, payload) {
+    const response = await fetch(path, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const data = await response.json(); if (!response.ok) throw new Error(data.error || 'Something went wrong.'); return data;
+  }
+  async function generateImage(prompt) {
+    showProgress('Making your image…');
+    const data = await request('/api/image', {prompt, size:$('imageSize').value, quality:$('quality').value});
+    $('stage').innerHTML = `<div class="result"><img src="${data.url}" alt="AI-generated image"><a class="download" href="${data.url}" download="hermes-creation.png">Download image</a></div>`;
+    $('resultMeta').textContent = 'Image · saved on this computer';
+  }
+  async function generateVideo(prompt) {
+    showProgress('Sending your video prompt…');
+    const job = await request('/api/video', {prompt, seconds:$('seconds').value, size:$('videoSize').value});
+    let finished = false;
+    for (let attempt = 0; attempt < 180; attempt++) {
+      await new Promise(resolve => setTimeout(resolve, 4000));
+      const response = await fetch('/api/video/' + encodeURIComponent(job.id)); const state = await response.json();
+      if (!response.ok) throw new Error(state.error || 'Could not check video status.');
+      const status = state.status || 'processing';
+      if (status === 'failed' || status === 'canceled') throw new Error(state.error?.message || 'Video generation did not complete.');
+      if (status === 'completed' || status === 'succeeded') {
+        finished = true; showProgress('Saving your video…');
+        const saved = await fetch('/api/video/' + encodeURIComponent(job.id) + '/download'); const result = await saved.json();
+        if (!saved.ok) throw new Error(result.error || 'The video finished but could not be downloaded.');
+        $('stage').innerHTML = `<div class="result"><video controls playsinline src="${result.url}"></video><a class="download" href="${result.url}" download="hermes-creation.mp4">Download video</a></div>`;
+        $('resultMeta').textContent = `${$('seconds').value} sec video · saved on this computer`; break;
+      }
+      showProgress('Making your video…', state.progress ? `${state.progress}% complete` : 'Video generation can take a few minutes.');
+    }
+    if (!finished) throw new Error('This video is still processing. Try again in a little while.');
+  }
+  $('imageTab').addEventListener('click', () => setMode('image')); $('videoTab').addEventListener('click', () => setMode('video'));
+  $('generate').addEventListener('click', async () => {
+    const prompt = $('prompt').value.trim();
+    if (!prompt) { $('prompt').focus(); $('prompt').setCustomValidity('Add a description first.'); $('prompt').reportValidity(); $('prompt').setCustomValidity(''); return; }
+    if (busy) return; busy = true; $('generate').disabled = true; $('resultMeta').textContent = 'Working…';
+    try { if (mode === 'image') await generateImage(prompt); else await generateVideo(prompt); }
+    catch (error) { showError(error.message); $('resultMeta').textContent = 'Could not generate'; }
+    finally { busy = false; $('generate').disabled = false; }
+  });
+  fetch('/api/status').then(r => r.json()).then(status => { $('statusDot').classList.toggle('ready', status.ready); $('statusText').textContent = status.ready ? 'Ready to create' : 'Needs API key'; }).catch(() => { $('statusText').textContent = 'Offline'; });
+</script>
+</body>
+</html>

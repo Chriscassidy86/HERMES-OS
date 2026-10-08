@@ -33,3 +33,11 @@ exports/
 # OS Files
 .DS_Store
 Thumbs.db
+
+# Local development snapshots
+*.bak
+*.backup
+
+# Local Paperclip tooling/cache
+.paperclip-pnpm-store/
+_codex-paperclip-bin/
